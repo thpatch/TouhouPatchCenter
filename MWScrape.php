@@ -1,12 +1,14 @@
 <?php
 
-/** Scrapes templates on a MediaWiki page into an array.
+/**
+  * Scrapes templates on a MediaWiki page into an array.
   *
   * @file
   * @author Nmlgc
   * /
 
-/** This was my first attempt at writing own PHP code. Profiling and optimizing
+/**
+  * This was my first attempt at writing own PHP code. Profiling and optimizing
   * this was quite a nice way to find myself around PHP and see what kind of
   * concepts work best in this language (not to mention fun).
   *
@@ -28,8 +30,6 @@
   * This way, we can achieve a ~32x speed increase compared to the initial
   * dumb Python→PHP conversion. :-)
   */
-
-$wgTPCPosParamPrefix = 'unnamed_';
 
 class Template
 {
@@ -66,9 +66,7 @@ class Template
 				$this->name = $value;
 			} else {
 				// Any other unnamed template parameter
-				global $wgTPCPosParamPrefix;
-
-				$this->params[$wgTPCPosParamPrefix . $this->unnamedId] = $value;
+				$this->params[$this->unnamedId] = $value;
 			}
 			$this->unnamedId++;
 		}
@@ -153,7 +151,7 @@ class MWScrape {
 	  * @param string $page Wikitext string containing the full page code
 	  * @return array Array of Template objects
 	  */
-	public function toArray( &$page ) {
+	public static function toArray( &$page ) {
 		$temps = array();
 
 		$tokens = self::getMWTokenArray( $page );
