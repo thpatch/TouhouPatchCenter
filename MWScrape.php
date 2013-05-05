@@ -93,7 +93,7 @@ class MWScrape {
 	  * @param int $end Offset of the token closing the template in $str
 	  * @return Template Template object
 	  */
-	protected function parseTemplate( &$str, &$tokens, &$start, &$end ) {
+	protected static function parseTemplate( &$str, &$tokens, &$start, &$end ) {
 		$ret = new Template;
 
 		$nest = 0;
@@ -137,7 +137,7 @@ class MWScrape {
 	 *		)
 	 *	)
 	 */
-	protected function getMWTokenArray( &$str ) {
+	protected static function getMWTokenArray( &$str ) {
 		// The regex way of doing this becomes faster the more matches there are.
 		// For shorter pages, this may actually be a bit slower than calling strpos()
 		// repeatedly across the whole string for every token, but not by much.
