@@ -5,7 +5,7 @@
   *
   * @file
   * @author Nmlgc
-  * /
+  */
 
 /**
   * This was my first attempt at writing own PHP code. Profiling and optimizing
@@ -41,6 +41,9 @@ class Template
 
 	// Number of next unnamed parameter. 0 = template name
 	public $unnamedId = 0;
+
+	// Start and end offsets of this template in the source string
+	public $srcStart, $srcEnd;
 
 	/** 
 	  * Adds an element (name or (unnamed) parameter) to this template.
@@ -82,6 +85,10 @@ class MWScrape {
 	const MW_PIPE = '|';
 	const MW_ASSIGN = '=';
 	const MW_TOKEN_REGEX = '/=|\||{{|}}|\[\[|\]\]/';
+	// Group 2: Custom page title (if given)
+	// Group 3: Display title
+	const MW_PAGE_LINK_REGEX = '/\[\[((.*?)\|)?(.*?)\]\]/';
+
 	const MW_TEMPLATE_TOKEN_LEN = 2;
 
 	/**
@@ -95,12 +102,14 @@ class MWScrape {
 	  */
 	protected static function parseTemplate( &$str, &$tokens, &$start, &$end ) {
 		$ret = new Template;
+		$ret->srcStart = $tokens[$start][1];
+		$ret->srcEnd = $tokens[$end][1];
 
 		$nest = 0;
 		// $start will point to the first character of the opening token.
 		// We jump over it for the first parameter *and* skip its evaluation
 		// in the loop - for the correct nesting level.
-		$paramOff = $tokens[$start][1] + self::MW_TEMPLATE_TOKEN_LEN;
+		$paramOff = $ret->srcStart + self::MW_TEMPLATE_TOKEN_LEN;
 		$assignOff = null;
 
 		// We need to iterate through the whole token array again
@@ -121,7 +130,7 @@ class MWScrape {
 			}
 		}
 		// Last element
-		$ret->add( $str, $paramOff, $assignOff, $tokens[$end][1] );
+		$ret->add( $str, $paramOff, $assignOff, $ret->srcEnd );
 		return $ret;
 	}
 
@@ -130,12 +139,12 @@ class MWScrape {
 	 *
 	 * @param string $str Wikitext string
 	 * @return array Array of the form
-	 *	Array (
-	 *		[index] => Array (
+	 * Array (
+	 * 		[index] => Array (
 	 *			[0] = <token>
 	 *			[1] = <offset>
 	 *		)
-	 *	)
+	 * )
 	 */
 	protected static function getMWTokenArray( &$str ) {
 		// The regex way of doing this becomes faster the more matches there are.
@@ -153,6 +162,9 @@ class MWScrape {
 	  */
 	public static function toArray( &$page ) {
 		$temps = array();
+
+		// Apply basic regex
+		$page = preg_replace( self::MW_PAGE_LINK_REGEX, "$3", $page );
 
 		$tokens = self::getMWTokenArray( $page );
 		$tokenCount = count( $tokens );
