@@ -154,9 +154,13 @@ class TPCServer {
 	  */
 	public static function writeServerFile( $patchList = null ) {
 		global $wgTPCServers;
+		global $wgTPCServerID;
 
 		$serverCache = array();
 		$serverJS = &$serverCache['server.js'];
+		if ( $wgTPCServerID ) {
+			$serverJS['id'] = $wgTPCServerID;
+		}
 		if ( $patchList ) {
 			$serverJS['patches'] = $patchList;
 		}
@@ -164,7 +168,7 @@ class TPCServer {
 			if ( !is_array( $i ) or !isset( $i['url'] ) ) {
 				continue;
 			}
-			$serverJS['mirrors'][] = $i['url'];
+			$serverJS['servers'][] = $i['url'];
 		}
 		self::writeJSONCache( $serverCache );
 	}
