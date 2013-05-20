@@ -18,4 +18,17 @@ class TPCUtil {
 	public static function dictGet( &$element, $default = null ) {
 		return isset( $element ) ? $element : $default;
 	}
+
+	/**
+	  * Normalizes a hook name.
+	  *
+	  * @param string &$hook Hook name
+	  * @return string Normalized hook name.
+	  */
+	public static function normalizeHook( $hook ) {
+		// Normalize hook name... this should totally do for now
+		$hook = strtolower( $hook );
+		$hook = preg_replace( '/ /', '_', $hook );
+		return $hook;
+	}
 }

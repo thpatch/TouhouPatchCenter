@@ -10,9 +10,7 @@
 class TouhouPatchCenter	{
 
 	protected static function runHooks( $hook, &$hookArray, $params ) {
-		// Normalize hook name... this should totally do for now
-		$hook = strtolower( $hook );
-		$hook = preg_replace( '/ /', '_', $hook );
+		$hook = TPCUtil::normalizeHook( $hook );
 		if ( isset( $hookArray[$hook] ) ) {
 			foreach ( $hookArray[$hook] as $func) {
 				return call_user_func_array( $func, $params );

@@ -44,7 +44,8 @@ class TPCFormat {
 				case "opcodes":
 					$opcodes = MWScrape::toArray( $val );
 					foreach ( $opcodes as $op )  {
-						if ( $op->name === "thcrap_format_opcode" and $op->params[1] ) {
+						$hook = TPCUtil::normalizeHook( $op->name );
+						if ( $hook === "thcrap_format_opcode" and $op->params[1] ) {
 							self::parseOpcode( $cont['opcodes'], $op->params );
 						}
 					}
