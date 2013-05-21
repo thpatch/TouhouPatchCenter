@@ -27,8 +27,15 @@ class TPCInfo {
 
 	public static function onGameInfo( &$tpcState, $title, $temp ) {
 		$pageTitle = strtolower( $title->getDBKey() );
-		$id = TPCUtil::dictGet( $temp->params['id'], $pageTitle );
-		$cont = &$tpcState->getFile( $id );
+		// No dictGet here because this would silently _create_ this parameter
+		// with null as content if it wasn't there before... nice, PHP
+		if( isset( $temp->params['game'] ) ) {
+			$game = $temp->params['game'];
+		} else {
+			$game = $pageTitle;
+		}
+		$cont = &$tpcState->getFile( $game );
+		$cont['game'] = $game;
 
 		foreach ( $temp->params as $key => $val ) {
 			switch ( $key ) {
