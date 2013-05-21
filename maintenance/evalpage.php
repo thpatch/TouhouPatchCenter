@@ -17,11 +17,16 @@ class TPCEvalPage extends Maintenance {
 		$this->addOption( 'title', 'Title of the page to evaluate', true, false );
 	}
 	public function execute() {
-		$title = $this->getOption( 'title' );
-		if ( !$title ) {
+		$text = $this->getOption( 'title' );
+		if ( !$text ) {
 			return;
 		}
-		TouhouPatchCenter::evalPage( Title::newFromText( $title ) );
+		$title = Title::newFromText( $text );
+		if ( $title->isKnown() ) {
+			TouhouPatchCenter::evalPage( $title );
+		} else {
+			$this->output( "Page '$text' doesn't exist!\n" );
+		}
 		return;
 	}
 }
