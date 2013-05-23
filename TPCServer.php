@@ -205,18 +205,12 @@ class TPCServer {
 		$patchList = array();
 
 		foreach ( $tpcState->patches as $patch ) {
-			/**
-			  * Decided against this.
-			  * Secondary mirroring will be pretty annoying if people have to 
-			  * change the servers in every patch.js on every update.
-			  *
 			// Write patch base URLs.
 			// The if() is necessary because we do not want to accidentally null
 			$servers = self::getServersForPatch( $patch );
 			if ( $servers ) {
 				$patchJS['servers'] = $servers;
 			}
-			*/
 			self::writeJSONCache( $tpcState->jsonCache, $patch );
 			self::writeCopyCache( $tpcState->copyCache, $patch );
 
