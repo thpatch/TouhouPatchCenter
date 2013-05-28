@@ -34,14 +34,18 @@ class TPCBinhack {
 		foreach ( $addr as $ver => $val ) {
 			$verFile = &$tpcState->getVersion( $ver );
 			preg_match_all( '/0x[0-9a-f]+/i', $val, $valArray);
-			$verFile['binhacks'][$id]['addr'] = $valArray[0];
+			if ( !empty( $valArray[0] ) ) {
+				$verFile['binhacks'][$id]['addr'] = $valArray[0];
+			}
 		}
 
 		$code = TPCParse::parseVer( $code );
 		foreach ( $code as $ver => $val ) {
 			$verFile = &$tpcState->getVersion( $ver );
 			$val = preg_replace('/\s+/', '', $val);
-			$verFile['binhacks'][$id]['code'] = $val;
+			if ( !empty( $val ) ) {
+				$verFile['binhacks'][$id]['code'] = $val;
+			}
 		}
 
 		$cont = &$baseFile['binhacks'][$id];

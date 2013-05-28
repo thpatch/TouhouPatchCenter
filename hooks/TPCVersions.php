@@ -25,11 +25,11 @@ class TPCVersions {
 			TPCUtil::dictGet( $temp->params[3], '(original)' )
 		);
 
-		if ( isset($temp->params['hash']) ) {
+		if ( isset($temp->params['hash']) and !empty( $temp->params['hash'] ) ) {
 	 		$hashes = &$tpcState->jsonContents['hashes'];	
 			$hashes[ $temp->params['hash'] ] = $ver;
 		}
-		if ( isset($temp->params['size']) ) {
+		if ( isset($temp->params['size']) and !empty( $temp->params['size'] ) ) {
 			$sizes = &$tpcState->jsonContents['sizes'];
 			$sizes[ $temp->params['size'] ] = $ver;
 		}
