@@ -31,4 +31,17 @@ class TPCUtil {
 		$hook = preg_replace( '/ /', '_', $hook );
 		return $hook;
 	}
+
+	/**
+	  * Checks whether an array is associative or numeric.
+	  *
+	  * @param array &$array The array to check.
+	  * @return int > 0: associative, = 0: numeric, < 0: both
+	  */
+	public static function isAssoc( &$array ) {
+		if ( !is_array( $array ) ) {
+			return 0;
+		}
+		return count( array_filter( array_keys( $array ), 'is_string' ) );
+	}
 }

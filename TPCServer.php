@@ -37,9 +37,9 @@ class TPCServer {
 		$merged = $array1;
 		foreach ( $array2 as $key => &$value ) {
 			if ( 
-				is_array ( $value ) &&
+				TPCUtil::isAssoc ( $value ) &&
 				isset ( $merged[$key] ) &&
-				is_array ( $merged[$key] )
+				TPCUtil::isAssoc ( $merged[$key] )
 			) {
 				$merged[$key] = self::arrayMergeRecursiveDistinct( $merged[$key], $value );
 			} else 	{
@@ -84,7 +84,7 @@ class TPCServer {
 		return self::arrayMergeRecursiveDistinct( $oldArray, $array );
 	}
 
-	public function getServersForPatch( &$patch ) {
+	public static function getServersForPatch( &$patch ) {
 		global $wgTPCServers;
 
 		$ret = array();
