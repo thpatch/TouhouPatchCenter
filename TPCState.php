@@ -27,6 +27,11 @@ class TPCState
 	  * i.e. if $file is not set.
 	  */
 
+	// Patch main file - not included in the $jsonCache to avoid the risk of
+	// unfinished downloads remaining in a state where they are unable to
+	// properly update themselves
+	public $patchJS = array();
+
 	// Gets directly written to JSON.
 	// Format: [patch-relative destination FN] => array( contents... )
 	public $jsonCache = array();

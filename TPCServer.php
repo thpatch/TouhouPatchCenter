@@ -104,33 +104,33 @@ class TPCServer {
 		self::createPath( dirname( $file ) );
 	}
 
+	public static function writeJSONFile( $fn, &$array, $patch = null ) {
+		global $wgTPCServers;
+
+		// Don't write "null" for files that were requested but never edited
+		if ( !$array or !$fn ) {
+			return;
+		}
+		$renderFile = true;
+		foreach ( $wgTPCServers as $server ) {
+			$srvPath = self::getServerPath( $server );
+			self::chdirPatch( $srvPath, $patch, $fn );			
+			if ( $renderFile ) {
+				// If this file already exists, merge its copy on the first server.
+				$array = self::mergeOldFile( $array, $fn );
+				$json = json_encode( (object)$array, TPC_JSON_OPTS );
+				$renderFile = false;
+			}
+			file_put_contents( $fn, $json, LOCK_EX );
+		}
+	}
+
 	/**
 	  * Writes a JSON patch cache to a certain patch.
 	  */
 	public static function writeJSONCache( &$jsonCache, $patch = null ) {
-		global $wgTPCServers;
-
-		// First loop files, then servers.
-		// This allows stacked files (especially the main game .js files)
-		// to have more differences between patches.
 		foreach ( $jsonCache as $fn => $array ) {
-			// Don't write "null" for files that were requested but never edited
-			if ( !$array or !$fn ) {
-				continue;
-			}
-			$renderFile = true;
-			foreach ( $wgTPCServers as $server ) {
-				$srvPath = self::getServerPath( $server );
-				self::chdirPatch( $srvPath, $patch, $fn );
-				
-				if ( $renderFile ) {
-					// If this file already exists, merge its copy on the first server.
-					$array = self::mergeOldFile( $array, $fn );
-					$json = json_encode( (object)$array, TPC_JSON_OPTS );
-					$renderFile = false;
-				}
-				file_put_contents( $fn, $json, LOCK_EX );
-			}
+			self::writeJSONFile( $fn, $array, $patch );
 		}
 	}
 
@@ -185,7 +185,7 @@ class TPCServer {
 		if ( empty ( $files ) ) {
 			return;
 		}
-		$patchJS = &$tpcState->getFile( null, 'patch.js' );
+		$patchJS = &$tpcState->patchJS;
 		$patchJS['files'] = $files;
 
 		// --------------
@@ -220,6 +220,7 @@ class TPCServer {
 			if ( isset( $patchJS['title'] ) ) {
 				$patchList[$patch] = $patchJS['title'];
 			}
+			self::writeJSONFile( 'patch.js', $tpcState->patchJS, $patch );
 		}
 		self::writeServerFile( $patchList );
 

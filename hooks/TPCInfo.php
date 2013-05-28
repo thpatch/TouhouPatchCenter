@@ -16,7 +16,7 @@ class TPCInfo {
 	public static function onPatchInfo( &$tpcState, $title, $temp ) {
 		$pageTitle = strtolower( $title->getDBKey() );
 
-		$patchJS = &$tpcState->getFile( null, 'patch.js' );
+		$patchJS = &$tpcState->patchJS;
 
 		$patchJS['id'] = $pageTitle;
 
