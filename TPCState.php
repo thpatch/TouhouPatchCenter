@@ -155,21 +155,12 @@ class TPCState
 	}
 
 	/**
-	  * Returns an array of all files in this state object,
-	  * together with the current time stamp.
+	  * Returns an array of all files in this state object.
 	  */
 	public function listFiles() {
-		$files = array();
-		$time = time();
-		foreach ( $this->jsonCache as $fn => $array ) {
-			if ( !$array ) {
-				continue;
-			}
-			$files[$fn] = time();
-		}
-		foreach ( $this->copyCache as $target => $source ) {
-			$files[$target] = filemtime( $source );
-		}
-		return $files;
+		return array_merge(
+			array_keys( $this->jsonCache ),
+			array_keys( $this->copyCache )
+		);
 	}
 }

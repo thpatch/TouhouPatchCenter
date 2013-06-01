@@ -104,6 +104,11 @@ class TPCServer {
 		self::createPath( dirname( $file ) );
 	}
 
+	/**
+	  * Writes a JSON file to a certain patch, merging any previously created content.
+	  *
+	  * @return int Hash of the target file's full merged content.
+	  */
 	public static function writeJSONFile( $fn, &$array, $patch = null ) {
 		global $wgTPCServers;
 
@@ -120,32 +125,50 @@ class TPCServer {
 				$array = self::mergeOldFile( $array, $fn );
 				$json = json_encode( (object)$array, TPC_JSON_OPTS );
 				$renderFile = false;
+				$ret = crc32( $json );
 			}
 			file_put_contents( $fn, $json, LOCK_EX );
 		}
+		return $ret;
+	}
+
+	public static function writeCopyFile( $target, &$source, $patch = null ) {
+		global $wgTPCServers;
+
+		foreach ( $wgTPCServers as $server ) {
+			$srvPath = self::getServerPath( $server );
+			self::chdirPatch( $srvPath, $patch, $target );
+			copy( $source, $target );
+		}
+		return filemtime( $source );
 	}
 
 	/**
-	  * Writes a JSON patch cache to a certain patch.
+	  * @param function $cacheFunc
+	  * 	Function to call for each element. Should return a hash or equivalent
+	  * 	integer identifying the element's current version.
+	  * 
+	  * @param array $cache
+	  * @param string $patch
+	  * @return array Array of the form ( [filename] => [hash] )
 	  */
-	public static function writeJSONCache( &$jsonCache, $patch = null ) {
-		foreach ( $jsonCache as $fn => $array ) {
-			self::writeJSONFile( $fn, $array, $patch );
-		}
-	}
-
-	protected static function writeCopyCache( &$copyCache, $patch = null ) {
-		global $wgTPCServers;
-
-		// Loop order doesn't matter here.
-		foreach ( $copyCache as $target => $source ) {
-			foreach ( $wgTPCServers as $server ) {
-				$srvPath = self::getServerPath( $server );
-				self::chdirPatch( $srvPath, $patch, $target );
-
-				copy( $source, $target );
+	protected static function writeCache( $cacheFunc, &$cache, $patch = null ) {
+		$ret = array();
+		foreach ( $cache as $target => &$source ) {
+			$hash = call_user_func( $cacheFunc, $target, $source, $patch );
+			if ( $hash ) {	
+				$ret[$target] = $hash;
 			}
 		}
+		return $ret;
+	}
+
+	public static function writeJSONCache( &$jsonCache, $patch = null ) {
+		return self::writeCache( 'self::writeJSONFile', $jsonCache, $patch );
+	}
+
+	public static function writeCopyCache( &$copyCache, $patch = null ) {
+		return self::writeCache( 'self::writeCopyFile', $copyCache, $patch );
 	}
 
 	/**
@@ -182,18 +205,17 @@ class TPCServer {
 		$prevDir = getcwd();
 
 		$files = $tpcState->listFiles();
-		if ( empty ( $files ) ) {
+		$patchJS = &$tpcState->patchJS;
+		if ( empty ( $files ) and empty ( $patchJS )  ) {
 			return;
 		}
-		$patchJS = &$tpcState->patchJS;
-		$patchJS['files'] = $files;
 
 		// --------------
 		// Other settings
 		// --------------
 		$patchJS['update'] = true;
 		// List fonts
-		$fonts = preg_grep( '/\.(ttf|otf)$/i', array_keys( $files ) );
+		$fonts = preg_grep( '/\.(ttf|otf)$/i', $files );
 		// Nope, we can't do an array because this would overwrite any previous
 		// assignment. It shouldn't matter for fonts, but it's still unexpected
 		// behavior...
@@ -211,8 +233,13 @@ class TPCServer {
 			if ( $servers ) {
 				$patchJS['servers'] = $servers;
 			}
-			self::writeJSONCache( $tpcState->jsonCache, $patch );
-			self::writeCopyCache( $tpcState->copyCache, $patch );
+			$ret = array_merge(
+				self::writeJSONCache( $tpcState->jsonCache, $patch ),
+				self::writeCopyCache( $tpcState->copyCache, $patch )
+			);
+			if ( $ret ) {
+				$patchJS['files'] = $ret;
+			}
 
 			// Whenever we have a title, we're evaluating just one patch anyway.
 			// Yes, patches will not show up unless they have a thcrap_patch_info
