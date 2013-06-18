@@ -178,6 +178,7 @@ class TPCServer {
 	public static function writeServerFile( $patchList = null ) {
 		global $wgTPCServers;
 		global $wgTPCServerID;
+		global $wgTPCServerDescURL;
 
 		$serverCache = array();
 		$serverJS = &$serverCache['server.js'];
@@ -192,6 +193,9 @@ class TPCServer {
 				continue;
 			}
 			$serverJS['servers'][] = $i['url'];
+		}
+		if ( $wgTPCServerDescURL ) {
+			$serverJS['desc_url'] = $wgTPCServerDescURL;
 		}
 		self::writeJSONCache( $serverCache );
 	}

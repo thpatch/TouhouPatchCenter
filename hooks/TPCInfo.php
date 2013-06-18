@@ -22,6 +22,10 @@ class TPCInfo {
 
 		$patchTitle = TPCUtil::dictGet( $temp->params['title'] );
 		$patchJS['title'] = $patchTitle;
+
+		if ( isset( $temp->params['min_build'] ) ) {
+			$patchJS['min_build'] = intval( $temp->params['min_build'] );
+		}
 		return true;
 	}
 
