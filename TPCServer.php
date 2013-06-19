@@ -195,7 +195,7 @@ class TPCServer {
 			$serverJS['servers'][] = $i['url'];
 		}
 		if ( $wgTPCServerDescURL ) {
-			$serverJS['desc_url'] = $wgTPCServerDescURL;
+			$serverJS['url_desc'] = $wgTPCServerDescURL;
 		}
 		self::writeJSONCache( $serverCache );
 	}

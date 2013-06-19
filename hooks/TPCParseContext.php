@@ -5,7 +5,7 @@
   * Registers the following template hooks:
   *
   * {{thcrap_game}}
-  * {{thcrap_data_patch}}
+  * {{thcrap_patch_file}}
   *
   * @file
   * @author Nmlgc

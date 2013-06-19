@@ -24,7 +24,11 @@ class TPCInfo {
 		$patchJS['title'] = $patchTitle;
 
 		if ( isset( $temp->params['min_build'] ) ) {
-			$patchJS['min_build'] = intval( $temp->params['min_build'] );
+			global $wgTPCServerEngineURL;
+			$patchJS['min_build'] = $temp->params['min_build'];
+			if ( $wgTPCServerEngineURL ) {
+				$patchJS['url_engine'] = $wgTPCServerEngineURL;
+			}
 		}
 		return true;
 	}
