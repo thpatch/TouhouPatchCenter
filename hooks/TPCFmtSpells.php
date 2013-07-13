@@ -26,6 +26,21 @@ class TPCFmtSpells {
 		if ( $name ) {
 			$spells[$id] = $name;
 		}
+
+		// Comments...
+		foreach ( $temp->params as $key => $val ) {
+			if ( !strncasecmp( $key, "comment_", 8 ) and $val ) {
+				$spellcomments = &$tpcState->switchDataFile( "spellcomments.js" );
+				$cmt = &$spellcomments[$id];
+				$lines = TPCUtil::scrapeLines( $val );
+				$cmt[$key] = $lines;
+				// Resolve owner in the correct language
+				if ( $owner and !isset( $cmt['owner'] ) ) {
+					$lang = $title->getPageLanguage();
+					$cmt['owner'] = wfMessage( $owner )->inLanguage( $lang )->plain();
+				}
+			}
+		}
 		return true;
 	}
 }
