@@ -130,22 +130,19 @@ class TPCState
 		return $this->jsonCache[ $newFN ];
 	}
 
-	public function switchGame( $game ) {
-		$this->jsonContents = &$this->getFile( $game );
-		return true;
+	public function &switchGame( $game ) {
+		return $this->jsonContents = &$this->getFile( $game );
 	}
 
-	public function switchTopFile( $file ) {
-		$this->jsonContents = &$this->getFile( null, $file );
-		return true;
+	public function &switchTopFile( $file ) {
+		return $this->jsonContents = &$this->getFile( null, $file );
 	}
 
-	public function switchDataFile( $file ) {
-		$this->jsonContents = &$this->getFile( $this->curGame, $file );
-		return true;
+	public function &switchDataFile( $file ) {
+		return $this->jsonContents = &$this->getFile( $this->curGame, $file );
 	}
 
-	public function switchDataFilePatch( $file ) {
+	public function &switchDataFilePatch( $file ) {
 		return $this->switchDataFile( $file . '.jdiff' );
 	}
 
