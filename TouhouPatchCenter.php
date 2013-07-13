@@ -45,6 +45,7 @@ require_once("$hookDir/TPCParseContext.php");
 require_once("$hookDir/TPCVersions.php");
 
 require_once("$hookDir/TPCFmtMsg.php");
+require_once("$hookDir/TPCFmtSpells.php");
 
 // Templates
 $templateDir = "$dir/templates";
