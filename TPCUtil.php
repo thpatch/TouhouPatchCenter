@@ -44,4 +44,20 @@ class TPCUtil {
 		}
 		return count( array_filter( array_keys( $array ), 'is_string' ) );
 	}
+
+	/**
+	  * Scrapes a wikitext string into an array of lines.
+	  *
+	  * @param string &$param The string to split
+	  * @return array Array of lines.
+	  */
+	public static function scrapeLines( &$param ) {
+		$REGEX_LINE = '#<br\s*/?>|\n#';
+
+		$param = preg_replace( '/%/', '%%', $param );
+
+		// Do more MediaWiki stuff...
+
+		return preg_split( $REGEX_LINE, $param, null, PREG_SPLIT_NO_EMPTY );
+	}
 }

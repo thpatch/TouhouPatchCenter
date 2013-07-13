@@ -23,7 +23,6 @@ class TPCFmtMsg {
 
 	const REGEX_CODE = '/#(?P<entry>[\d]+)@(?P<time>[\d]+)/';
 	const REGEX_RUBY = '/\{\{\s*ruby\s*\|(.*?)\|\s*(.*?)\s*\}\}/';
-	const REGEX_LINE = '#<br\s*/?>|\n#';
 
 	public static function formatSlot( &$time, &$type, &$index ) {
 		// Much faster than sprintf, by the way
@@ -54,14 +53,6 @@ class TPCFmtMsg {
 		}
 	}
 
-	public static function scrapeLines( &$param ) {
-		$param = preg_replace( '/%/', '%%', $param );
-
-		// Do more MediaWiki stuff...
-
-		return preg_split( self::REGEX_LINE, $param, null, PREG_SPLIT_NO_EMPTY );	
-	}
-
 	public static function onMsg( &$tpcState, &$title, &$temp ) {
 		$code = TPCUtil::dictGet( $temp->params['code'] );
 		if ( !preg_match( self::REGEX_CODE, $code, $m) ) {
@@ -85,7 +76,7 @@ class TPCFmtMsg {
 			$timeIndex = 0;
 		}
 
-		$lines = self::scrapeLines( $temp->params['tl'] );
+		$lines = TPCUtil::scrapeLines( $temp->params['tl'] );
 
 		// Line processing
 		if ( $lines ) {
