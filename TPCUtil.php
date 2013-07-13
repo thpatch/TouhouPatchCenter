@@ -46,17 +46,27 @@ class TPCUtil {
 	}
 
 	/**
+	  * Sanitizes a wikitext string for in-game display.
+	  *
+	  * @param string &$param The string to sanitize.
+	  * @return string Sanitized string.
+	  */
+	public static function sanitize( &$param ) {
+		$param = preg_replace( '/%/', '%%', $param );
+		// Do more MediaWiki stuff...
+		return $param;
+	}
+
+	/**
 	  * Scrapes a wikitext string into an array of lines.
 	  *
-	  * @param string &$param The string to split
+	  * @param string &$param The string to split.
 	  * @return array Array of lines.
 	  */
 	public static function scrapeLines( &$param ) {
 		$REGEX_LINE = '#<br\s*/?>|\n#';
 
-		$param = preg_replace( '/%/', '%%', $param );
-
-		// Do more MediaWiki stuff...
+		$param = TPCUtil::sanitize( $param );
 
 		return preg_split( $REGEX_LINE, $param, null, PREG_SPLIT_NO_EMPTY );
 	}
