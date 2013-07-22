@@ -31,13 +31,14 @@ class TPCStorage {
 	 * Parameters are passed by reference, though only for performance reasons. They're not
 	 * altered by this function.
 	 *
-	 * @param array $array1
-	 * @param array $array2 Prioritized array
+	 * @param array $array1 Base array.
+	 * @param array $array2 Prioritized array.
+	 * @param bool $changed Receives true if there has been a change.
 	 * @return array
 	 * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
 	 * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
 	 */
-	public static function arrayMergeRecursiveDistinct( array &$array1, array &$array2 ) {
+	public static function arrayMergeRecursiveDistinct( array &$array1, array &$array2, &$changed ) {
 		$merged = $array1;
 		foreach ( $array2 as $key => &$value ) {
 			if (
@@ -45,24 +46,27 @@ class TPCStorage {
 				isset ( $merged[$key] ) &&
 				TPCUtil::isAssoc ( $merged[$key] )
 			) {
-				$merged[$key] = self::arrayMergeRecursiveDistinct( $merged[$key], $value );
-			} else 	{
+				$merged[$key] = self::arrayMergeRecursiveDistinct( $merged[$key], $value, $changed );
+			} else if ( !isset( $merged[$key] ) or $merged[$key] !== $value ) {
 				$merged[$key] = $value;
+				$changed = true;
 			}
 		}
 		return $merged;
 	}
 
-	protected static function mergeOldFile( &$server, &$array, &$fn ) {
+	protected static function mergeOldFile( &$server, &$array, &$fn, &$changed ) {
 		if ( !file_exists( $fn ) ) {
+			$changed = true;
 			return $array;
 		}
 		$oldJson = $server->get( $fn );
 		if ( !$oldJson ) {
+			$changed = true;
 			return $array;
 		}
 		$oldArray = json_decode( $oldJson, true );
-		return self::arrayMergeRecursiveDistinct( $oldArray, $array );
+		return self::arrayMergeRecursiveDistinct( $oldArray, $array, $changed );
 	}
 
 	protected static function getServersForPatch( &$patch ) {
@@ -110,7 +114,12 @@ class TPCStorage {
 			self::chdirPatch( $server, $patch, $fn );
 			if ( $renderFile ) {
 				// If this file already exists, merge its copy on the first server.
-				$array = self::mergeOldFile( $server, $array, $fn );
+				$changed = false;
+				$array = self::mergeOldFile( $server, $array, $fn, $changed );
+				if( !$changed ) {
+					// Nothing to do here.
+					return;
+				}
 				$json = json_encode( (object)$array, TPC_JSON_OPTS );
 				$renderFile = false;
 				$ret = crc32( $json );
