@@ -45,8 +45,10 @@ $wgAutoloadClasses['TPCStorage'] = "$dir/TPCStorage.php";
 $wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
 
 $wgExtensionMessagesFiles['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.i18n.php";
+// --------
 
 // TPC Hooks
+// ---------
 $hookDir = "$dir/hooks";
 require_once("$hookDir/TPCBinhack.php");
 require_once("$hookDir/TPCBreakpoint.php");
@@ -58,8 +60,10 @@ require_once("$hookDir/TPCVersions.php");
 
 require_once("$hookDir/TPCFmtMsg.php");
 require_once("$hookDir/TPCFmtSpells.php");
+// ---------
 
 // Templates
+// --------
 $templateDir = "$dir/templates";
 require_once("$templateDir/thcrap_servers.php");
 // --------

@@ -16,6 +16,7 @@ class TPCEvalPage extends Maintenance {
 
 		$this->addOption( 'title', 'Title of the page to evaluate', true, false );
 	}
+
 	public function execute() {
 		$text = $this->getOption( 'title' );
 		if ( !$text ) {

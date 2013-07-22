@@ -7,7 +7,7 @@
   * @author Nmlgc
   */
 
-class TouhouPatchCenter	{
+class TouhouPatchCenter {
 
 	protected static function runHooks( $hook, &$hookArray, $params ) {
 		$hook = TPCUtil::normalizeHook( $hook );
@@ -78,7 +78,7 @@ class TouhouPatchCenter	{
 		$isWatch, $section, $flags, $revision, $status, $baseRevId
 	) {
 		$title = $article->getTitle();
-		if ( TPCPatchMap::isPatchRootPage( $title ) or TPCPatchMap::get( $title ) 	) {
+		if ( TPCPatchMap::isPatchRootPage( $title ) or TPCPatchMap::get( $title ) ) {
 			self::evalPage( $title, $content );
 		}
 		return true;

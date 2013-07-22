@@ -57,7 +57,7 @@ class TPCState
 		return $this->curFile;
 	}		
 
-	/** 
+	/**
 	  * Removes potentially dangerous characters from a file name
 	  *
 	  * @param string $fn File name
@@ -124,22 +124,25 @@ class TPCState
 
 	/**
 	  * Get a different version of the current file.
-	  */ 
+	  */
 	public function &getVersion( $version = null ) {
 		$newFN = $this->getFileName( $this->curGame, $version, $this->curFile );
 		return $this->jsonCache[ $newFN ];
 	}
 
 	public function &switchGame( $game ) {
-		return $this->jsonContents = &$this->getFile( $game );
+		$this->jsonContents = &$this->getFile( $game );
+		return $this->jsonContents;
 	}
 
 	public function &switchTopFile( $file ) {
-		return $this->jsonContents = &$this->getFile( null, $file );
+		$this->jsonContents = &$this->getFile( null, $file );
+		return $this->jsonContents;
 	}
 
 	public function &switchDataFile( $file ) {
-		return $this->jsonContents = &$this->getFile( $this->curGame, $file );
+		$this->jsonContents = &$this->getFile( $this->curGame, $file );
+		return $this->jsonContents;
 	}
 
 	public function &switchDataFilePatch( $file ) {
