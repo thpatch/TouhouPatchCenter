@@ -12,53 +12,12 @@ require_once( dirname( __FILE__ ) . "/../../../maintenance/Maintenance.php" );
 
 class TPCRebuild extends Maintenance {
 
-	// ------------ lixlpixel recursive PHP functions -------------
-	// recursiveRemoveDirectory( directory to delete, empty )
-	// expects path to directory and optional TRUE / FALSE to empty
-	// ------------------------------------------------------------
-	function recursiveRemoveDirectory( $directory, $empty = FALSE )
-	{
-		if ( substr( $directory, -1 ) == '/' ) {
-			$directory = substr( $directory, 0, -1 );
-		}
-		if ( !file_exists ( $directory ) || !is_dir ( $directory ) ) {
-			return FALSE;
-		} elseif(is_readable($directory)) {
-			$handle = opendir($directory);
-			while ( FALSE !== ( $item = readdir( $handle ) ) ) {
-				if($item != '.' && $item != '..') 	{
-					$path = $directory . '/' . $item;
-					if ( is_dir ( $path ) ) {
-						$this->recursiveRemoveDirectory( $path );
-					} else {
-						unlink( $path );
-					}
-				}
-			}
-			closedir( $handle );
-			if ( $empty == FALSE ) {
-				if ( !rmdir( $directory ) ) {
-					return FALSE;
-				}
-			}
-		}
-		return TRUE;
-	}
-	// ------------------------------------------------------------
-
 	public function clearMappings() {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->delete( 'tpc_patch_map', '*' );
 	}
 
-	public function clearServers( &$servers ) {
-		foreach ( $servers as $i ) {
-			$path = TPCServer::getServerPath( $i );
-			$this->recursiveRemoveDirectory( $path, true );
-		}
-	}
-
-	public function parseAllPatches() {
+	public function parsePatches() {
 		$patches = TPCPatchMap::getPatchRootPages();
 		$num = $patches->numRows();
 		$i = 1;
@@ -78,20 +37,15 @@ class TPCRebuild extends Maintenance {
 	}
 
 	public function rebuild() {
-		global $wgTPCServers;
-
+		TPCStorage::init();
 		$this->output( "Clearing page->patch mappings in database...\n" );
 		$this->clearMappings();
 
-		if ( $wgTPCServers ) {
-			$this->output( "Removing all files on all servers...\n" );
-			$this->clearServers( $wgTPCServers );
-		} else {
-			// $this->output
-		}
+		$this->output( "Removing all files on all servers...\n" );
+		TPCStorage::wipe();
 
 		$this->output( "Parsing all patch pages...\n" );
-		$this->parseAllPatches();
+		$this->parsePatches();
 	}
 
 	public function execute() {

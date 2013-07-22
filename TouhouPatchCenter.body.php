@@ -41,7 +41,7 @@ class TouhouPatchCenter	{
 			self::runTPCHooks( $i->name, $tpcState, $title, $i );
 		}
 
-		TPCServer::writeState( $tpcState );
+		TPCStorage::writeState( $tpcState );
 	}
 
 	public static function evalFile( Title $title ) {
@@ -67,7 +67,7 @@ class TouhouPatchCenter	{
 
 		$tpcState->addCopy( $target, $filePath );
 
-		TPCServer::writeState( $tpcState );
+		TPCStorage::writeState( $tpcState );
 	}
 
 	/**

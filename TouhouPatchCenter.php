@@ -27,10 +27,12 @@ $wgAutoloadClasses['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.body.php";
 $wgAutoloadClasses['MWScrape'] = "$dir/MWScrape.php";
 
 $wgAutoloadClasses['TPCPatchMap'] = "$dir/TPCPatchMap.php";
-$wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
 $wgAutoloadClasses['TPCParse'] = "$dir/TPCParse.php";
 $wgAutoloadClasses['TPCServer'] = "$dir/TPCServer.php";
+$wgAutoloadClasses['TPCServerLocal'] = "$dir/TPCServerLocal.php";
 $wgAutoloadClasses['TPCState'] = "$dir/TPCState.php";
+$wgAutoloadClasses['TPCStorage'] = "$dir/TPCStorage.php";
+$wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
 
 $wgExtensionMessagesFiles['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.i18n.php";
 
