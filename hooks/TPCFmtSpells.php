@@ -24,7 +24,7 @@ class TPCFmtSpells {
 		
 		$spells = &$tpcState->switchDataFile( "spells.js" );
 		if ( $name ) {
-			$spells[$id] = TPCUtil::sanitize( $name );
+			$spells[$id] = $name;
 		}
 
 		// Comments...
