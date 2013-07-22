@@ -201,7 +201,11 @@ class TPCStorage {
 					'local_path' => $i
 				);
 			}
-			self::$servers[] = new TPCServerLocal( $i );
+			if ( isset( $i['sftp_user'] ) ) {
+				self::$servers[] = new TPCServerSFTP( $i );
+			} else {
+				self::$servers[] = new TPCServerLocal( $i );
+			}
 		}
 	}
 

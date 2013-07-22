@@ -19,7 +19,14 @@ $wgExtensionCredits['other'][] = array(
 	'url'            => 'https://github.com/nmlgc/TouhouPatchCenter',
 );
 
-// --------
+// Other libraries
+// ---------------
+
+// phpseclib (required for SFTP storage back-end)
+require_once('Net/SFTP.php');
+require_once('Crypt/RSA.php');
+// ---------------
+
 // Includes
 // --------
 $dir = __DIR__;
@@ -30,6 +37,9 @@ $wgAutoloadClasses['TPCPatchMap'] = "$dir/TPCPatchMap.php";
 $wgAutoloadClasses['TPCParse'] = "$dir/TPCParse.php";
 $wgAutoloadClasses['TPCServer'] = "$dir/TPCServer.php";
 $wgAutoloadClasses['TPCServerLocal'] = "$dir/TPCServerLocal.php";
+if ( class_exists( 'Net_SFTP', false ) ) {
+	$wgAutoloadClasses['TPCServerSFTP'] = "$dir/TPCServerSFTP.php";
+}
 $wgAutoloadClasses['TPCState'] = "$dir/TPCState.php";
 $wgAutoloadClasses['TPCStorage'] = "$dir/TPCStorage.php";
 $wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
