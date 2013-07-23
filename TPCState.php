@@ -58,7 +58,7 @@ class TPCState
 	}		
 
 	/**
-	  * Removes potentially dangerous characters from a file name
+	  * Removes potentially dangerous stuff from a file name.
 	  *
 	  * @param string $fn File name
 	  * @return string Sanitized file name
@@ -66,7 +66,12 @@ class TPCState
 	public static function sanitizeFileName( $fn ) {
 		// This _will_ need to be changed once we patch Tasofro games, since they
 		// tend to use Japanese characters in their file names...
-		return preg_replace( '/[^a-z0-9\._\- ]/i', '', $fn );
+		$ret = preg_replace( '/[^a-z0-9\._\- \/]/i', '', $fn );
+
+		// Directory traversal
+		$ret = preg_replace( '/^\/|\.\.\//i', '', $fn );
+
+		return $ret;
 	}
 
 	public function init( $title ) {
