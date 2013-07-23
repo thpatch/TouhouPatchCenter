@@ -8,11 +8,17 @@
   * {{thcrap_include}}
   * {{thcrap_tl_patches}}
   * {{thcrap_tl_include}}
+  * {{thcrap_prefix_include}}
+  * {{thcrap_prefix_file_include}}
   */
 
 class TPCInclude {
 
-	public static function getTitleFromLink( &$curTitle, $str ) {
+	protected static function getGame( &$tpcState, &$temp ) {
+		return TPCUtil::dictGet( $temp->params['game'], $tpcState->getCurGame() );
+	}
+
+	public static function getTitleFromLink( &$curTitle, $str, $namespace = NS_MAIN ) {
 		// Subpage links
 		if ( $str[0] === '/' ) {
 			// Remove trailing slash
@@ -28,18 +34,15 @@ class TPCInclude {
 			return null;
 		// Full links
 		} else {
-			return Title::newFromText( $str );
+			return Title::newFromText( $str, $namespace );
 		}
 	}
 
-	public static function onTarget( &$tpcState, $title, $temp, $patch = null ) {
+	public static function onTarget( &$tpcState, $title, &$temp, $patch = null ) {
 		if ( !$title ) {
 			return true;
 		}
-		$game = TPCUtil::dictGet( $temp->params['game'] );
-		if ( !$game ) {
-			$game = $tpcState->getCurGame();
-		}
+		$game = self::getGame( $tpcState, $temp );
 		$file = TPCUtil::dictGet( $temp->params['file'] );
 		if ( !$file ) {
 			$file = TPCUtil::dictGet( $temp->params['target'] );
@@ -55,6 +58,7 @@ class TPCInclude {
 		if ( $parse and $titleID ) {
 			// Yes, this is how the MediaWiki core differentiates, too.
 			if ( $title->getNamespace() === NS_FILE ) {
+				TPCDebug::printVar( "evalFile($file)", $title );
 				TouhouPatchCenter::evalFile( $title );
 			} else {
 				TouhouPatchCenter::evalPage( $title );
@@ -87,10 +91,31 @@ class TPCInclude {
 		// TODO: This is really slow... Refactor into something that writes
 		// all languages in a single database call.
 		foreach ( $tpcState->tlPatches as $patch => $lang ) {
-			$targetTitle = self::getTitleFromLink( $title, $page . "/$lang" );
+			$targetTitle = self::getTitleFromLink( $title, "$page/$lang" );
 			self::onTarget( $tpcState, $targetTitle, $temp, $patch );
 		}
 		return true;
+	}
+
+	public static function onPrefixInclude( &$tpcState, &$title, &$temp ) {
+		if ( !isset( $tpcState->tlPatches ) ) {
+			return true;
+		}
+		$page = $temp->params[1];
+		$game = self::getGame( $tpcState, $temp );
+		$namespace = intval( TPCUtil::dictGet( $temp->params['namespace'] ) );
+		foreach ( $tpcState->tlPatches as $patch => $lang ) {
+			$fullPage = "$patch-$game-$page";
+			$targetTitle = self::getTitleFromLink( $title, $fullPage, $namespace );
+			self::onTarget( $tpcState, $targetTitle, $temp, $patch );
+		}
+		return true;
+	}
+
+	public static function onPrefixFileInclude( &$tpcState, &$title, &$temp ) {
+		$temp->params['namespace'] = NS_FILE;
+		$temp->params[1] = preg_replace( '/\//', '-', $temp->params['target'] );
+		return self::onPrefixInclude( $tpcState, $title, $temp );
 	}
 }
 
@@ -98,3 +123,5 @@ $wgTPCHooks['thcrap_target'][] = 'TPCInclude::onTarget';
 $wgTPCHooks['thcrap_include'][] = 'TPCInclude::onInclude';
 $wgTPCHooks['thcrap_tl_patches'][] = 'TPCInclude::onTLPatches';
 $wgTPCHooks['thcrap_tl_include'][] = 'TPCInclude::onTLInclude';
+$wgTPCHooks['thcrap_prefix_include'][] = 'TPCInclude::onPrefixInclude';
+$wgTPCHooks['thcrap_prefix_file_include'][] = 'TPCInclude::onPrefixFileInclude';
