@@ -21,7 +21,7 @@ class thcrap_servers {
 		$doGeoIP = function_exists( 'geoip_record_by_name' );
 
 		// Table header
-		$ret = "{| class=\"wikitable\"\n|-\n! Server\n! URL";
+		$ret = "{| class=\"wikitable\"\n|-\n! Server\n! URL\n";
 		if ( $doGeoIP ) {
 			$ret .= "\n! Location\n";
 		}
@@ -45,10 +45,10 @@ class thcrap_servers {
 				}
 				$ret .= "{$record['country_name']}, ";
 				$ret .= "{$record['continent_code']}";
+				$ret .= "\n";
 			}
-			$ret .= "\n";
 		}
-		$ret .= "\n|}";
+		$ret .= "|}";
 		return true;
 	}
 
