@@ -58,7 +58,6 @@ class TPCInclude {
 		if ( $parse and $titleID ) {
 			// Yes, this is how the MediaWiki core differentiates, too.
 			if ( $title->getNamespace() === NS_FILE ) {
-				TPCDebug::printVar( "evalFile($file)", $title );
 				TouhouPatchCenter::evalFile( $title );
 			} else {
 				TouhouPatchCenter::evalPage( $title );
@@ -125,3 +124,4 @@ $wgTPCHooks['thcrap_tl_patches'][] = 'TPCInclude::onTLPatches';
 $wgTPCHooks['thcrap_tl_include'][] = 'TPCInclude::onTLInclude';
 $wgTPCHooks['thcrap_prefix_include'][] = 'TPCInclude::onPrefixInclude';
 $wgTPCHooks['thcrap_prefix_file_include'][] = 'TPCInclude::onPrefixFileInclude';
+$wgTPCHooks['thcrap_image'][] = 'TPCInclude::onPrefixFileInclude';
