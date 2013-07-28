@@ -52,7 +52,6 @@ $wgExtensionMessagesFiles['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.i18n.ph
 $hookDir = "$dir/hooks";
 require_once("$hookDir/TPCBinhack.php");
 require_once("$hookDir/TPCBreakpoint.php");
-require_once("$hookDir/TPCFormat.php");
 require_once("$hookDir/TPCInclude.php");
 require_once("$hookDir/TPCInfo.php");
 require_once("$hookDir/TPCParseContext.php");
