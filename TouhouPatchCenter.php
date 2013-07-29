@@ -72,6 +72,7 @@ require_once("$templateDir/thcrap_servers.php");
 // ---------------
 $wgHooks['FileUpload'][] = 'TouhouPatchCenter::onFileUpload';
 $wgHooks['PageContentSaveComplete'][] = 'TouhouPatchCenter::onPageSave';
+$wgHooks['TitleMoveComplete'][] = 'TouhouPatchCenter::onTitleMoveComplete';
 $wgHooks['CanonicalNamespaces'][] = 'TouhouPatchCenter::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'TouhouPatchCenter::onDatabaseUpdate';
 // ---------------

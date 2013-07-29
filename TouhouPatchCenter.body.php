@@ -79,9 +79,9 @@ class TouhouPatchCenter {
 		}
 	}
 
-	/**
-	  * PageContentSaveComplete hook.
-	  */
+	// =====
+	// Hooks
+	// =====
 	public static function onPageSave(
 		$article, $user, $content, $summary, $isMinor,
 		$isWatch, $section, $flags, $revision, $status, $baseRevId
@@ -93,17 +93,18 @@ class TouhouPatchCenter {
 		return true;
 	}
 
-	/**
-	  * FileUpload hook.
-	  */
 	public static function onFileUpload( $file ) {
 		self::evalFile( $file->getTitle() );
 		return true;
 	}
 
-	/**
-	  * CanonicalNamespaces hook.
-	  */
+	public static function onTitleMoveComplete(
+		Title &$title, Title &$newtitle, User &$user, $oldid, $newid
+	) {
+		self::evalTitle( $newtitle );
+		return true;
+	}
+
 	public static function onCanonicalNamespaces( &$list )	{
 		global $wgTPCPatchNamespace;
 		global $wgNamespacesWithSubpages;
@@ -118,9 +119,6 @@ class TouhouPatchCenter {
 		return true;
 	}
 
-	/**
-	  * LoadExtensionSchemaUpdates hook.
-	  */
 	public static function onDatabaseUpdate( DatabaseUpdater $updater ) {
 		$dir = __DIR__;
 		$updater->addExtensionTable( 'tpc_patch_map', "$dir/tpc_patch_map.sql" );
@@ -128,4 +126,5 @@ class TouhouPatchCenter {
 		$updater->addExtensionTable( 'tpc_tl_patches', "$dir/tpc_tl_patches.sql" );
 		return true;
 	}
+	// =====
 }
