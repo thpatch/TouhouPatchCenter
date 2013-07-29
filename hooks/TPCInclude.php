@@ -77,19 +77,11 @@ class TPCInclude {
 		return self::onTarget( $tpcState, $targetTitle, $temp );
 	}
 
-	public static function onTLPatches( &$tpcState, &$title, &$temp ) {
-		$tpcState->tlPatches = $temp->params;
-		return true;
-	}
-
 	public static function onTLInclude( &$tpcState, &$title, &$temp ) {
-		if ( !isset( $tpcState->tlPatches ) ) {
-			return true;
-		}
 		$page = $temp->params[1];
 		// TODO: This is really slow... Refactor into something that writes
 		// all languages in a single database call.
-		foreach ( $tpcState->tlPatches as $patch => $lang ) {
+		foreach ( TPCTLPatches::get() as $patch => $lang ) {
 			$targetTitle = self::getTitleFromLink( $title, "$page/$lang" );
 			self::onTarget( $tpcState, $targetTitle, $temp, $patch );
 		}
@@ -97,13 +89,10 @@ class TPCInclude {
 	}
 
 	public static function onPrefixInclude( &$tpcState, &$title, &$temp ) {
-		if ( !isset( $tpcState->tlPatches ) ) {
-			return true;
-		}
 		$page = $temp->params[1];
 		$game = self::getGame( $tpcState, $temp );
 		$namespace = intval( TPCUtil::dictGet( $temp->params['namespace'] ) );
-		foreach ( $tpcState->tlPatches as $patch => $lang ) {
+		foreach ( TPCTLPatches::get() as $patch => $lang ) {
 			$fullPage = "$patch-$game-$page";
 			$targetTitle = self::getTitleFromLink( $title, $fullPage, $namespace );
 			self::onTarget( $tpcState, $targetTitle, $temp, $patch );
@@ -120,7 +109,6 @@ class TPCInclude {
 
 $wgTPCHooks['thcrap_target'][] = 'TPCInclude::onTarget';
 $wgTPCHooks['thcrap_include'][] = 'TPCInclude::onInclude';
-$wgTPCHooks['thcrap_tl_patches'][] = 'TPCInclude::onTLPatches';
 $wgTPCHooks['thcrap_tl_include'][] = 'TPCInclude::onTLInclude';
 $wgTPCHooks['thcrap_prefix_include'][] = 'TPCInclude::onPrefixInclude';
 $wgTPCHooks['thcrap_prefix_file_include'][] = 'TPCInclude::onPrefixFileInclude';

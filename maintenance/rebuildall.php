@@ -15,6 +15,7 @@ class TPCRebuild extends Maintenance {
 	public function clearMappings() {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->delete( 'tpc_patch_map', '*' );
+		$dbw->delete( 'tpc_tl_patches', '*' );
 	}
 
 	public function parsePatches() {

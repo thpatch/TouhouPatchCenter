@@ -42,6 +42,7 @@ if ( class_exists( 'Net_SFTP', false ) ) {
 }
 $wgAutoloadClasses['TPCState'] = "$dir/TPCState.php";
 $wgAutoloadClasses['TPCStorage'] = "$dir/TPCStorage.php";
+require_once("$dir/TPCTLPatches.php"); // contains a TPC hook
 $wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
 
 $wgExtensionMessagesFiles['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.i18n.php";
