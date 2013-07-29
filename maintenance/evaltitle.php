@@ -1,7 +1,7 @@
 <?php
 
 /**
-  * Simply calls TouhouPatchCenter::evalPage on a given title. :-)
+  * Simply calls TouhouPatchCenter::evalTitle on a given title. :-)
   *
   * @file
   * @author Nmlgc
@@ -9,7 +9,7 @@
 
 require_once( dirname( __FILE__ ) . "/../../../maintenance/Maintenance.php" );
 
-class TPCEvalPage extends Maintenance {
+class TPCEvalTitle extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
@@ -24,7 +24,7 @@ class TPCEvalPage extends Maintenance {
 		}
 		$title = Title::newFromText( $text );
 		if ( $title->isKnown() ) {
-			TouhouPatchCenter::evalPage( $title );
+			TouhouPatchCenter::evalTitle( $title );
 		} else {
 			$this->output( "Page '$text' doesn't exist!\n" );
 		}
@@ -32,5 +32,5 @@ class TPCEvalPage extends Maintenance {
 	}
 }
 
-$maintClass = 'TPCEvalPage';
+$maintClass = 'TPCEvalTitle';
 require_once( RUN_MAINTENANCE_IF_MAIN );

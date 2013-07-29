@@ -56,12 +56,7 @@ class TPCInclude {
 
 		$parse = TPCPatchMap::update( $title, $patch, $game, $file );
 		if ( $parse and $titleID ) {
-			// Yes, this is how the MediaWiki core differentiates, too.
-			if ( $title->getNamespace() === NS_FILE ) {
-				TouhouPatchCenter::evalFile( $title );
-			} else {
-				TouhouPatchCenter::evalPage( $title );
-			}
+			TouhouPatchCenter::evalTitle( $title );
 		}
 		return true;
 

@@ -70,6 +70,15 @@ class TouhouPatchCenter {
 		TPCStorage::writeState( $tpcState );
 	}
 
+	public static function evalTitle( Title $title ) {
+		// Yes, this is how the MediaWiki core differentiates, too.
+		if ( $title->getNamespace() === NS_FILE ) {
+			self::evalFile( $title );
+		} else {
+			self::evalPage( $title );
+		}
+	}
+
 	/**
 	  * PageContentSaveComplete hook.
 	  */
