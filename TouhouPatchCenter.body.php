@@ -25,23 +25,24 @@ class TouhouPatchCenter {
 		return self::runHooks( $hook, $wgTPCHooks, array( &$tpcState, &$title, &$temp ) );
 	}
 
-	public static function evalPage( Title &$title, $content = null ) {
-		$tpcState = new TPCState;
-		$tpcState->init( $title );
-
-		if ( !$content ) {
-			$newPage = WikiPage::factory( $title );
-			$content = $newPage->getContent();
-		}
-
+	public static function evalContent( TPCState &$tpcState, Title $title, Content &$content ) {
 		$text = $content->getNativeData();
 		$temps = MWScrape::toArray($text);
-
 		foreach ( $temps as $i ) {
 			self::runTPCHooks( $i->name, $tpcState, $title, $i );
 		}
+	}
 
-		TPCStorage::writeState( $tpcState );
+	public static function evalPage( Title &$title, $content = null ) {
+		$tpcState = new TPCState;
+		if ( $tpcState->init( $title ) ) {
+			if ( !$content ) {
+				$newPage = WikiPage::factory( $title );
+				$content = $newPage->getContent();
+			}
+			self::evalContent( $tpcState, $title, $content );
+			TPCStorage::writeState( $tpcState );
+		}
 	}
 
 	public static function evalFile( Title $fileTitle ) {
@@ -75,12 +76,12 @@ class TouhouPatchCenter {
 		}
 	}
 
-	public static function evalTitle( Title $title ) {
+	public static function evalTitle( Title $title, $content = null ) {
+		self::evalPage( $title, $content );
+
 		// Yes, this is how the MediaWiki core differentiates, too.
 		if ( $title->getNamespace() === NS_FILE ) {
 			self::evalFile( $title );
-		} else {
-			self::evalPage( $title );
 		}
 	}
 
@@ -93,7 +94,7 @@ class TouhouPatchCenter {
 	) {
 		$title = $article->getTitle();
 		if ( TPCPatchMap::isPatchRootPage( $title ) or TPCPatchMap::get( $title ) ) {
-			self::evalPage( $title, $content );
+			self::evalTitle( $title, $content );
 		}
 		return true;
 	}
