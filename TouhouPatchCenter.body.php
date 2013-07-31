@@ -44,30 +44,35 @@ class TouhouPatchCenter {
 		TPCStorage::writeState( $tpcState );
 	}
 
-	public static function evalFile( Title $title ) {
-		// Is this file already mapped to a patch?
-		$map = TPCPatchMap::get( $title );
-		if ( !$map or !$map->pm_patch ) {
-			// Nope, nothing we care about
-			return;
+	public static function evalFile( Title $fileTitle ) {
+		$pages = array( $fileTitle );
+		if ( $fileTitle->isRedirect() ) {
+			$content = WikiPage::factory( $fileTitle )->getContent();
+			$fileTitle = $content->getUltimateRedirectTarget();
+		} else {
+			// could be a target page for a redirect
+			$pages = array_merge( $fileTitle->getRedirectsHere(), $pages );
 		}
-
-		$tpcState = new TPCState;
-		$tpcState->patches = $map->pm_patch;
-
-		$tpcState->switchGame( $map->pm_game );
-
-		$localFile = wfLocalFile( $title );
+		$localFile = wfLocalFile( $fileTitle );
 		$filePath = $localFile->getLocalRefPath();
 		if ( !$filePath ) {
 			return;
 		}
 
-		$target = TPCUtil::dictGet( $map->pm_target, $title->getBaseText() );
-
-		$tpcState->addCopy( $target, $filePath );
-
-		TPCStorage::writeState( $tpcState );
+		foreach ( $pages as $i ) {
+			// Is this file already mapped to a patch?
+			$map = TPCPatchMap::get( $i );
+			if ( !$map or !$map->pm_patch ) {
+				// Nope, nothing we care about
+				continue;
+			}
+			$tpcState = new TPCState;
+			$tpcState->patches = $map->pm_patch;
+			$tpcState->switchGame( $map->pm_game );
+			$target = TPCUtil::dictGet( $map->pm_target, $i->getBaseText() );
+			$tpcState->addCopy( $target, $filePath );
+			TPCStorage::writeState( $tpcState );
+		}
 	}
 
 	public static function evalTitle( Title $title ) {
