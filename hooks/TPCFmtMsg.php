@@ -13,9 +13,11 @@
 
 class TPCFmtMsg {
 
-	const ASSIST_PREFIX = '%s (';
-	const ASSIST_POSTFIX = ')';
+	const TAB = '<l|>';
+
 	const ASSIST_TYPE = 'assist';
+	const ASSIST_PREFIX = '<t|%s (>';
+	const ASSIST_POSTFIX = ')';
 
 	const RUBY_FORMAT = '|%d,%d,%s';
 
@@ -85,7 +87,10 @@ class TPCFmtMsg {
 				$prefix = sprintf( self::ASSIST_PREFIX, $tpcState->msgAssistName );
 				$lines[0] = $prefix . $lines[0];
 
-				// TODO: Indent all following lines
+				// Indent all following lines
+				for ( $i = 1; $i < count($lines); $i++ ) {
+					$lines[$i] = self::TAB . $lines[$i];
+				}
 
 				// Postfix last line
 				$lines[count($lines) - 1] .= self::ASSIST_POSTFIX;
