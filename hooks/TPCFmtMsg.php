@@ -66,12 +66,19 @@ class TPCFmtMsg {
 		// Render specific types
 		$type = TPCUtil::dictGet( $temp->params[1] );
 
+		// h1 index hack... meh.
+		if ( $temp->params[1] === 'h1') {
+			$indexType = 'h1';
+		} else {
+			$indexType = null;
+		}
+
 		// Time index
-		$timeIndex = &$tpcState->msgTimeIndex[$type];
+		$timeIndex = &$tpcState->msgTimeIndex[$indexType];
 		if(
-			( $entry === TPCUtil::dictGet( $tpcState->msgLastEntry[$type] ) ) and
-			( $time === TPCUtil::dictGet( $tpcState->msgLastTime[$type] ) ) and
-			( $tpcState->msgLastType === $type )
+			( $entry === TPCUtil::dictGet( $tpcState->msgLastEntry[$indexType] ) ) and
+			( $time === TPCUtil::dictGet( $tpcState->msgLastTime[$indexType] ) ) and
+			( $tpcState->msgLastType === $indexType )
 		) {
 			$timeIndex++;
 		} else {
@@ -102,8 +109,7 @@ class TPCFmtMsg {
 			// but profiling tells that it hardly matters anyway...
 			self::renderRuby( $lines );
 
-			// Note that we don't do this for empty lines
-			$slot = self::formatSlot( $time, $type, $timeIndex );
+			$slot = self::formatSlot( $time, $indexType, $timeIndex );
 			$cont = &$tpcState->jsonContents[$entry][$slot];
 			$cont['lines'] = $lines;
 			// Set type... or don't, the patcher doesn't care.
@@ -112,10 +118,10 @@ class TPCFmtMsg {
 				$cont['type'] = $type;
 			}*/
 		}
-		
-		$tpcState->msgLastEntry[$type] = $entry;
-		$tpcState->msgLastTime[$type] = $time;
-		$tpcState->msgLastType = $type;
+
+		$tpcState->msgLastEntry[$indexType] = $entry;
+		$tpcState->msgLastTime[$indexType] = $time;
+		$tpcState->msgLastType = $indexType;
 		return true;
 	}
 
