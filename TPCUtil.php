@@ -52,7 +52,6 @@ class TPCUtil {
 	  * @return string Sanitized string.
 	  */
 	public static function sanitize( &$param ) {
-		$param = preg_replace( '/%/', '%%', $param );
 		// Do more MediaWiki stuff...
 		return $param;
 	}
