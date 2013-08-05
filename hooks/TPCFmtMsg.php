@@ -19,9 +19,14 @@ class TPCFmtMsg {
 		'assist' => [
 			'prefix' => '<t$%s (>',
 			'postfix' => ')'
+		],
+		'tabchar' => [
+			'prefix' => '<r$%s>',
+			'postfix' => ''
 		]
 	];
 
+	const TABREF_FORMAT = '<ts$%s>';
 	const RUBY_FORMAT = '|%d,%d,%s';
 
 	const FONT_SIZE = 7.0; // Close enough
@@ -63,6 +68,8 @@ class TPCFmtMsg {
 		if ( !preg_match( self::REGEX_CODE, $code, $m) ) {
 			return true;
 		}
+		$lang = $title->getPageLanguage();
+
 		$entry = $m['entry'];
 		$time = $m['time'];
 
@@ -94,16 +101,30 @@ class TPCFmtMsg {
 			if ( isset( self::$charTypes[$type] ) ) {
 				$typeSpec = &self::$charTypes[$type];
 				// Start line for indentation
+				$i = 0;
 				$prefix = '';
 
 				// Prefix first line
 				if ( $type === 'assist' and isset( $tpcState->msgAssistName ) ) {
 					$prefix = sprintf( $typeSpec['prefix'], $tpcState->msgAssistName );
+					$i = 1;
+				} else if ( $type === 'tabchar' and isset( $temp->params['char'] ) ) {
+					$char = wfMessage( $temp->params['char'] )->inLanguage( $lang )->plain();
+					// Add a full-width space for... spacing
+					$char .= '　';
+					$prefix = sprintf( $typeSpec['prefix'], $char );
+
+					// Write tab reference string
+					$tabref = TPCUtil::dictGet( $tpcState->tabref );
+					if ( strlen( $char ) > strlen( $tabref ) ) {
+						$tpcState->tabref = $char;
+					}
+					$i = 1;
 				}
 				$lines[0] = $prefix . $lines[0];
 
 				// Indent all following lines
-				for ( $i = 1; $i < count($lines); $i++ ) {
+				for ( $i; $i < count($lines); $i++ ) {
 					$lines[$i] = self::TAB . $lines[$i];
 				}
 
@@ -118,6 +139,11 @@ class TPCFmtMsg {
 			$slot = self::formatSlot( $time, $indexType, $timeIndex );
 			$cont = &$tpcState->jsonContents[$entry][$slot];
 			$cont['lines'] = &$lines;
+
+			// Remember the first one for tabref
+			if ( !isset( $tpcState->msgFirstLine ) ) {
+				$tpcState->msgFirstLine = &$lines[0];
+			}
 
 			// Set type... or don't, the patcher doesn't care.
 			// Don't know why the prototype versions had that in the first place...
@@ -137,6 +163,16 @@ class TPCFmtMsg {
 		return true;
 	}
 
+	public static function onMsgFooter( &$tpcState, &$title, &$temp ) {
+		if ( isset( $tpcState->msgFirstLine ) and isset( $tpcState->tabref ) ) {
+			$refStr = sprintf( self::TABREF_FORMAT, $tpcState->tabref );
+			$tpcState->msgFirstLine = $refStr . $tpcState->msgFirstLine;
+			unset( $tpcState->msgFirstLine );
+			unset( $tpcState->tabref );
+		}
+		return true;
+	}
+
 	public static function onMsgParse( &$tpcState, &$title, &$temp ) {
 		$tpcState->switchDataFilePatch( TPCUtil::dictGet( $temp->params['file'] ) );
 		return true;
@@ -145,8 +181,10 @@ class TPCFmtMsg {
 
 $wgTPCHooks['thcrap_msg'][] = 'TPCFmtMsg::onMsg';
 $wgTPCHooks['thcrap_msg_assist'][] = 'TPCFmtMsg::onMsgAssist';
+$wgTPCHooks['thcrap_msg/footer'][] = 'TPCFmtMsg::onMsgFooter';
 // "Historic templates"
 $wgTPCHooks['dt'][] = 'TPCFmtMsg::onMsg';
 $wgTPCHooks['dialogtable'][] = 'TPCFmtMsg::onMsg';
+$wgTPCHooks['dt/footer'][] = 'TPCFmtMsg::onMsgFooter';
 $wgTPCHooks['msgassist'][] = 'TPCFmtMsg::onMsgAssist';
 $wgTPCHooks['msgparse'][] = 'TPCFmtMsg::onMsgParse';
