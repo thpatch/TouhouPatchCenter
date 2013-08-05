@@ -13,11 +13,14 @@
 
 class TPCFmtMsg {
 
-	const TAB = '<l|>';
+	const TAB = '<l$>';
 
-	const ASSIST_TYPE = 'assist';
-	const ASSIST_PREFIX = '<t|%s (>';
-	const ASSIST_POSTFIX = ')';
+	static protected $charTypes = [
+		'assist' => [
+			'prefix' => '<t$%s (>',
+			'postfix' => ')'
+		]
+	];
 
 	const RUBY_FORMAT = '|%d,%d,%s';
 
@@ -63,7 +66,7 @@ class TPCFmtMsg {
 		$entry = $m['entry'];
 		$time = $m['time'];
 
-		// Render specific types
+		$lines = TPCUtil::scrapeLines( $temp->params['tl'] );
 		$type = TPCUtil::dictGet( $temp->params[1] );
 
 		// h1 index hack... meh.
@@ -85,13 +88,18 @@ class TPCFmtMsg {
 			$timeIndex = 0;
 		}
 
-		$lines = TPCUtil::scrapeLines( $temp->params['tl'] );
-
 		// Line processing
 		if ( $lines ) {
-			if ( $type === self::ASSIST_TYPE and isset( $tpcState->msgAssistName ) ) {
+			// Special types
+			if ( isset( self::$charTypes[$type] ) ) {
+				$typeSpec = &self::$charTypes[$type];
+				// Start line for indentation
+				$prefix = '';
+
 				// Prefix first line
-				$prefix = sprintf( self::ASSIST_PREFIX, $tpcState->msgAssistName );
+				if ( $type === 'assist' and isset( $tpcState->msgAssistName ) ) {
+					$prefix = sprintf( $typeSpec['prefix'], $tpcState->msgAssistName );
+				}
 				$lines[0] = $prefix . $lines[0];
 
 				// Indent all following lines
@@ -100,9 +108,7 @@ class TPCFmtMsg {
 				}
 
 				// Postfix last line
-				$lines[count($lines) - 1] .= self::ASSIST_POSTFIX;
-
-				$type = null;
+				$lines[count($lines) - 1] .= $typeSpec['postfix'];
 			}
 
 			// Yeah, maybe we should only do this based on some previous condition, 
@@ -111,7 +117,8 @@ class TPCFmtMsg {
 
 			$slot = self::formatSlot( $time, $indexType, $timeIndex );
 			$cont = &$tpcState->jsonContents[$entry][$slot];
-			$cont['lines'] = $lines;
+			$cont['lines'] = &$lines;
+
 			// Set type... or don't, the patcher doesn't care.
 			// Don't know why the prototype versions had that in the first place...
 			/*if( $type ) {
