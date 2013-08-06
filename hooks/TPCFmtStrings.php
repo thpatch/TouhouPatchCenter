@@ -1,0 +1,49 @@
+<?php
+
+/**
+  * Parser for hardcoded strings.
+  * Registers the following template hooks:
+  *
+  * {{thcrap_string_def}}
+  * {{thcrap_string_loc}}
+  *
+  * @file
+  * @author Nmlgc
+  */
+
+class TPCFmtStrings {
+
+	public static function onDef( &$tpcState, &$title, &$temp ) {
+		$id = TPCUtil::dictGet( $temp->params['id'] );
+		$tl = TPCUtil::dictGet( $temp->params['tl'] );
+		if ( empty( $id ) or empty( $tl ) ) {
+			return true;
+		}
+		$stringdefs = &$tpcState->switchFile( "stringdefs.js" );
+		$stringdefs[$id] = $tl;
+		return true;
+	}
+
+	public static function onLoc( &$tpcState, &$title, &$temp ) {
+		$addr = TPCUtil::dictGet( $temp->params['addr'] );
+		$id = TPCUtil::dictGet( $temp->params['id'] );
+		if ( empty( $addr ) or empty( $id ) ) {
+			return true;
+		}
+		$stringdefs = &$tpcState->switchGameFile( "stringlocs.js" );
+
+		$builds = TPCParse::parseVer( $addr );
+		foreach ( $builds as $build => $val ) {
+			if ( !empty( $val ) ) {
+				$buildFile = &$tpcState->getBuild( $build );
+				$buildFile[$val] = $id;
+			}
+		}
+		return true;
+	}
+}
+$wgTPCHooks['thcrap_string_def'][] = 'TPCFmtStrings::onDef';
+$wgTPCHooks['thcrap_string_loc'][] = 'TPCFmtStrings::onLoc';
+// Short versions
+$wgTPCHooks['stringdef'][] = 'TPCFmtStrings::onDef';
+$wgTPCHooks['stringloc'][] = 'TPCFmtStrings::onLoc';
