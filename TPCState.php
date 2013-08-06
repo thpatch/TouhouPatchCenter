@@ -11,20 +11,22 @@
 class TPCState
 {
 	/** 
-	  * By assigning different names to $patches, $game and $file,
+	  * By assigning different names to $patches, $game, $file and $build,
 	  * one can access all directory levels on the server:
 	  *
-	  * +----------+-------+-------+----------------------+
-	  * | $patches | $game | $file | Result               |
-	  * +----------+-------+-------+----------------------+
-	  * |          |       | set   | /filename            |
-	  * | set      |       | set   | /patch/filename      |
-	  * | set      | set   |       | /patch/game.ver.js   |
-	  * | set      | set   | set   | /patch/game/filename |
-	  * +----------+-------+-------+----------------------+
-	  * 
-	  * Currently, $version is only applied with the main file of a game,
-	  * i.e. if $file is not set.
+	  * +----------+-------+-------+--------+--------------------------------+
+	  * | $patches | $game | $file | $build | Result                         |
+	  * +----------+-------+-------+--------+--------------------------------+
+	  * |          |       | set   |        | /filename.ext                  |
+	  * | set      |       | set   |        | /patch/filename.ext            |
+	  * | set      |       | set   | set    | /patch/filename.build.ext      |
+	  * | set      | set   |       |        | /patch/game.js                 |
+	  * | set      | set   |       | set    | /patch/game.build.js           |
+	  * | set      | set   | set   |        | /patch/game/filename.ext       |
+	  * | set      | set   | set   | set    | /patch/game/filename.build.ext |
+	  * +----------+-------+-------+--------+--------------------------------+
+	  *
+	  * "ext" contains every extension of a file name, beginning from the first dot.
 	  */
 
 	// Patch main file - not included in the $jsonCache to avoid the risk of
@@ -101,16 +103,24 @@ class TPCState
 		$this->curBuild = self::sanitizeFileName( $build );
 		$this->curFile = self::sanitizeFileName( $file );
 
-		if ( $this->curGame ) {
-			if ( $this->curFile ) {
-				return $this->curGame . '/' . $this->curFile;
-			} else if ( $this->curBuild ) {
-				return $this->curGame . '.' . $this->curBuild . '.js';
-			} else {
-				return $this->curGame . '.js';
+		if ( !$this->curFile ) {
+			$fn = $this->curGame . '.js';
+		} else {
+			$fn = $this->curFile;
+		}
+
+		if ( $this->curBuild ) {
+			$dotPos = strpos( $fn, '.' );
+			if ( $dotPos === false ) {
+				$dotPos = strlen( $fn );
 			}
-		} else /* if ( $this->curFile ) */ {
-			return $this->curFile;
+			$fn = substr( $fn, 0, $dotPos ) . ".$build" . substr( $fn, $dotPos );
+		}
+
+		if ( $this->curGame and $this->curFile ) {
+			return $this->curGame . '/' . $fn;
+		} else {
+			return $fn;
 		}
 	}
 
