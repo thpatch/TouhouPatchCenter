@@ -18,7 +18,7 @@ class TPCParseContext {
 	}
 
 	static public function onPatchFile( &$tpcState, $title, $temp ) {
-		return $tpcState->switchDataFilePatch( $temp->params[1] );
+		return $tpcState->switchGameFilePatch( $temp->params[1] );
 	}
 }
 

@@ -19,8 +19,8 @@ class TPCBinhack {
 			return true;
 		}
 		// Switch back to the top file of the current game
-		$tpcState->switchDataFile( null );
-		$baseFile = &$tpcState->getVersion( null );
+		$tpcState->switchGameFile( null );
+		$baseFile = &$tpcState->getBuild( null );
 		
 		$title = TPCUtil::dictGet( $temp->params['title'] );
 		$addr = TPCUtil::dictGet( $temp->params['addr'] );
@@ -31,20 +31,20 @@ class TPCBinhack {
 
 		// TODO: Refactor into something callback-based?
 		$addr = TPCParse::parseVer( $addr );
-		foreach ( $addr as $ver => $val ) {
-			$verFile = &$tpcState->getVersion( $ver );
+		foreach ( $addr as $build => $val ) {
+			$buildFile = &$tpcState->getBuild( $build );
 			preg_match_all( '/0x[0-9a-f]+/i', $val, $valArray);
 			if ( !empty( $valArray[0] ) ) {
-				$verFile['binhacks'][$id]['addr'] = $valArray[0];
+				$buildFile['binhacks'][$id]['addr'] = $valArray[0];
 			}
 		}
 
 		$code = TPCParse::parseVer( $code );
-		foreach ( $code as $ver => $val ) {
-			$verFile = &$tpcState->getVersion( $ver );
-			$val = preg_replace('/\s+/', '', $val);
+		foreach ( $code as $build => $val ) {
+			$buildFile = &$tpcState->getBuild( $build );
+			$val = preg_replace( '/\s+/', '', $val );
 			if ( !empty( $val ) ) {
-				$verFile['binhacks'][$id]['code'] = $val;
+				$buildFile['binhacks'][$id]['code'] = $val;
 			}
 		}
 

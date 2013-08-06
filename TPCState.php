@@ -41,7 +41,7 @@ class TPCState
 	public $copyCache = array();
 
 	protected $curGame = null;
-	protected $curVersion = null;
+	protected $curBuild = null;
 	protected $curFile = null;
 
 	// Array of patches the current state will be stored in
@@ -92,20 +92,20 @@ class TPCState
 	}
 
 	/**
-	  * Combines any permutation of $game, $version and $file
+	  * Combines any permutation of $game, $build and $file
 	  * to a complete, patch-relative file name.
 	 */
-	public function getFileName( $game, $version, $file ) {
+	public function getFileName( $game, $build, $file ) {
 		// Wave the magic wand
 		$this->curGame = self::sanitizeFileName( $game );
-		$this->curVersion = self::sanitizeFileName( $version );
+		$this->curBuild = self::sanitizeFileName( $build );
 		$this->curFile = self::sanitizeFileName( $file );
 
 		if ( $this->curGame ) {
 			if ( $this->curFile ) {
 				return $this->curGame . '/' . $this->curFile;
-			} else if ( $this->curVersion) {
-				return $this->curGame . '.' . $this->curVersion . '.js';
+			} else if ( $this->curBuild ) {
+				return $this->curGame . '.' . $this->curBuild . '.js';
 			} else {
 				return $this->curGame . '.js';
 			}
@@ -128,10 +128,10 @@ class TPCState
 	}
 
 	/**
-	  * Get a different version of the current file.
+	  * Get a different build of the current file.
 	  */
-	public function &getVersion( $version = null ) {
-		$newFN = $this->getFileName( $this->curGame, $version, $this->curFile );
+	public function &getBuild( $build = null ) {
+		$newFN = $this->getFileName( $this->curGame, $build, $this->curFile );
 		return $this->jsonCache[ $newFN ];
 	}
 
@@ -140,18 +140,18 @@ class TPCState
 		return $this->jsonContents;
 	}
 
-	public function &switchTopFile( $file ) {
+	public function &switchFile( $file ) {
 		$this->jsonContents = &$this->getFile( null, $file );
 		return $this->jsonContents;
 	}
 
-	public function &switchDataFile( $file ) {
+	public function &switchGameFile( $file ) {
 		$this->jsonContents = &$this->getFile( $this->curGame, $file );
 		return $this->jsonContents;
 	}
 
-	public function &switchDataFilePatch( $file ) {
-		return $this->switchDataFile( $file . '.jdiff' );
+	public function &switchGameFilePatch( $file ) {
+		return $this->switchGameFile( $file . '.jdiff' );
 	}
 
 	public function addCopy( $target, $source ) {

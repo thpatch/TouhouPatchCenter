@@ -19,23 +19,23 @@ class TPCBreakpoint {
 			return true;
 		}
 		// Switch back to the top file of the current game
-		$tpcState->switchDataFile( null );
+		$tpcState->switchGameFile( null );
 
 		foreach ( $temp->params as $key => $val ) {
 			if ( $key === "type" ) {
 				// nope, have that one already
 				continue;
 			}
-			$versions = TPCParse::parseVer( $val );
-			foreach ( $versions as $ver => $val ) {
-				$verFile = &$tpcState->getVersion( $ver );
+			$builds = TPCParse::parseVer( $val );
+			foreach ( $builds as $build => $val ) {
+				$buildFile = &$tpcState->getBuild( $build );
 				$val = trim( $val );
 				if ( $val == "false" ) {
 					$val = false;
 				} else if ( $val == "true" ) {
 					$val = true;
 				}
-				$verFile['breakpoints'][$type][$key] = $val;
+				$buildFile['breakpoints'][$type][$key] = $val;
 			}
 		}
 		return true;

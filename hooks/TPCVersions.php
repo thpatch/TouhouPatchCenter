@@ -14,7 +14,7 @@
 class TPCVersions {
 
 	public static function onVerInfoHeader( &$tpcState, $title, $temp ) {
-		$tpcState->switchTopFile( "versions.js" );
+		$tpcState->switchFile( "versions.js" );
 		return true;
 	}
 

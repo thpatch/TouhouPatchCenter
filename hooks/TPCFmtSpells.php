@@ -22,7 +22,7 @@ class TPCFmtSpells {
 		// In-game ID starts from 0
 		$id = intval( $id ) - 1;
 		
-		$spells = &$tpcState->switchDataFile( "spells.js" );
+		$spells = &$tpcState->switchGameFile( "spells.js" );
 		if ( $name ) {
 			$spells[$id] = $name;
 		}
@@ -30,7 +30,7 @@ class TPCFmtSpells {
 		// Comments...
 		foreach ( $temp->params as $key => $val ) {
 			if ( !strncasecmp( $key, "comment_", 8 ) and $val ) {
-				$spellcomments = &$tpcState->switchDataFile( "spellcomments.js" );
+				$spellcomments = &$tpcState->switchGameFile( "spellcomments.js" );
 				$cmt = &$spellcomments[$id];
 				$lines = TPCUtil::scrapeLines( $val );
 				$cmt[$key] = $lines;

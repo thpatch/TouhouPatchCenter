@@ -174,7 +174,7 @@ class TPCFmtMsg {
 	}
 
 	public static function onMsgParse( &$tpcState, &$title, &$temp ) {
-		$tpcState->switchDataFilePatch( TPCUtil::dictGet( $temp->params['file'] ) );
+		$tpcState->switchGameFilePatch( TPCUtil::dictGet( $temp->params['file'] ) );
 		return true;
 	}
 }
