@@ -26,7 +26,7 @@ class TPCFmtMsg {
 		]
 	];
 
-	const TABREF_FORMAT = '<ts$%s>';
+	const TABREF_FORMAT = '<ts%s>';
 	const RUBY_FORMAT = '|%d,%d,%s';
 
 	const FONT_SIZE = 7.0; // Close enough
@@ -115,9 +115,11 @@ class TPCFmtMsg {
 					$prefix = sprintf( $typeSpec['prefix'], $char );
 
 					// Write tab reference string
-					$tabref = TPCUtil::dictGet( $tpcState->tabref );
-					if ( strlen( $char ) > strlen( $tabref ) ) {
-						$tpcState->tabref = $char;
+					if ( !isset ( $tpcState->tabref ) ) {
+						$tpcState->tabref = array();
+					}
+					if ( !in_array( $char, $tpcState->tabref ) ) {
+						$tpcState->tabref[] = $char;
 					}
 					$i = 1;
 				}
@@ -165,7 +167,11 @@ class TPCFmtMsg {
 
 	public static function onMsgFooter( &$tpcState, &$title, &$temp ) {
 		if ( isset( $tpcState->msgFirstLine ) and isset( $tpcState->tabref ) ) {
-			$refStr = sprintf( self::TABREF_FORMAT, $tpcState->tabref );
+			$tabrefStr = null;
+			foreach ( $tpcState->tabref as $char ) {
+				$tabrefStr .= '$' . $char;
+			}
+			$refStr = sprintf( self::TABREF_FORMAT, $tabrefStr );
 			$tpcState->msgFirstLine = $refStr . $tpcState->msgFirstLine;
 			unset( $tpcState->msgFirstLine );
 			unset( $tpcState->tabref );
