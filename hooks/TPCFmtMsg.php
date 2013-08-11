@@ -110,8 +110,8 @@ class TPCFmtMsg {
 					$i = 1;
 				} else if ( $type === 'tabchar' and isset( $temp->params['char'] ) ) {
 					$char = wfMessage( $temp->params['char'] )->inLanguage( $lang )->plain();
-					// Add a full-width space for... spacing
-					$char .= '　';
+					// Add two spaces for... spacing
+					$char .= '  ';
 					$prefix = sprintf( $typeSpec['prefix'], $char );
 
 					// Write tab reference string
