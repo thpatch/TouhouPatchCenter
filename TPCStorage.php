@@ -134,7 +134,8 @@ class TPCStorage {
 			self::chdirPatch( $server, $patch, $target );
 			$server->copy( $target, $source );
 		}
-		return filemtime( $source );
+		$sourceData = file_get_contents( $source );
+		return crc32( $sourceData );
 	}
 
 	/**
