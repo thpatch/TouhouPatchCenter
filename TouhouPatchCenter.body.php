@@ -77,11 +77,11 @@ class TouhouPatchCenter {
 	}
 
 	public static function evalTitle( Title $title, $content = null ) {
-		self::evalPage( $title, $content );
-
 		// Yes, this is how the MediaWiki core differentiates, too.
 		if ( $title->getNamespace() === NS_FILE ) {
 			self::evalFile( $title );
+		} else {
+			self::evalPage( $title, $content );
 		}
 	}
 
@@ -93,7 +93,7 @@ class TouhouPatchCenter {
 		$isWatch, $section, $flags, $revision, $status, $baseRevId
 	) {
 		$title = $article->getTitle();
-		if ( TPCPatchMap::isPatchRootPage( $title ) or TPCPatchMap::get( $title ) ) {
+		if ( TPCPatchMap::isPatchPage( $title ) ) {
 			self::evalTitle( $title, $content );
 		}
 		return true;

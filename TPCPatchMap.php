@@ -89,6 +89,10 @@ class TPCPatchMap {
 		return ( $title->getNamespace() === $wgTPCPatchNamespace and !$title->isSubpage() );
 	}
 
+	public static function isPatchPage( $title ) {
+		return self::isPatchRootPage( $title ) or self::get( $title );
+	}
+
 	public static function getPatchRootPages() {
 		global $wgTPCPatchNamespace;
 		$dbr = wfGetDB( DB_SLAVE );
