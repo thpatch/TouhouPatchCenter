@@ -67,6 +67,6 @@ class TPCUtil {
 
 		$param = TPCUtil::sanitize( $param );
 
-		return preg_split( $REGEX_LINE, $param, null, PREG_SPLIT_NO_EMPTY );
+		return preg_split( $REGEX_LINE, $param, null );
 	}
 }
