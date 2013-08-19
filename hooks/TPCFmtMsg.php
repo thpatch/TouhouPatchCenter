@@ -17,7 +17,7 @@ class TPCFmtMsg {
 
 	static protected $charTypes = [
 		'assist' => [
-			'prefix' => '<t$%s (>',
+			'prefix' => '<t$%s >(',
 			'postfix' => ')'
 		],
 		'tabchar' => [
@@ -127,7 +127,7 @@ class TPCFmtMsg {
 
 				// Indent all following lines
 				for ( $i; $i < count($lines); $i++ ) {
-					$lines[$i] = self::TAB . $lines[$i];
+					$lines[$i] = self::TAB . ' ' . $lines[$i];
 				}
 
 				// Postfix last line
