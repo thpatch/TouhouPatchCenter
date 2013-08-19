@@ -21,7 +21,7 @@ class TPCFmtSpells {
 		$owner = TPCUtil::dictGet( $temp->params['owner'] );
 		// In-game ID starts from 0
 		$id = intval( $id ) - 1;
-		
+
 		$spells = &$tpcState->switchGameFile( "spells.js" );
 		if ( $name ) {
 			$spells[$id] = $name;
@@ -46,5 +46,5 @@ class TPCFmtSpells {
 }
   
 $wgTPCHooks['thcrap_spell'][] = 'TPCFmtSpells::onSpell';
-// "Historic templates"
+// Short versions
 $wgTPCHooks['spell_card'][] = 'TPCFmtSpells::onSpell';

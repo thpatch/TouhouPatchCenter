@@ -188,7 +188,7 @@ class TPCFmtMsg {
 $wgTPCHooks['thcrap_msg'][] = 'TPCFmtMsg::onMsg';
 $wgTPCHooks['thcrap_msg_assist'][] = 'TPCFmtMsg::onMsgAssist';
 $wgTPCHooks['thcrap_msg/footer'][] = 'TPCFmtMsg::onMsgFooter';
-// "Historic templates"
+// Short versions
 $wgTPCHooks['dt'][] = 'TPCFmtMsg::onMsg';
 $wgTPCHooks['dialogtable'][] = 'TPCFmtMsg::onMsg';
 $wgTPCHooks['dt/footer'][] = 'TPCFmtMsg::onMsgFooter';
