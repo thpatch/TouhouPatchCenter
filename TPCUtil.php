@@ -65,6 +65,11 @@ class TPCUtil {
 	public static function scrapeLines( &$param ) {
 		$REGEX_LINE = '#<br\s*/?>|\n#';
 
+		// Important! Breaks patch stacking otherwise!
+		if ( strlen( $param ) == 0 ) {
+			return null;
+		}
+
 		$param = TPCUtil::sanitize( $param );
 
 		return preg_split( $REGEX_LINE, $param, null );
