@@ -27,12 +27,8 @@ class TPCFmtMsg {
 	];
 
 	const TABREF_FORMAT = '<ts%s>';
-	const RUBY_FORMAT = '|%d,%d,%s';
-
-	const FONT_SIZE = 7.0; // Close enough
 
 	const REGEX_CODE = '/#(?P<entry>[\d]+)@(?P<time>[\d]+)/';
-	const REGEX_RUBY = '/\{\{\s*ruby(-ja)*\s*\|(.*?)\|\s*(.*?)\s*\}\}/';
 
 	public static function formatSlot( &$time, &$type, &$index ) {
 		// Much faster than sprintf, by the way
@@ -43,23 +39,11 @@ class TPCFmtMsg {
 		}
 	}
 
-	protected static function renderRuby( &$lines) {
+	protected static function renderRuby( &$lines ) {
+		$REGEX_RUBY_PAT = '/\{\{\s*ruby(-ja)*\s*\|(.*?)\|\s*(.*?)\s*\}\}/';
+		$REGEX_RUBY_REP = '<f$\2$\3>';
 		foreach ( $lines as $key => &$i ) {
-			if ( !preg_match( self::REGEX_RUBY, $i, $m, PREG_OFFSET_CAPTURE) ) {
-				continue;
-			}
-			$i = 
-				substr( $i, 0, $m[0][1] ) .
-				$m[2][0] .
-				substr( $i, $m[0][1] + strlen( $m[0][0] ) )
-			;
-
-			$baseLen = $m[3][1] - $m[2][1];
-			$start = $m[0][1] * self::FONT_SIZE;
-			$span = ( $baseLen / strlen( $m[3][0] ) ) * self::FONT_SIZE;
-
-			$rubyLine = sprintf( self::RUBY_FORMAT, $start, $span, $m[3][0] );
-			array_splice( $lines, $key, 0, $rubyLine );
+			$lines[$key] = preg_replace( $REGEX_RUBY_PAT, $REGEX_RUBY_REP, $i );
 		}
 	}
 
