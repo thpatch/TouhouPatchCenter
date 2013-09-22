@@ -48,7 +48,7 @@ class TPCInfo {
 		foreach ( $temp->params as $key => $val ) {
 			switch ( $key ) {
 				case 'latest':
-					$vars = preg_split( '/\s*,\s*/', $val, null, PREG_SPLIT_NO_EMPTY );
+					$vars = TPCParse::parseCSV( $val );
 					$cont[$key] = $vars;
 					break;
 				default:

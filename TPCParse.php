@@ -57,6 +57,17 @@ class TPCParse {
 	}
 
 	/**
+	  * Parses a CSV string into an array.
+	  *
+	  * @param string &$param The string to split.
+	  * @return array Array of lines.
+	  */
+	public static function parseCSV( &$param ) {
+		$REGEX_CSV = '/\s*,\s*/';
+		return preg_split( $REGEX_CSV, $param, null, PREG_SPLIT_NO_EMPTY );
+	}
+
+	/**
 	  * Parses a wikitext string into an array of lines.
 	  *
 	  * @param string &$param The string to split.
@@ -88,7 +99,7 @@ class TPCParse {
 	  */	
 	public static function parseFunc( $str ) {
 		if ( preg_match( '/(.+)\s*\((.+)\)/', $str, $func ) ) {
-			$vars = preg_split( '/\s*,\s*/', $func[2], null, PREG_SPLIT_NO_EMPTY );
+			$vars = self::parseCSV( $func[2] );
 			return array( $func[1] => $vars );
 		}
 		return null;
