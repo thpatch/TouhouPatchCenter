@@ -30,6 +30,10 @@ class TPCInfo {
 				$patchJS['url_engine'] = $wgTPCServerEngineURL;
 			}
 		}
+		if ( isset( $temp->params['dependencies'] ) ) {
+			$vars = TPCParse::parseCSV( $temp->params['dependencies'] );
+			$patchJS['dependencies'] = $vars;
+		}
 		return true;
 	}
 
