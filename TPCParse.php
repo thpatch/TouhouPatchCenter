@@ -57,6 +57,23 @@ class TPCParse {
 	}
 
 	/**
+	  * Parses a wikitext string into an array of lines.
+	  *
+	  * @param string &$param The string to split.
+	  * @return array Array of lines.
+	  */
+	public static function parseLines( &$param ) {
+		$REGEX_LINE = '#<br\s*/?>|\n#';
+
+		// Important! Breaks patch stacking otherwise!
+		if ( strlen( $param ) == 0 ) {
+			return null;
+		}
+		$param = TPCUtil::sanitize( $param );
+		return preg_split( $REGEX_LINE, $param, null );
+	}
+
+	/**
 	  * Parses function calls. For example,
 	  *
 	  * 	parseFunc( "util_xor(0x77, 7, 16)" );

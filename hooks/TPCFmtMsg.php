@@ -57,7 +57,7 @@ class TPCFmtMsg {
 		$entry = $m['entry'];
 		$time = $m['time'];
 
-		$lines = TPCUtil::scrapeLines( $temp->params['tl'] );
+		$lines = TPCParse::parseLines( $temp->params['tl'] );
 		$type = TPCUtil::dictGet( $temp->params[1] );
 
 		// h1 index hack... meh.

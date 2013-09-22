@@ -32,7 +32,7 @@ class TPCFmtSpells {
 			if ( !strncasecmp( $key, "comment_", 8 ) and $val ) {
 				$spellcomments = &$tpcState->switchGameFile( "spellcomments.js" );
 				$cmt = &$spellcomments[$id];
-				$lines = TPCUtil::scrapeLines( $val );
+				$lines = TPCParse::parseLines( $val );
 				$cmt[$key] = $lines;
 				// Resolve owner in the correct language
 				if ( $owner and !isset( $cmt['owner'] ) ) {

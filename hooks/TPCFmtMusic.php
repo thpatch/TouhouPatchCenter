@@ -39,7 +39,7 @@ class TPCFmtMusic {
 			$themes[$id] = $idText;
 		}
 
-		$tl = TPCUtil::scrapeLines( $tl );
+		$tl = TPCParse::parseLines( $tl );
 		foreach ( $tl as $i ) {
 			$test = trim( $i, " 　@" );
 			if ( !empty( $test ) ) {

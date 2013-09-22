@@ -55,23 +55,4 @@ class TPCUtil {
 		// Do more MediaWiki stuff...
 		return $param;
 	}
-
-	/**
-	  * Scrapes a wikitext string into an array of lines.
-	  *
-	  * @param string &$param The string to split.
-	  * @return array Array of lines.
-	  */
-	public static function scrapeLines( &$param ) {
-		$REGEX_LINE = '#<br\s*/?>|\n#';
-
-		// Important! Breaks patch stacking otherwise!
-		if ( strlen( $param ) == 0 ) {
-			return null;
-		}
-
-		$param = TPCUtil::sanitize( $param );
-
-		return preg_split( $REGEX_LINE, $param, null );
-	}
 }
