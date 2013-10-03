@@ -27,7 +27,7 @@ class TouhouPatchCenter {
 
 	public static function evalContent( TPCState &$tpcState, Title $title, Content &$content ) {
 		$text = $content->getNativeData();
-		$temps = MWScrape::toArray($text);
+		$temps = MWScrape::toArray( $text );
 		foreach ( $temps as $i ) {
 			self::runTPCHooks( $i->name, $tpcState, $title, $i );
 		}
@@ -88,9 +88,9 @@ class TouhouPatchCenter {
 	// =====
 	// Hooks
 	// =====
-	public static function onPageSave(
+	public static function onPageContentSaveComplete(
 		$article, $user, $content, $summary, $isMinor,
-		$isWatch, $section, $flags, $revision, $status, $baseRevId
+		$null1, $null2, $flags, $revision, $status, $baseRevId
 	) {
 		$title = $article->getTitle();
 		if ( TPCPatchMap::isPatchPage( $title ) ) {

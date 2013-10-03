@@ -73,7 +73,7 @@ require_once("$templateDir/thcrap_servers.php");
 // MediaWiki hooks
 // ---------------
 $wgHooks['FileUpload'][] = 'TouhouPatchCenter::onFileUpload';
-$wgHooks['PageContentSaveComplete'][] = 'TouhouPatchCenter::onPageSave';
+$wgHooks['PageContentSaveComplete'][] = 'TouhouPatchCenter::onPageContentSaveComplete';
 $wgHooks['TitleMoveComplete'][] = 'TouhouPatchCenter::onTitleMoveComplete';
 $wgHooks['CanonicalNamespaces'][] = 'TouhouPatchCenter::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'TouhouPatchCenter::onDatabaseUpdate';
@@ -85,7 +85,7 @@ $wgTPCPatchNamespace = 238;
 // Other constants
 if ( version_compare( PHP_VERSION, '5.4.0' ) >= 0 ) {
 	define( 'TPC_JSON_OPTS', 
-		JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+		JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
 } else {
 	define( 'TPC_JSON_OPTS', 0 );
 }

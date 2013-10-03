@@ -41,13 +41,10 @@ class TPCServerSFTP extends TPCServer {
 		}
 
 		$this->sftp = new Net_SFTP( $sftp_host );
-
 		if ( $sftp_pass ) {
 			$ret = $this->sftp->login( $sftp_user, $sftp_pass );
-		} else if ( $key ) {
-			$ret = $this->sftp->login( $sftp_user, $key );
 		} else {
-			$ret = $this->sftp->login( $sftp_user );
+			$ret = $this->sftp->login( $sftp_user, $key );
 		}
 
 		if ( $local_path ) {
