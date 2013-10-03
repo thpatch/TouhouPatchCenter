@@ -19,17 +19,17 @@ $wgExtensionCredits['other'][] = array(
 	'url'            => 'https://github.com/nmlgc/TouhouPatchCenter',
 );
 
-// Other libraries
-// ---------------
-
-// phpseclib (required for SFTP storage back-end)
-require_once('Net/SFTP.php');
-require_once('Crypt/RSA.php');
-// ---------------
-
 // Includes
 // --------
 $dir = __DIR__;
+
+// Packages included by Composer, and our classes that need them
+if ( is_readable( "$dir/vendor/autoload.php" ) ) {
+	require_once("$dir/vendor/autoload.php");
+
+	$wgAutoloadClasses['TPCServerSFTP'] = "$dir/TPCServerSFTP.php";
+}
+
 $wgAutoloadClasses['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.body.php";
 $wgAutoloadClasses['MWScrape'] = "$dir/MWScrape.php";
 
@@ -37,9 +37,6 @@ $wgAutoloadClasses['TPCPatchMap'] = "$dir/TPCPatchMap.php";
 $wgAutoloadClasses['TPCParse'] = "$dir/TPCParse.php";
 $wgAutoloadClasses['TPCServer'] = "$dir/TPCServer.php";
 $wgAutoloadClasses['TPCServerLocal'] = "$dir/TPCServerLocal.php";
-if ( class_exists( 'Net_SFTP', false ) ) {
-	$wgAutoloadClasses['TPCServerSFTP'] = "$dir/TPCServerSFTP.php";
-}
 $wgAutoloadClasses['TPCState'] = "$dir/TPCState.php";
 $wgAutoloadClasses['TPCStorage'] = "$dir/TPCStorage.php";
 require_once("$dir/TPCTLPatches.php"); // contains a TPC hook
