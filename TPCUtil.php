@@ -52,6 +52,10 @@ class TPCUtil {
 	  * @return string Sanitized string.
 	  */
 	public static function sanitize( &$param ) {
+		// Remove {{lang}} wrappers
+		$REGEX_LANG_PAT = '/\{\{\s*lang*\s*\|.*?\|\s*(.*?)\s*\}\}/i';
+		$REGEX_LANG_REP = '\1';
+		$param = preg_replace( $REGEX_LANG_PAT, $REGEX_LANG_REP, $param );
 		// Do more MediaWiki stuff...
 		return $param;
 	}
