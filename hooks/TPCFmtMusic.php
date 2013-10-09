@@ -36,7 +36,7 @@ class TPCFmtMusic {
 		} while ( $idContent and $idTitle = $idContent->getRedirectTarget() );
 		$idText = $idPage->getText();
 		if ( $idText ) {
-			$themes[$id] = $idText;
+			$themes[$id] = TPCUtil::sanitize( $idText );
 		}
 
 		$tl = TPCParse::parseLines( $tl );
