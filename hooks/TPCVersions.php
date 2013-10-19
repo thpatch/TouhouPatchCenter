@@ -41,3 +41,5 @@ $wgTPCHooks['thcrap_version_info/header'][] = 'TPCVersions::onVerInfoHeader';
 $wgTPCHooks['thcrap_ver_info/header'][] = 'TPCVersions::onVerInfoHeader';
 $wgTPCHooks['thcrap_version_info'][] = 'TPCVersions::onVerInfo';
 $wgTPCHooks['thcrap_ver_info'][] = 'TPCVersions::onVerInfo';
+$wgTPCRestrictedTemplates[] = 'thcrap_version_info';
+$wgTPCRestrictedTemplates[] = 'thcrap_ver_info';

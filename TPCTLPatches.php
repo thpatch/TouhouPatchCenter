@@ -46,3 +46,4 @@ class TPCTLPatches {
 }
 
 $wgTPCHooks['thcrap_tl_patches'][] = 'TPCTLPatches::onTLPatches';
+$wgTPCRestrictedTemplates[] = 'thcrap_tl_patches';

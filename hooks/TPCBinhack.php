@@ -55,3 +55,4 @@ class TPCBinhack {
 }
 
 $wgTPCHooks['thcrap_binhack'][] = 'TPCBinhack::onBinhack';
+$wgTPCRestrictedTemplates[] = 'thcrap_binhack';

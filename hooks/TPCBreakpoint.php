@@ -43,3 +43,4 @@ class TPCBreakpoint {
 }
 
 $wgTPCHooks['thcrap_breakpoint'][] = 'TPCBreakpoint::onBreakpoint';
+$wgTPCRestrictedTemplates[] = 'thcrap_breakpoint';

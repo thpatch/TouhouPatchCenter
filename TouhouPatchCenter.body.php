@@ -88,6 +88,26 @@ class TouhouPatchCenter {
 	// =====
 	// Hooks
 	// =====
+	public static function onPageContentSave(
+		$article, $user, $content, $summary, $isMinor, $null1, $null2, $flags, $status
+	) {
+		if ( !$user->isAllowed( 'tpc-restricted' ) ) {
+			global $wgTPCRestrictedTemplates;
+
+			$text = $content->getNativeData();
+			$temps = MWScrape::toArray( $text );
+
+			foreach ( $temps as $temp ) {
+				$hook = TPCUtil::normalizeHook( $temp->name );
+				if ( in_array( $hook, $wgTPCRestrictedTemplates ) )  {
+					$status->fatal( 'tpc-edit-blocked' );
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public static function onPageContentSaveComplete(
 		$article, $user, $content, $summary, $isMinor,
 		$null1, $null2, $flags, $revision, $status, $baseRevId

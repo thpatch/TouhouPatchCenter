@@ -48,6 +48,13 @@ $wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
 $wgExtensionMessagesFiles['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.i18n.php";
 // --------
 
+// Rights
+// ------
+$wgAvailableRights[] = 'tpc-restricted';
+$wgGroupPermissions['sysop']['tpc-restricted'] = true;
+$wgGroupPermissions['patchdev']['tpc-restricted'] = true;
+// ------
+
 // TPC Hooks
 // ---------
 $hookDir = "$dir/hooks";
@@ -73,6 +80,7 @@ require_once("$templateDir/thcrap_servers.php");
 // MediaWiki hooks
 // ---------------
 $wgHooks['FileUpload'][] = 'TouhouPatchCenter::onFileUpload';
+$wgHooks['PageContentSave'][] = 'TouhouPatchCenter::onPageContentSave';
 $wgHooks['PageContentSaveComplete'][] = 'TouhouPatchCenter::onPageContentSaveComplete';
 $wgHooks['TitleMoveComplete'][] = 'TouhouPatchCenter::onTitleMoveComplete';
 $wgHooks['CanonicalNamespaces'][] = 'TouhouPatchCenter::onCanonicalNamespaces';
