@@ -88,22 +88,37 @@ class TouhouPatchCenter {
 	// =====
 	// Hooks
 	// =====
+	public static function isRestricted( $temp ) {
+		global $wgTPCRestrictedTemplates;
+		$hook = TPCUtil::normalizeHook( $temp->name );
+		return in_array( $hook, $wgTPCRestrictedTemplates );
+	}
+
+	public static function getRestrictedTemplates( $content ) {
+		$text = $content->getNativeData();
+		$temps = MWScrape::toArray( $text );
+		return array_filter( $temps, "TouhouPatchCenter::isRestricted" );
+	}
+
 	public static function onPageContentSave(
 		$article, $user, $content, $summary, $isMinor, $null1, $null2, $flags, $status
 	) {
 		if ( !$user->isAllowed( 'tpc-restricted' ) ) {
-			global $wgTPCRestrictedTemplates;
+			// Does this edit add, remove or modify any restricted templates?
+			// (Yes, we need the count comparison because array_udiff() doesn't
+			// seem to take newly added templates into account.)
+			$oldPage = WikiPage::factory( $article->getTitle() );
+			$newRTs = self::getRestrictedTemplates( $content );
+			$oldRTs = self::getRestrictedTemplates( $oldPage->getContent() );
 
-			$text = $content->getNativeData();
-			$temps = MWScrape::toArray( $text );
-
-			foreach ( $temps as $temp ) {
-				$hook = TPCUtil::normalizeHook( $temp->name );
-				if ( in_array( $hook, $wgTPCRestrictedTemplates ) )  {
-					$status->fatal( 'tpc-edit-blocked' );
-					return false;
+			if ( count( $newRTs ) == count( $oldRTs ) ) {
+				$diff = array_udiff( $oldRTs, $newRTs, "Template::differs" );
+				if ( empty( $diff ) ) {
+					return true;
 				}
 			}
+			$status->fatal( 'tpc-edit-blocked' );
+			return false;
 		}
 		return true;
 	}

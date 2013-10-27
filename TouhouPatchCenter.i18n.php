@@ -15,7 +15,7 @@ $messages['en'] = array(
 	'grouppage-patchdev' => '{{ns:project}}:Patch developers',
 	'right-tpc-restricted' => 'Add and modify restricted patch templates',
 	'tpc-desc' => "Creates a server for the ''Touhou Community Reliant Automatic Patcher'' from MediaWiki pages.",
-	'tpc-edit-blocked' => 'You do not have permission to use restricted patch templates.'
+	'tpc-edit-blocked' => 'You do not have permission to add, remove or modify the content of restricted patch templates.'
 );
 $magicWords['en'] = array(
 	'thcrap_servers' => array( 0, 'thcrap_servers' )
@@ -28,5 +28,5 @@ $messages['de'] = array(
 	'grouppage-patchdev' => '{{ns:project}}:Patch-Entwickler',
 	'right-tpc-restricted' => 'Beschränkte Patch-Vorlagen hinzufügen und bearbeiten',
 	'tpc-desc' => "Erstellt einen Server für den ''Touhou Community Reliant Automatic Patcher'' aus MediaWiki-Seiten.",
-	'tpc-edit-blocked' => 'Du bist nicht berechtigt, beschränkte Patch-Vorlagen zu verwenden.'
+	'tpc-edit-blocked' => 'Du bist nicht berechtigt, beschränkte Patch-Vorlagen hinzuzufügen, zu löschen, oder deren Inhalt zu ändern.'
 );

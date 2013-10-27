@@ -74,6 +74,22 @@ class Template
 			$this->unnamedId++;
 		}
 	}
+
+	/**
+	  * Returns whether two templates are different.
+	  * To be used in functions like array_udiff().
+	  *
+	  * @param Template $a First template
+	  * @param Template $b Second template
+	  * @return bool
+	  */
+	public static function differs( &$a, &$b ) {
+		// With arrays, '===' would additionally check for order and type,
+		// but we don't need to be as strict.
+		return (
+			( $a->name !== $b->name ) or ( $a->params != $b->params )
+		);
+	}
 }
 
 class MWScrape {
