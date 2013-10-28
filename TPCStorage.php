@@ -226,7 +226,7 @@ class TPCStorage {
 		$prevDir = getcwd();
 
 		$files = $tpcState->listFiles();
-		$patchJS = &$tpcState->patchJS;
+		$patchJS = &$tpcState->getFile( null, 'patch.js' );
 		if ( empty ( $files ) and empty ( $patchJS ) ) {
 			return;
 		}
@@ -256,23 +256,31 @@ class TPCStorage {
 			if ( $servers ) {
 				$patchJS['servers'] = $servers;
 			}
-			$filesJS = array_merge(
-				self::writeJSONCache( $tpcState->jsonCache, $patch ),
-				self::writeCopyCache( $tpcState->copyCache, $patch )
-			);
-			if ( $filesJS ) {
-				// For backwards compatibility...
-				$patchJS['files'] = $filesJS;
-
-				self::writeJSONFile( 'files.js', $filesJS, $patch );
-			}
 			// Whenever we have a title, we're evaluating just one patch anyway.
 			// Yes, patches will not show up unless they have a thcrap_patch_info
 			// associated with them.
 			if ( isset( $patchJS['title'] ) ) {
 				$patchList[$patch] = $patchJS['title'];
 			}
-			self::writeJSONFile( 'patch.js', $tpcState->patchJS, $patch );
+			$filesJS = array_merge(
+				self::writeJSONCache( $tpcState->jsonCache, $patch ),
+				self::writeCopyCache( $tpcState->copyCache, $patch )
+			);
+			if ( $filesJS ) {
+				// For the sake of backwards compatibility, we need to
+				// juggle around the file list and its hash:
+
+				// Since patch.js was already written as part of the jsonCache,
+				// this step also invalidates its hash we write to that file.
+				// Old versions will thus never overwrite patch.js in an update.
+				$patchJS['files'] = $filesJS;
+				// Save the changed file again, and get the correct hash...
+				$patchJSHash = self::writeJSONFile( 'patch.js', $patchJS, $patch );
+				// ...to put it exclusively into files.js for new versions.
+				$filesJS['patch.js'] = $patchJSHash;
+
+				self::writeJSONFile( 'files.js', $filesJS, $patch );
+			}
 		}
 		self::writeServerFile( $patchList );
 
