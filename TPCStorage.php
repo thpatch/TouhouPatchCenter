@@ -256,14 +256,16 @@ class TPCStorage {
 			if ( $servers ) {
 				$patchJS['servers'] = $servers;
 			}
-			$ret = array_merge(
+			$filesJS = array_merge(
 				self::writeJSONCache( $tpcState->jsonCache, $patch ),
 				self::writeCopyCache( $tpcState->copyCache, $patch )
 			);
-			if ( $ret ) {
-				$patchJS['files'] = $ret;
-			}
+			if ( $filesJS ) {
+				// For backwards compatibility...
+				$patchJS['files'] = $filesJS;
 
+				self::writeJSONFile( 'files.js', $filesJS, $patch );
+			}
 			// Whenever we have a title, we're evaluating just one patch anyway.
 			// Yes, patches will not show up unless they have a thcrap_patch_info
 			// associated with them.
