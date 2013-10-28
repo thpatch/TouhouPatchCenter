@@ -15,10 +15,12 @@ $messages['en'] = array(
 	'grouppage-patchdev' => '{{ns:project}}:Patch developers',
 	'right-tpc-restricted' => 'Add and modify restricted patch templates',
 	'tpc-desc' => "Creates a server for the ''Touhou Community Reliant Automatic Patcher'' from MediaWiki pages.",
-	'tpc-edit-blocked' => 'You do not have permission to add, remove or modify the content of restricted patch templates.'
+	'tpc-edit-blocked' => 'You do not have permission to add, remove or modify the content of restricted patch templates.',
+	'tpc-template' => '<code>&#123;&#123;$1&#125;&#125;</code>'
 );
 $magicWords['en'] = array(
-	'thcrap_servers' => array( 0, 'thcrap_servers' )
+	'thcrap_servers' => array( 0, 'thcrap_servers' ),
+	'thcrap_restricted_templates' => array( 0, 'thcrap_restricted_templates' )
 );
 
 /** German (Deutsch) */
