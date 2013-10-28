@@ -74,6 +74,7 @@ require_once("$hookDir/TPCFmtStrings.php");
 // Templates
 // --------
 $templateDir = "$dir/templates";
+require_once("$templateDir/TPCTemplate.php");
 require_once("$templateDir/thcrap_servers.php");
 // --------
 

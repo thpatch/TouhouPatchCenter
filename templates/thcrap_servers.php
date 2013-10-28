@@ -8,15 +8,9 @@
   * @author Nmlgc
   */
 
-class thcrap_servers {
+class thcrap_servers extends TPCTemplate {
 
-	const TEMPLATE_NAME = 'thcrap_servers';
-
-	public static function run( &$parser, &$cache, &$magicWordId, &$ret ) {
-		if ( $magicWordId != self::TEMPLATE_NAME ) {
-			return true;
-		}
-
+	public static function run( &$parser, &$cache, &$magicWordId, &$ret, &$frame ) {
 		global $wgTPCServers;
 		$doGeoIP = function_exists( 'geoip_record_by_name' );
 
@@ -51,15 +45,6 @@ class thcrap_servers {
 		$ret .= "|}";
 		return true;
 	}
-
-	/**
-	  * MagicWordwgVariableIDs hook.
-	  */
-	public static function setup( &$variableIDs ) {
-		$variableIDs[] = self::TEMPLATE_NAME;
-		return true;
-	}
 }
 
 $wgHooks['MagicWordwgVariableIDs'][] = 'thcrap_servers::setup';
-$wgHooks['ParserGetVariableValueSwitch'][] = 'thcrap_servers::run';
