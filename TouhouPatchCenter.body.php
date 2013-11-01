@@ -95,9 +95,13 @@ class TouhouPatchCenter {
 	}
 
 	public static function getRestrictedTemplates( $content ) {
-		$text = $content->getNativeData();
-		$temps = MWScrape::toArray( $text );
-		return array_filter( $temps, "TouhouPatchCenter::isRestricted" );
+		if ( is_a( $content, 'Content' ) ) {
+			$text = $content->getNativeData();
+			$temps = MWScrape::toArray( $text );
+			return array_filter( $temps, "TouhouPatchCenter::isRestricted" );
+		} else {
+			return null;
+		}
 	}
 
 	public static function onPageContentSave(
