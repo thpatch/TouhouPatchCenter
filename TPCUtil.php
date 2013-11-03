@@ -57,6 +57,8 @@ class TPCUtil {
 		$REGEX_LANG_PAT = '/\{\{\s*lang*\s*\|.*?\|\s*(.*?)\s*\}\}/i';
 		$REGEX_LANG_REP = '\1';
 		$param = preg_replace( $REGEX_LANG_PAT, $REGEX_LANG_REP, $param );
+		// &nbsp;
+		$param = preg_replace( '/&nbsp;/', json_decode( '"\u00a0"' ), $param );
 		// MediaWiki markup
 		$param = preg_replace( "/'''''(.*?)'''''/", '<bi$\1>', $param );
 		$param = preg_replace( "/'''(.*?)'''/", '<b$\1>', $param );
