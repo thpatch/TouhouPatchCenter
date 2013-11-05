@@ -33,7 +33,7 @@ class TPCBinhack {
 		$addr = TPCParse::parseVer( $addr );
 		foreach ( $addr as $build => $val ) {
 			$buildFile = &$tpcState->getBuild( $build );
-			preg_match_all( '/0x[0-9a-f]+/i', $val, $valArray);
+			$valArray = TPCParse::parseCSV( $val );
 			if ( !empty( $valArray[0] ) ) {
 				$buildFile['binhacks'][$id]['addr'] = $valArray[0];
 			}
