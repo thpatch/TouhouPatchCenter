@@ -173,6 +173,8 @@ class TPCStorage {
 	protected static function writeServerFile( $patchList = null ) {
 		global $wgTPCServers;
 		global $wgTPCServerID;
+		global $wgTPCServerTitle;
+		global $wgTPCServerNeighbors;
 		global $wgTPCServerDescURL;
 
 		$serverCache = array();
@@ -180,6 +182,9 @@ class TPCStorage {
 		if ( $wgTPCServerID ) {
 			$serverJS['id'] = $wgTPCServerID;
 		}
+		$serverJS['title'] = $wgTPCServerTitle;
+		$serverJS['neighbors'] = $wgTPCServerNeighbors;
+
 		if ( $patchList ) {
 			$serverJS['patches'] = $patchList;
 		}
