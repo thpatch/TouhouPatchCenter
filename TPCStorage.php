@@ -199,6 +199,18 @@ class TPCStorage {
 		self::writeJSONCache( $serverCache );
 	}
 
+	protected static function newServer( &$server ) {
+		$class = $server['class'];
+		if ( class_exists( $class ) ) {
+			return new $class( $server );
+		} else if ( is_string( $class ) ) {
+			throw new MWException(
+				"Required back-end server class '$class' not available!\n" .
+				"(Did you run 'composer install'?)"
+			);
+		}
+	}
+
 	/**
 	  * Initializes the server back-end classes.
 	  */
@@ -210,15 +222,8 @@ class TPCStorage {
 		}
 		self::$servers = array();
 		foreach ( $wgTPCServers as $i ) {
-			if ( !is_array( $i ) ) {
-				$i = array(
-					'local_path' => $i
-				);
-			}
-			if ( isset( $i['sftp_user'] ) ) {
-				self::$servers[] = new TPCServerSFTP( $i );
-			} else {
-				self::$servers[] = new TPCServerLocal( $i );
+			if ( isset( $i['class'] ) ) {
+				self::$servers[] = self::newServer( $i );
 			}
 		}
 	}
