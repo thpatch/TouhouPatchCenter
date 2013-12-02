@@ -74,10 +74,16 @@ class TPCInclude {
 
 	public static function onTLInclude( &$tpcState, &$title, &$temp ) {
 		$page = $temp->params[1];
+		$baseTitle = self::getTitleFromLink( $title, $page );
+		$baseLang = $baseTitle->getPageLanguage()->getCode();
 		// TODO: This is really slow... Refactor into something that writes
 		// all languages in a single database call.
 		foreach ( TPCTLPatches::get() as $patch => $lang ) {
-			$targetTitle = self::getTitleFromLink( $title, "$page/$lang" );
+			if ( $lang === $baseLang ) {
+				$targetTitle = $baseTitle;
+			} else {
+				$targetTitle = self::getTitleFromLink( $title, "$page/$lang" );
+			}
 			self::onTarget( $tpcState, $targetTitle, $temp, $patch );
 		}
 		return true;
