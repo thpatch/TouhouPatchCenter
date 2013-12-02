@@ -74,10 +74,9 @@ class TPCStorage {
 
 		$ret = array();
 		foreach ( $wgTPCServers as $i ) {
-			if( !is_array( $i ) or !$i['url'] ) {
-				continue;
+			if ( isset( $i['url'] ) ) {
+				$ret[] = "{$i['url']}/$patch/";
 			}
-			$ret[] = "{$i['url']}/$patch/";
 		}
 		return $ret;
 	}
@@ -104,7 +103,7 @@ class TPCStorage {
 	  * @return int Hash of the target file's full merged content.
 	  */
 	protected static function writeJSONFile( $fn, &$array, $patch = null ) {
-
+		$ret = null;
 		// Don't write "null" for files that were requested but never edited
 		if ( !$array or !$fn ) {
 			return;
