@@ -53,6 +53,26 @@ class TPCUtil {
 	  * @return string Sanitized string.
 	  */
 	public static function sanitize( &$param, $escape_percents = true ) {
+		// HTML comments
+		$param = preg_replace( '/<!--(.*?)-->/', '', $param );
+		/**
+		  * Remove translation markup. And yes, we use regex to do it.
+		  * Justification:
+		  * * The source format is plaintext, not XML. In fact, this is the only
+		  *   instance of XML tags being used inside translatable strings.
+		  * * Thus, using full-fledged XML parsers is counter-productive. PHP's
+		  *   DOM, for example, ignores everything up to the first HTML tag.
+		  *   Should we build some tags around the text by default just to work
+		  *   around this now?
+		  * * Some of the translation units extend to more template parameters
+		  *   and we might not even have an opening or closing tag due to this.
+		  * * Even worse, DOM might get confused with our layout markup... and
+		  *   by working around *that*, we have ultimately defeated any reason
+		  *   to use DOM in the first place.
+		  */
+		$param = preg_replace( '~<translate>\n~', '', $param );
+		$param = preg_replace( '~</translate>~', '', $param );
+
 		// Remove {{lang}} wrappers
 		$REGEX_LANG_PAT = '/\{\{\s*lang*\s*\|.*?\|\s*(.*?)\s*\}\}/i';
 		$REGEX_LANG_REP = '\1';
