@@ -145,7 +145,7 @@ class TPCFmtMsg {
 	}
 
 	public static function onMsgAssist( &$tpcState, &$title, &$temp ) {
-		$tpcState->msgAssistName = $temp->params[1];
+		$tpcState->msgAssistName = TPCUtil::sanitize( $temp->params[1] );
 		return true;
 	}
 

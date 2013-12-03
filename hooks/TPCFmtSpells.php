@@ -24,7 +24,7 @@ class TPCFmtSpells {
 
 		$spells = &$tpcState->switchGameFile( "spells.js" );
 		if ( $name ) {
-			$spells[$id] = $name;
+			$spells[$id] = TPCUtil::sanitize( $name );
 		}
 
 		// Comments...
@@ -37,7 +37,8 @@ class TPCFmtSpells {
 				// Resolve owner in the correct language
 				if ( $owner and !isset( $cmt['owner'] ) ) {
 					$lang = $title->getPageLanguage();
-					$cmt['owner'] = wfMessage( $owner )->inLanguage( $lang )->plain();
+					$owner = wfMessage( $owner )->inLanguage( $lang )->plain();
+					$cmt['owner'] = TPCUtil::sanitize( $owner );
 				}
 			}
 		}
