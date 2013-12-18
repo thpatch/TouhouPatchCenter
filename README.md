@@ -1,4 +1,4 @@
 TouhouPatchCenter
 =================
 
-Creates a thcrap server from MediaWiki pages.
+Creates a thcrap repository from MediaWiki pages.

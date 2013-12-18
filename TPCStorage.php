@@ -166,33 +166,33 @@ class TPCStorage {
 	}
 
 	/**
-	  * Updates the main server file (server.js).
+	  * Updates the main repository definition (repo.js).
 	  * Also adds an optional $patchList.
 	  */
-	protected static function writeServerFile( $patchList = null ) {
+	protected static function writeRepoFile( $patchList = null ) {
 		global $wgTPCServers;
-		global $wgTPCServerID;
-		global $wgTPCServerTitle;
-		global $wgTPCServerNeighbors;
-		global $wgTPCServerDescURL;
+		global $wgTPCRepoID;
+		global $wgTPCRepoTitle;
+		global $wgTPCRepoNeighbors;
+		global $wgTPCRepoDescURL;
 
-		$serverJS = array(
-			'id' => $wgTPCServerID,
-			'title' => $wgTPCServerTitle,
-			'neighbors' => $wgTPCServerNeighbors,
-			'url_desc' => $wgTPCServerDescURL
+		$repoJS = array(
+			'id' => $wgTPCRepoID,
+			'title' => $wgTPCRepoTitle,
+			'neighbors' => $wgTPCRepoNeighbors,
+			'url_desc' => $wgTPCRepoDescURL
 		);
 
 		if ( $patchList ) {
-			$serverJS['patches'] = $patchList;
+			$repoJS['patches'] = $patchList;
 		}
 
 		foreach ( $wgTPCServers as $i ) {
 			if ( isset( $i['url'] ) ) {
-				$serverJS['servers'][] = $i['url'];
+				$repoJS['servers'][] = $i['url'];
 			}
 		}
-		self::writeJSONFile( 'server.js', $serverJS );
+		self::writeJSONFile( 'repo.js', $repoJS );
 	}
 
 	protected static function newServer( &$server ) {
@@ -293,7 +293,7 @@ class TPCStorage {
 				self::writeJSONFile( 'files.js', $filesJS, $patch );
 			}
 		}
-		self::writeServerFile( $patchList );
+		self::writeRepoFile( $patchList );
 
 		// Shouldn't matter on the server, but offline testers will thank you
 		chdir( $prevDir );

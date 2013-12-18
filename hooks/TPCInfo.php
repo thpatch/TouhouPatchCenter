@@ -24,10 +24,10 @@ class TPCInfo {
 		$patchJS['title'] = $patchTitle;
 
 		if ( isset( $temp->params['min_build'] ) ) {
-			global $wgTPCServerEngineURL;
+			global $wgTPCRepoEngineURL;
 			$patchJS['min_build'] = $temp->params['min_build'];
-			if ( $wgTPCServerEngineURL ) {
-				$patchJS['url_engine'] = $wgTPCServerEngineURL;
+			if ( $wgTPCRepoEngineURL ) {
+				$patchJS['url_engine'] = $wgTPCRepoEngineURL;
 			}
 		}
 		if ( isset( $temp->params['dependencies'] ) ) {
