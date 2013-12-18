@@ -22,7 +22,7 @@ class TPCFmtStrings {
 		$tl = TPCUtil::sanitize( $tl, false );
 		if ( isset( $temp->params['ascii'] ) ) {
 			// Try to transliterate the string, then limit it to the ASCII range
-			$tl = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $tl );
+			$tl = iconv( "UTF-8", "ASCII//TRANSLIT//IGNORE", $tl );
 			$tl = preg_replace( '/[^(\x20-\x7F)]/i', '', $tl );
 		}
 		$stringdefs = &$tpcState->switchFile( "stringdefs.js" );

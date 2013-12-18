@@ -49,7 +49,7 @@ class TPCFmtMsg {
 
 	public static function onMsg( &$tpcState, &$title, &$temp ) {
 		$code = TPCUtil::dictGet( $temp->params['code'] );
-		if ( !preg_match( self::REGEX_CODE, $code, $m) ) {
+		if ( !preg_match( self::REGEX_CODE, $code, $m ) ) {
 			return true;
 		}
 		$lang = $title->getPageLanguage();
@@ -110,12 +110,12 @@ class TPCFmtMsg {
 				$lines[0] = $prefix . $lines[0];
 
 				// Indent all following lines
-				for ( $i; $i < count($lines); $i++ ) {
+				for ( $i; $i < count( $lines ); $i++ ) {
 					$lines[$i] = self::TAB . ' ' . $lines[$i];
 				}
 
 				// Postfix last line
-				$lines[count($lines) - 1] .= $typeSpec['postfix'];
+				$lines[count( $lines ) - 1] .= $typeSpec['postfix'];
 			}
 
 			// Yeah, maybe we should only do this based on some previous condition, 

@@ -40,8 +40,8 @@ class TPCServerLocal extends TPCServer {
 		}
 		if ( !file_exists ( $path ) || !is_dir ( $path ) ) {
 			return FALSE;
-		} elseif(is_readable($path)) {
-			$handle = opendir($path);
+		} elseif ( is_readable( $path ) ) {
+			$handle = opendir( $path );
 			while ( FALSE !== ( $item = readdir( $handle ) ) ) {
 				if ( $item != '.' && $item != '..' ) {
 					$curPath = $path . '/' . $item;

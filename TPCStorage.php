@@ -176,27 +176,23 @@ class TPCStorage {
 		global $wgTPCServerNeighbors;
 		global $wgTPCServerDescURL;
 
-		$serverCache = array();
-		$serverJS = &$serverCache['server.js'];
-		if ( $wgTPCServerID ) {
-			$serverJS['id'] = $wgTPCServerID;
-		}
-		$serverJS['title'] = $wgTPCServerTitle;
-		$serverJS['neighbors'] = $wgTPCServerNeighbors;
+		$serverJS = array(
+			'id' => $wgTPCServerID,
+			'title' => $wgTPCServerTitle,
+			'neighbors' => $wgTPCServerNeighbors,
+			'url_desc' => $wgTPCServerDescURL
+		);
 
 		if ( $patchList ) {
 			$serverJS['patches'] = $patchList;
 		}
+
 		foreach ( $wgTPCServers as $i ) {
-			if ( !is_array( $i ) or !isset( $i['url'] ) ) {
-				continue;
+			if ( isset( $i['url'] ) ) {
+				$serverJS['servers'][] = $i['url'];
 			}
-			$serverJS['servers'][] = $i['url'];
 		}
-		if ( $wgTPCServerDescURL ) {
-			$serverJS['url_desc'] = $wgTPCServerDescURL;
-		}
-		self::writeJSONCache( $serverCache );
+		self::writeJSONFile( 'server.js', $serverJS );
 	}
 
 	protected static function newServer( &$server ) {
