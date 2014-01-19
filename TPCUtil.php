@@ -53,8 +53,6 @@ class TPCUtil {
 	  * @return string Sanitized string.
 	  */
 	public static function sanitize( &$param, $escape_percents = true ) {
-		// HTML comments
-		$param = preg_replace( '/<!--(.*?)-->/', '', $param );
 		/**
 		  * Remove translation markup. And yes, we use regex to do it.
 		  * Justification:
@@ -72,6 +70,10 @@ class TPCUtil {
 		  */
 		$param = preg_replace( '~<translate>\n~', '', $param );
 		$param = preg_replace( '~</translate>~', '', $param );
+		$param = preg_replace( '~<!--T\:(.*?)-->\n~', '', $param );
+
+		// HTML comments
+		$param = preg_replace( '/<!--(.*?)-->/', '', $param );
 
 		// Remove {{lang}} wrappers
 		$REGEX_LANG_PAT = '/\{\{\s*lang*\s*\|.*?\|\s*(.*?)\s*\}\}/i';
