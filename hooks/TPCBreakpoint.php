@@ -34,6 +34,8 @@ class TPCBreakpoint {
 					$val = false;
 				} else if ( $val == "true" ) {
 					$val = true;
+				} else if ( $key === "addr" ) {
+					$val = TPCParse::parseCSV( $val );
 				}
 				$buildFile['breakpoints'][$type][$key] = $val;
 			}
