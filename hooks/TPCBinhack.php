@@ -35,11 +35,7 @@ class TPCBinhack {
 			$buildFile = &$tpcState->getBuild( $build );
 			$valArray = TPCParse::parseCSV( $val );
 			if ( !empty( $valArray ) ) {
-				if ( is_array( $valArray ) and count( $valArray ) == 1 ) {
-					$buildFile['binhacks'][$id]['addr'] = $valArray[0];
-				} else {
-					$buildFile['binhacks'][$id]['addr'] = $valArray;
-				}
+				$buildFile['binhacks'][$id]['addr'] = $valArray;
 			}
 		}
 

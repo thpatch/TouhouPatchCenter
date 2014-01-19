@@ -57,14 +57,19 @@ class TPCParse {
 	}
 
 	/**
-	  * Parses a CSV string into an array.
+	  * Parses a CSV string into a flexible array.
 	  *
 	  * @param string &$param The string to split.
-	  * @return array Array of lines.
+	  * @return array|string Flexible array.
 	  */
 	public static function parseCSV( &$param ) {
 		$REGEX_CSV = '/\s*,\s*/';
-		return preg_split( $REGEX_CSV, $param, null, PREG_SPLIT_NO_EMPTY );
+		$ret = preg_split( $REGEX_CSV, $param, null, PREG_SPLIT_NO_EMPTY );
+		if ( count( $ret ) == 1 ) {
+			return $ret[0];
+		} else {
+			return $ret;
+		}
 	}
 
 	/**
