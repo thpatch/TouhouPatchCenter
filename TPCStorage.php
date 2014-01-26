@@ -173,12 +173,14 @@ class TPCStorage {
 		global $wgTPCServers;
 		global $wgTPCRepoID;
 		global $wgTPCRepoTitle;
+		global $wgTPCRepoContact;
 		global $wgTPCRepoNeighbors;
 		global $wgTPCRepoDescURL;
 
 		$repoJS = array(
 			'id' => $wgTPCRepoID,
 			'title' => $wgTPCRepoTitle,
+			'contact' => $wgTPCRepoContact,
 			'neighbors' => $wgTPCRepoNeighbors,
 			'url_desc' => $wgTPCRepoDescURL
 		);
