@@ -40,10 +40,19 @@ class TPCFmtMsg {
 	}
 
 	protected static function renderRuby( &$lines ) {
-		$REGEX_RUBY_PAT = '/\{\{\s*ruby(-ja)*\s*\|(.*?)\|\s*(.*?)\s*\}\}/';
-		$REGEX_RUBY_REP = '<f$\2$\3>';
+		$REGEX_RUBY = '/\{\{\s*ruby(-ja)*\s*\|(.*?)\|\s*(.*?)\s*\}\}/';
+		$FORMAT_RUBY = "|\t%s\t,\t%s\t,%s";
 		foreach ( $lines as $key => &$i ) {
-			$lines[$key] = preg_replace( $REGEX_RUBY_PAT, $REGEX_RUBY_REP, $i );
+			if ( !preg_match( $REGEX_RUBY, $i, $m, PREG_OFFSET_CAPTURE) ) {
+				continue;
+			}
+			$offset = substr( $i, 0, $m[0][1] );
+			$base = $m[2][0];
+			$rest = substr( $i, $m[0][1] + strlen( $m[0][0] ) );
+			$i = $offset . $base . $rest;
+
+			$rubyLine = sprintf( $FORMAT_RUBY, $offset, $base, $m[3][0] );
+			array_splice( $lines, $key, 0, $rubyLine );
 		}
 	}
 
