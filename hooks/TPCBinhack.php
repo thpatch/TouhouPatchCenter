@@ -49,7 +49,9 @@ class TPCBinhack {
 		}
 
 		$cont = &$baseFile['binhacks'][$id];
-		$cont['title'] = $title;
+		if ( !empty( $title ) ) {
+			$cont['title'] = $title;
+		}
 		return true;
 	}
 }
