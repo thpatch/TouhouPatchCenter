@@ -32,6 +32,13 @@ class TPCInfo {
 		}
 		if ( isset( $temp->params['dependencies'] ) ) {
 			$vars = TPCParse::parseCSV( $temp->params['dependencies'] );
+			// ----
+			// Workaround for a bug in 2014-01-27, remove once the next build is out!
+			// ----
+			if ( gettype( $vars ) === 'string' ) {
+				$vars = [$vars];
+			}
+			// ----
 			$patchJS['dependencies'] = $vars;
 		}
 		return true;
