@@ -68,9 +68,9 @@ class TPCUtil {
 		  *   by working around *that*, we have ultimately defeated any reason
 		  *   to use DOM in the first place.
 		  */
-		$param = preg_replace( '~<translate>\n~', '', $param );
+		$param = preg_replace( '~<translate>\n?~', '', $param );
 		$param = preg_replace( '~</translate>~', '', $param );
-		$param = preg_replace( '~<!--T\:(.*?)-->\n~', '', $param );
+		$param = preg_replace( '~<!--T\:(.*?)-->\n?~', '', $param );
 
 		// HTML comments
 		$param = preg_replace( '/<!--(.*?)-->/', '', $param );
