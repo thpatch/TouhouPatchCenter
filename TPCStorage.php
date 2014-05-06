@@ -273,27 +273,7 @@ class TPCStorage {
 				self::writeJSONCache( $tpcState->jsonCache, $patch ),
 				self::writeCopyCache( $tpcState->copyCache, $patch )
 			);
-			if ( $filesJS ) {
-				// For the sake of backwards compatibility, we need to
-				// juggle around the file list and its hash:
-
-				// Remove patch.js from the file list we write to that file.
-				// Old versions will thus never overwrite patch.js in an update.
-				unset( $filesJS['patch.js'] );
-				// IMPORTANT, because json_encode encodes an empty PHP array as a JSON array!
-				// Since arrays are always completely replaced, setting an empty block once
-				// would delete everything else parsed so far.
-				// (Also, JSON_FORCE_OBJECT feels as if it would lead to even more problems.)
-				if ( !empty( $filesJS ) ) {
-					$patchJS['files'] = $filesJS;
-				}
-				// Save the changed file again, and get the correct hash...
-				$patchJSHash = self::writeJSONFile( 'patch.js', $patchJS, $patch );
-				// ...to put it exclusively into files.js for new versions.
-				$filesJS['patch.js'] = $patchJSHash;
-
-				self::writeJSONFile( 'files.js', $filesJS, $patch );
-			}
+			self::writeJSONFile( 'files.js', $filesJS, $patch );
 		}
 		self::writeRepoFile( $patchList );
 
