@@ -91,4 +91,32 @@ class TPCUtil {
 		// Do more MediaWiki stuff...
 		return $param;
 	}
+	
+	
+	/**
+	  * Returns a table cell with the full GeoIP location information for a given URL.
+	  *
+	  * @param string &$url
+	  * @return string
+	  */
+	public static function getGeoIPCell( &$url ) {
+		if ( function_exists( 'geoip_record_by_name' ) ) {
+			$parsedURL = parse_url( $url, PHP_URL_HOST );
+			$record = geoip_record_by_name( $parsedURL );
+
+			$ret = "| ";
+			if ( $record['city'] ) {
+				$ret .= "{$record['city']}, ";
+			}
+			if ( $record['region'] ) {
+				$ret .= "{$record['region']}, ";
+			}
+			$ret .= "{$record['country_name']}, ";
+			$ret .= "{$record['continent_code']}";
+			$ret .= "\n";
+		} else {
+			$ret = '';
+		}
+		return $ret;
+	}
 }

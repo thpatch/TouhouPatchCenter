@@ -26,21 +26,7 @@ class thcrap_servers extends TPCTemplate {
 			$ret .= "|-\n";
 			$ret .= "| {$i['title']}\n";
 			$ret .= "| [{$i['url']} {$i['url']}]\n";
-			if ( $doGeoIP ) {
-				$url = parse_url( $i['url'], PHP_URL_HOST );
-				$record = geoip_record_by_name( $url );
-
-				$ret .= "| ";
-				if ( $record['city'] ) {
-					$ret .= "{$record['city']}, ";
-				}
-				if ( $record['region'] ) {
-					$ret .= "{$record['region']}, ";
-				}
-				$ret .= "{$record['country_name']}, ";
-				$ret .= "{$record['continent_code']}";
-				$ret .= "\n";
-			}
+			$ret .= TPCUtil::getGeoIPCell( $i['url'] );
 		}
 		$ret .= "|}";
 		return true;
