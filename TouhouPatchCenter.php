@@ -74,6 +74,7 @@ $templateDir = "$dir/templates";
 require_once("$templateDir/TPCTemplate.php");
 require_once("$templateDir/thcrap_restricted_templates.php");
 require_once("$templateDir/thcrap_servers.php");
+require_once("$templateDir/thcrap_neighbors.php");
 // --------
 
 // MediaWiki hooks

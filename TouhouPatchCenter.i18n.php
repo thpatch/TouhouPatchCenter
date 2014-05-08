@@ -19,6 +19,7 @@ $messages['en'] = array(
 	'tpc-template' => '<code>&#123;&#123;$1&#125;&#125;</code>'
 );
 $magicWords['en'] = array(
+	'thcrap_neighbors' => array( 0, 'thcrap_neighbors' ),
 	'thcrap_servers' => array( 0, 'thcrap_servers' ),
 	'thcrap_restricted_templates' => array( 0, 'thcrap_restricted_templates' )
 );
