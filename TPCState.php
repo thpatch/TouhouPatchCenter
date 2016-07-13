@@ -10,7 +10,7 @@
 
 class TPCState
 {
-	/** 
+	/**
 	  * By assigning different names to $patches, $game, $file and $build,
 	  * one can access all directory levels on the server:
 	  *
@@ -52,7 +52,7 @@ class TPCState
 	}
 	public function getCurFile() {
 		return $this->curFile;
-	}		
+	}
 
 	/**
 	  * Removes potentially dangerous stuff from a file name.

@@ -16,12 +16,12 @@
   * different beast. Basically, it works like this:
   *
   * - Function calls are *expensive*. Avoid if possible.
-  * - As a result, "classic" string parsing (especially when substr() is 
+  * - As a result, "classic" string parsing (especially when substr() is
   *   involved) is *SLOW*.
   *   Thus, defer the actual string handling as long as possible.
-  * - Instead, create an array containing the offsets of all interesting 
+  * - Instead, create an array containing the offsets of all interesting
       MediaWiki tokens.
-  * - All the nesting functions work exclusively on this array. Subfunctions 
+  * - All the nesting functions work exclusively on this array. Subfunctions
   *   only get references into this array.
   * - Only the last function, Template->add, actually splits the string for
   *   the array assignment.
@@ -37,7 +37,7 @@ class Template
 	public $name = '';
 
 	// Parsed template parameters
-	public $params = array();	
+	public $params = array();
 
 	// Number of next unnamed parameter. 0 = template name
 	public $unnamedId = 0;
@@ -45,14 +45,14 @@ class Template
 	// Start and end offsets of this template in the source string
 	public $srcStart, $srcEnd;
 
-	/** 
+	/**
 	  * Adds an element (name or (unnamed) parameter) to this template.
 	  *
-	  * @param string $str 
+	  * @param string $str
 	  * @param int $start Offset of parameter's first character in $str
 	  * @param int $end Offset of parameter's last character in $str
 	  * @param int $assign Offset of assignment character. Can be null for unnamed parameters.
-	  *  
+	  *
 	  */
 	public function add( &$str, &$start, &$assign, &$end )	{
 		// "|param = value"
@@ -133,7 +133,7 @@ class MWScrape {
 		for ( $i = $start + 1; $i < $end; $i++ ) {
 			$curOff = $tokens[$i][1];
 			$curToken = $tokens[$i][0];
-			if ( $nest === 0 and $curToken === self::MW_PIPE )	 {
+			if ( $nest === 0 and $curToken === self::MW_PIPE ) {
 				$ret->add( $str, $paramOff, $assignOff, $curOff );
 				$paramOff = $curOff + 1;
 				$assignOff = null;
@@ -150,16 +150,16 @@ class MWScrape {
 		return $ret;
 	}
 
-	/** 
+	/**
 	 * Create an array with offsets of all interesting tokens in a wikitext page.
 	 *
 	 * @param string $str Wikitext string
 	 * @return array Array of the form
 	 * Array (
 	 * 		[index] => Array (
-	 *			[0] = <token>
-	 *			[1] = <offset>
-	 *		)
+	 * 			[0] = <token>
+	 * 			[1] = <offset>
+	 * 		)
 	 * )
 	 */
 	protected static function getMWTokenArray( &$str ) {
@@ -170,7 +170,7 @@ class MWScrape {
 		return $tokens[0];
 	}
 
-	/** 
+	/**
 	  * Parses templates and their parameters of a MediaWiki page into an array.
 	  *
 	  * @param string $page Wikitext string containing the full page code

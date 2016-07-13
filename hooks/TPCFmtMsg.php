@@ -127,7 +127,7 @@ class TPCFmtMsg {
 				$lines[count( $lines ) - 1] .= $typeSpec['postfix'];
 			}
 
-			// Yeah, maybe we should only do this based on some previous condition, 
+			// Yeah, maybe we should only do this based on some previous condition,
 			// but profiling tells that it hardly matters anyway...
 			self::renderRuby( $lines );
 

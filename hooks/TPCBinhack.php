@@ -21,7 +21,7 @@ class TPCBinhack {
 		// Switch back to the top file of the current game
 		$tpcState->switchGameFile( null );
 		$baseFile = &$tpcState->getBuild( null );
-		
+
 		$title = TPCUtil::dictGet( $temp->params['title'] );
 		$addr = TPCUtil::dictGet( $temp->params['addr'] );
 		$code = TPCUtil::dictGet( $temp->params['code'] );

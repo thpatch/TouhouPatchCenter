@@ -92,7 +92,7 @@ $wgTPCPatchNamespace = 238;
 
 // Other constants
 if ( version_compare( PHP_VERSION, '5.4.0' ) >= 0 ) {
-	define( 'TPC_JSON_OPTS', 
+	define( 'TPC_JSON_OPTS',
 		JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
 } else {
 	define( 'TPC_JSON_OPTS', 0 );

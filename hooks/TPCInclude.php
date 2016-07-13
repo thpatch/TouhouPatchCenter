@@ -22,7 +22,7 @@ class TPCInclude {
 		// Subpage links
 		if ( $str[0] === '/' ) {
 			// Remove trailing slash
-			if ( substr($str, -1) === '/') {	
+			if ( substr($str, -1) === '/') {
 				$str = substr( $str, 1, -1 );
 			} else {
 				$str = substr( $str, 1 );

@@ -8,7 +8,7 @@
   */
 
 class TPCUtil {
-	/** 
+	/**
 	  * Python's dict.get in PHP
 	  *
 	  * @param mixed $element Dictionary element
@@ -91,8 +91,8 @@ class TPCUtil {
 		// Do more MediaWiki stuff...
 		return $param;
 	}
-	
-	
+
+
 	/**
 	  * Returns a table cell with the full GeoIP location information for a given URL.
 	  *

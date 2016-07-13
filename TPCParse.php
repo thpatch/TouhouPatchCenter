@@ -20,7 +20,7 @@ class TPCParse {
 		$cut = 0;
 		// Find valid versions
 		foreach ( $scrape as $i ) {
-			if ( 
+			if (
 				( $i->name === "thcrap_ver" ) and	// TODO: Don't hardcode...
 				( isset( $i->params['ver'] ) ) and
 				( isset( $i->params[1] ) )
@@ -31,7 +31,7 @@ class TPCParse {
 				$start = $i->srcStart - $cut;
 				$end = $i->srcEnd - $cut + MWScrape::MW_TEMPLATE_TOKEN_LEN;
 				$len = $end - $start;
-			
+
 				$str = substr( $str, 0, $start ) . substr( $str, $end );
 				// Remember splice point
 				$splice[] = $start;
@@ -42,7 +42,7 @@ class TPCParse {
 		$curSplice = 0;
 		foreach ( $versions as $i ) {
 			// Splice
-			$ret[ $i->params['ver'] ] = 
+			$ret[ $i->params['ver'] ] =
 				// before
 				substr( $str, 0, $splice[$curSplice] ) .
 				// this version
@@ -101,7 +101,7 @@ class TPCParse {
 	  * 			[0] => 0x77, [1] => 7, [2] => 16
 	  *			)
 	  *		)
-	  */	
+	  */
 	public static function parseFunc( $str ) {
 		if ( preg_match( '/(.+)\s*\((.+)\)/', $str, $func ) ) {
 			$vars = self::parseCSV( $func[2] );

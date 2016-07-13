@@ -45,7 +45,7 @@ class TPCFmtSpells {
 		return true;
 	}
 }
-  
+
 $wgTPCHooks['thcrap_spell'][] = 'TPCFmtSpells::onSpell';
 // Short versions
 $wgTPCHooks['spell_card'][] = 'TPCFmtSpells::onSpell';

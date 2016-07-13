@@ -26,7 +26,7 @@ class TPCVersions {
 		);
 
 		if ( isset($temp->params['hash']) and !empty( $temp->params['hash'] ) ) {
-	 		$hashes = &$tpcState->jsonContents['hashes'];	
+			$hashes = &$tpcState->jsonContents['hashes'];
 			$hashes[ $temp->params['hash'] ] = $ver;
 		}
 		if ( isset($temp->params['size']) and !empty( $temp->params['size'] ) ) {

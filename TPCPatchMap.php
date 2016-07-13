@@ -80,7 +80,7 @@ class TPCPatchMap {
 		return true;
 	}
 
-	/** 
+	/**
 	  * @param Title $title Title object
 	  * @return bool
 	  */
