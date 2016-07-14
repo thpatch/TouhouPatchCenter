@@ -25,6 +25,11 @@ class TPCVersions {
 			TPCUtil::dictGet( $temp->params[3], '(original)' )
 		);
 
+		// Optional code page specification
+		if ( isset( $temp->params[4] ) ) {
+			$ver[] = intval( $temp->params[4] );
+		}
+
 		if ( isset($temp->params['hash']) and !empty( $temp->params['hash'] ) ) {
 			$hashes = &$tpcState->jsonContents['hashes'];
 			$hashes[ $temp->params['hash'] ] = $ver;
