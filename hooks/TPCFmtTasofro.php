@@ -19,8 +19,10 @@ class TPCFmtTasofro {
 		$code = TPCUtil::dictGet( $temp->params['code'], ++$tpcState->tasofroCode );
 		$tpcState->tasofroCode = $code;
 		$lines = TPCParse::parseLines( $temp->params['tl'] );
-
-		$tpcState->jsonContents[$code]['lines'] = &$lines;
+		// Don't write a JSON null for empty boxes to keep patch stacking functional.
+		if( $lines ) {
+			$tpcState->jsonContents[$code]['lines'] = &$lines;
+		}
 		return true;
 	}
 }
