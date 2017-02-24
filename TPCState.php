@@ -37,6 +37,10 @@ class TPCState
 	// Format: [patch-relative destination FN] => [absolute source FN]
 	public $copyCache = array();
 
+	// List of files to delete.
+	// Format: [patch-relative destination FN, patch-relative destination FN, …]
+	public $deletionCache = array();
+
 	protected $curGame = null;
 	protected $curBuild = null;
 	protected $curFile = null;
@@ -164,13 +168,19 @@ class TPCState
 		$this->copyCache[ $fn ] = $source;
 	}
 
+	public function addDeletion( $target ) {
+		$fn = $this->getFileName( $this->curGame, null, $target );
+		$this->deletionCache[] = $fn;
+	}
+
 	/**
 	  * Returns an array of all files in this state object.
 	  */
 	public function listFiles() {
 		return array_merge(
 			array_keys( $this->jsonCache ),
-			array_keys( $this->copyCache )
+			array_keys( $this->copyCache ),
+			array_keys( $this->deletionCache )
 		);
 	}
 }

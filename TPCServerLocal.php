@@ -94,4 +94,8 @@ class TPCServerLocal extends TPCServer {
 	function copy( &$target, &$source ) {
 		copy( $source, $target );
 	}
+
+	function delete( &$target ) {
+		unlink( $target );
+	}
 };

@@ -137,6 +137,13 @@ class TPCStorage {
 		return crc32( $sourceData );
 	}
 
+	protected static function writeDeletion( $target, $patch = null ) {
+		foreach ( self::$servers as $server ) {
+			self::chdirPatch( $server, $patch, $target );
+			$server->delete( $target );
+		}
+	}
+
 	/**
 	  * @param function $cacheFunc
 	  * 	Function to call for each element. Should return a hash or equivalent
@@ -163,6 +170,15 @@ class TPCStorage {
 
 	protected static function writeCopyCache( &$copyCache, $patch = null ) {
 		return self::writeCache( 'self::writeCopyFile', $copyCache, $patch );
+	}
+
+	protected static function writeDeletionCache( &$deletionCache, $patch = null ) {
+		$ret = array();
+		foreach ( $deletionCache as $i ) {
+			self::writeDeletion( $i, $patch );
+			$ret[ $i ] = null;
+		}
+		return $ret;
 	}
 
 	/**
@@ -271,7 +287,8 @@ class TPCStorage {
 			}
 			$filesJS = array_merge(
 				self::writeJSONCache( $tpcState->jsonCache, $patch ),
-				self::writeCopyCache( $tpcState->copyCache, $patch )
+				self::writeCopyCache( $tpcState->copyCache, $patch ),
+				self::writeDeletionCache( $tpcState->deletionCache, $patch )
 			);
 			self::writeJSONFile( 'files.js', $filesJS, $patch );
 		}

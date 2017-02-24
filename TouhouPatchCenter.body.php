@@ -143,6 +143,23 @@ class TouhouPatchCenter {
 		return true;
 	}
 
+	public static function onFileDeleteComplete(
+		$file, $oldimage, $article, $user, $reason
+	) {
+		$title = $file->getTitle();
+		$map = TPCPatchMap::get( $title );
+		if ( !$map or !$map->pm_patch ) {
+			return true;
+		}
+		$tpcState = new TPCState;
+		$tpcState->patches = $map->pm_patch;
+		$tpcState->switchGame( $map->pm_game );
+		$target = TPCUtil::dictGet( $map->pm_target, $title->getBaseText() );
+		$tpcState->addDeletion( $target );
+		TPCStorage::writeState( $tpcState );
+		return true;
+	}
+
 	public static function onTitleMoveComplete(
 		Title &$title, Title &$newtitle, User &$user, $oldid, $newid
 	) {
