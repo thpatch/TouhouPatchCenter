@@ -19,8 +19,10 @@ class TPCFmtSpells {
 		}
 		$name = TPCUtil::dictGet( $temp->params['name'] );
 		$owner = TPCUtil::dictGet( $temp->params['owner'] );
-		// In-game ID starts from 0
-		$id = intval( $id ) - 1;
+		if ( is_numeric( $id ) ) {
+			// In-game ID starts from 0
+			$id = intval( $id ) - 1;
+		}
 
 		$spells = &$tpcState->switchGameFile( "spells.js" );
 		if ( $name ) {
