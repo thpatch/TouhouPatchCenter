@@ -5,6 +5,7 @@
   * Registers the following template hooks:
   *
   * {{thcrap_game}}
+  * {{thcrap_game_file}}
   * {{thcrap_patch_file}}
   *
   * @file
@@ -17,11 +18,16 @@ class TPCParseContext {
 		return $tpcState->switchGame( $temp->params[1] );
 	}
 
+	static public function onGameFile( &$tpcState, $title, $temp ) {
+		return $tpcState->switchGameFile( $temp->params[1] );
+	}
+
 	static public function onPatchFile( &$tpcState, $title, $temp ) {
 		return $tpcState->switchGameFilePatch( $temp->params[1] );
 	}
 }
 
 $wgTPCHooks['thcrap_game'][] = 'TPCParseContext::onGame';
+$wgTPCHooks['thcrap_game_file'][] = 'TPCParseContext::onGameFile';
 $wgTPCHooks['thcrap_patch_file'][] = 'TPCParseContext::onPatchFile';
 
