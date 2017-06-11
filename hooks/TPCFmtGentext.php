@@ -14,7 +14,7 @@
 class TPCFmtGentext {
 
 	public static function addGentext( &$tpcState, $id, &$tl ) {
-		if ( !empty( $id ) and !empty( $tl ) ) {
+		if ( !empty( $tl ) ) {
 			$tpcState->jsonContents[$id] = $tl;
 		}
 		return true;
