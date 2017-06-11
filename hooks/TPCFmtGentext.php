@@ -31,7 +31,7 @@ class TPCFmtGentext {
 		$title = TPCUtil::dictGet( $temp->params['title'] );
 		$locked = TPCUtil::dictGet( $temp->params['locked'] );
 		$unlocked = TPCUtil::dictGet( $temp->params['unlocked'] );
-		self::addGentext( $tpcState, $id, $title );
+		self::addGentext( $tpcState, $id, TPCUtil::sanitize( $title ));
 		self::addGentext( $tpcState, $id . "_0", TPCParse::parseLines( $locked ));
 		self::addGentext( $tpcState, $id . "_1", TPCParse::parseLines( $unlocked ));
 		return true;
