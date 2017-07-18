@@ -13,8 +13,11 @@
 
 class TPCFmtGentext {
 
-	public static function addGentext( &$tpcState, $id, &$tl ) {
+	public static function addGentext( &$tpcState, $id, $tl ) {
 		if ( !empty( $tl ) ) {
+			if ( is_array( $tl ) && count( $tl ) == 1 ) {
+				$tl = $tl[0];
+			}
 			$tpcState->jsonContents[$id] = $tl;
 		}
 		return true;
