@@ -76,16 +76,17 @@ class TPCParse {
 	  * Parses a wikitext string into an array of lines.
 	  *
 	  * @param string &$param The string to split.
+	  * @param bool $escape_percents Keep literal percent signs for a printf format string.
 	  * @return array Array of lines.
 	  */
-	public static function parseLines( &$param ) {
+	public static function parseLines( &$param, $escape_percents = true ) {
 		$REGEX_LINE = '#<br\s*/?>|\n#';
 
 		// Important! Breaks patch stacking otherwise!
 		if ( strlen( $param ) == 0 ) {
 			return null;
 		}
-		$param = TPCUtil::sanitize( $param );
+		$param = TPCUtil::sanitize( $param, $escape_percents );
 		return preg_split( $REGEX_LINE, $param, null );
 	}
 
