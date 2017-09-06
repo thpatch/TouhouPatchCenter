@@ -183,4 +183,17 @@ class TPCState
 			array_keys( $this->deletionCache )
 		);
 	}
+
+	/**
+	  * Returns a per-file translation unit counter, incremented for every call
+	  * to autoCode(), that can be overriden by a 'code' parameter in [temp].
+	  * Should be called regardless of the template's lines being set, obviously.
+	  */
+	public function autoCode( &$temp ) {
+		$curFile = $this->getCurFile();
+		$code = TPCUtil::dictGet( $this->autoCodes[ $curFile ], 0 );
+		$code = TPCUtil::dictGet( $temp->params['code'], ++$code );
+		$this->autoCodes[ $curFile ] = $code;
+		return $code;
+	}
 }

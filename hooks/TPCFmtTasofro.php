@@ -13,11 +13,7 @@
 class TPCFmtTasofro {
 
 	public static function onTT( &$tpcState, &$title, &$temp ) {
-		$curFile = $tpcState->getCurFile();
-		$autoCode = TPCUtil::dictGet( $tpcState->tasofroCode[ $curFile ], 0 );
-
-		$code = TPCUtil::dictGet( $temp->params['code'], ++$autoCode );
-		$tpcState->tasofroCode[ $curFile ] = $code;
+		$code = $tpcState->autoCode( $temp );
 
 		$lines = TPCParse::parseLines( $temp->params['tl'], false );
 		// Don't write a JSON null for empty boxes to keep patch stacking functional.
