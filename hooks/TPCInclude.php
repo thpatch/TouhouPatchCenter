@@ -90,7 +90,11 @@ class TPCInclude {
 	}
 
 	public static function onPrefixInclude( &$tpcState, &$title, &$temp ) {
-		$page = $temp->params[1];
+		// NSML needs [ and ] in some filenames, which are illegal in MediaWiki
+		// page names, so we use dashes instead.
+		// This replaces them for the wiki file names only.
+		$page = str_replace( array( '[', ']' ), '-', $temp->params[1] );
+
 		$game = self::getGame( $tpcState, $temp );
 		$namespace = intval( TPCUtil::dictGet( $temp->params['namespace'] ) );
 		foreach ( TPCTLPatches::get() as $patch => $lang ) {
