@@ -76,6 +76,11 @@ class TPCState
 	}
 
 	public function init( $title ) {
+		// Part of the theme DB?
+		if ( $title->getNamespace() === NS_THEMEDB ) {
+			$this->patches = array( "lang_" . $title->getSubpageText() );
+			return true;
+		}
 		// Is this page already mapped to a patch?
 		if ( !TPCPatchMap::isPatchRootPage( $title ) ) {
 			$map = TPCPatchMap::get( $title );

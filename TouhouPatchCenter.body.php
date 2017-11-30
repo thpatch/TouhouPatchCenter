@@ -26,6 +26,10 @@ class TouhouPatchCenter {
 	}
 
 	public static function evalContent( TPCState &$tpcState, Title $title, Content &$content ) {
+		if ( $title->getNamespace() === NS_THEMEDB ) {
+			$id = strtr( $title->getBaseText(), ' ', '_' );
+			return TPCFmtTheme::onTheme( $tpcState, $title, $id );
+		}
 		$text = $content->getNativeData();
 		$temps = MWScrape::toArray( $text );
 		foreach ( $temps as $i ) {
