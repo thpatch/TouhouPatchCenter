@@ -2,6 +2,9 @@
 
 /**
   * Database-powered list of translation patches.
+  * Registers the following template hooks:
+  *
+  * {{thcrap_tl_patches}}
   *
   * @file
   * @author Nmlgc

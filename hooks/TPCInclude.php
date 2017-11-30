@@ -6,7 +6,6 @@
   *
   * {{thcrap_target}}
   * {{thcrap_include}}
-  * {{thcrap_tl_patches}}
   * {{thcrap_tl_include}}
   * {{thcrap_prefix_include}}
   * {{thcrap_prefix_file_include}}
