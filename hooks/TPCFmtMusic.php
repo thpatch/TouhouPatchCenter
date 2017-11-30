@@ -21,23 +21,14 @@ class TPCFmtMusic {
 		}
 		$id = sprintf( '%s_%02d', $game, $num );
 
-		// Need to be both called unconditionally in this order, because any
-		// getFile or switchFile call that gives or implies curGame == null
-		// resets the game information in the state!
-		$themes = &$tpcState->getFile( null, "themes.js" );
-		$musiccmt = &$tpcState->getFile( $game, "musiccmt.js" );
-
-		// Fetch and store music title, resolving any redirects in the process
 		$lang = $title->getPageLanguage()->getCode();
 		$idTitle = Title::newFromText( "$id/$lang" , NS_THEMEDB );
-		do {
-			$idPage = WikiPage::factory( $idTitle );
-			$idContent = $idPage->getContent();
-		} while ( $idContent and $idTitle = $idContent->getRedirectTarget() );
-		$idText = $idPage->getText();
-		if ( $idText ) {
-			$themes[$id] = TPCUtil::sanitize( $idText );
-		}
+		// Needs to be called first, because any getFile() or switchFile()
+		// call that gives or implies curGame == null resets the game
+		// information in the state!
+		TPCFmtTheme::onTheme( $tpcState, $idTitle, $id );
+
+		$musiccmt = &$tpcState->getFile( $game, "musiccmt.js" );
 
 		$tl = TPCParse::parseLines( $tl );
 		foreach ( $tl as $i ) {

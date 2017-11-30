@@ -67,6 +67,7 @@ require_once("$hookDir/TPCFmtMsg.php");
 require_once("$hookDir/TPCFmtMusic.php");
 require_once("$hookDir/TPCFmtSpells.php");
 require_once("$hookDir/TPCFmtStrings.php");
+require_once("$hookDir/TPCFmtTheme.php");
 
 require_once("$hookDir/TPCFmtTasofro.php");
 // ---------
