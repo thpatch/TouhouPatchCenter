@@ -136,9 +136,7 @@ class TouhouPatchCenter {
 		$null1, $null2, $flags, $revision, $status, $baseRevId
 	) {
 		$title = $article->getTitle();
-		if ( TPCPatchMap::isPatchPage( $title ) ) {
-			self::evalTitle( $title, $content );
-		}
+		self::evalTitle( $title, $content );
 		return true;
 	}
 
