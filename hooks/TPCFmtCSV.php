@@ -11,11 +11,16 @@
   */
 
 class TPCFmtCSV {
+	public static function workAroundZero( &$arr, $id ) {
+		if( $id == 0 ) {
+			$arr[ '_' ] = '_';
+		}
+	}
 
 	public static function onCSV( &$tpcState, &$title, &$temp ) {
 		$id = TPCUtil::dictGet( $temp->params['id'] );
 		$tl = TPCUtil::dictGet( $temp->params['tl'] );
-		if ( empty( $id ) or empty( $tl ) ) {
+		if ( empty( $tl ) ) {
 			return true;
 		}
 		$tl = TPCUtil::sanitize( $tl, false );
@@ -24,9 +29,11 @@ class TPCFmtCSV {
 		$ids = explode( ".", $id );
 		$lastSubkeyIndex = count( $ids ) - 1;
 		for( $i = 0; $i < $lastSubkeyIndex; $i++ ) {
+			self::workAroundZero( $subkey, $ids[ $i ] );
 			$subkey = &$subkey[ $ids[ $i ] ];
 		}
-		$subkey[ $ids[ $lastSubkeyIndex ] = &$tl;
+		self::workAroundZero( $subkey, $ids[ $lastSubkeyIndex ]);
+		$subkey[ $ids[ $lastSubkeyIndex ] ] = &$tl;
 		return true;
 	}
 }
