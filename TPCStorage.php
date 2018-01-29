@@ -75,7 +75,8 @@ class TPCStorage {
 		$ret = array();
 		foreach ( $wgTPCServers as $i ) {
 			if ( isset( $i['url'] ) ) {
-				$ret[] = "{$i['url']}/$patch/";
+				$serverURL = "{$i['url']}/$patch/";
+				$ret[] = preg_replace( '/([^:])(\/{2,})/', '$1/', $serverURL );
 			}
 		}
 		return $ret;
