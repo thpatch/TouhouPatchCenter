@@ -40,7 +40,7 @@ class TPCFmtMsg {
 	}
 
 	protected static function renderRuby( &$lines ) {
-		$REGEX_RUBY = '/\{\{\s*ruby(-ja)*\s*\|(.*?)\|\s*(.*?)\s*\}\}/';
+		$REGEX_RUBY = '/\{\{\s*ruby(-ja)*\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\}\}/';
 		$FORMAT_RUBY = "|\t%s\t,\t%s\t,%s";
 		foreach ( $lines as $key => &$i ) {
 			if ( !preg_match( $REGEX_RUBY, $i, $m, PREG_OFFSET_CAPTURE) ) {
