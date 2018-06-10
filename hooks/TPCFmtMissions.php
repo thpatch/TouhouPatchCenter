@@ -49,6 +49,9 @@ class TPCFmtMissions {
 				$arr[$i] = $val;
 			}
 		}
+
+		// Needed to ensure that $arr is sequential
+		ksort( $arr );
 	}
 
 	public static function onMission( &$tpcState, &$title, &$temp ) {
