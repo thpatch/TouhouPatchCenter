@@ -64,6 +64,7 @@ require_once("$hookDir/TPCVersions.php");
 
 require_once("$hookDir/TPCFmtCSV.php");
 require_once("$hookDir/TPCFmtGentext.php");
+require_once("$hookDir/TPCFmtMissions.php");
 require_once("$hookDir/TPCFmtMsg.php");
 require_once("$hookDir/TPCFmtMusic.php");
 require_once("$hookDir/TPCFmtSpells.php");
