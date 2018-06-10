@@ -30,7 +30,7 @@ class TPCFmtMissions {
 
 			$i = $offset . $base . $rest;
 			$furi[$key] = [$offset, $base];
-			$lines[$key+LINES] = $m[3][0];
+			$lines[$key + self::LINES] = $m[3][0];
 		}
 	}
 
@@ -72,7 +72,7 @@ class TPCFmtMissions {
 
 		// Line processing
 		if ( $lines ) {
-			array_splice( $lines, LINES ); // limit input to 3 lines
+			array_splice( $lines, self::LINES ); // limit input to 3 lines
 			$furi = [];
 			self::renderRuby( $lines, $furi );
 
