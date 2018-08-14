@@ -148,6 +148,9 @@ class TouhouPatchCenter {
 	public static function onFileDeleteComplete(
 		$file, $oldimage, $article, $user, $reason
 	) {
+		if ( $oldimage ) {
+			return true;
+		}
 		$title = $file->getTitle();
 		$map = TPCPatchMap::get( $title );
 		if ( !$map or !$map->pm_patch ) {
