@@ -9,6 +9,16 @@
 
 class TPCUtil {
 	/**
+	  * Returns the language of original content in the given namespace.
+	  *
+	  * @param int $namespace Namespace number
+	  * @return string Language code
+	  */
+	public static function getNamespaceBaseLanguage( $namespace ) {
+		return $namespace == 0 ? 'ja' : $wgLanguageCode;
+	}
+
+	/**
 	  * Python's dict.get in PHP
 	  *
 	  * @param mixed $element Dictionary element

@@ -71,23 +71,6 @@ class TPCInclude {
 		return self::onTarget( $tpcState, $targetTitle, $temp );
 	}
 
-	public static function onTLInclude( &$tpcState, &$title, &$temp ) {
-		$page = $temp->params[1];
-		$baseTitle = self::getTitleFromLink( $title, $page );
-		$baseLang = $baseTitle->getPageLanguage()->getCode();
-		// TODO: This is really slow... Refactor into something that writes
-		// all languages in a single database call.
-		foreach ( TPCTLPatches::get() as $patch => $lang ) {
-			if ( $lang === $baseLang ) {
-				$targetTitle = $baseTitle;
-			} else {
-				$targetTitle = self::getTitleFromLink( $title, "$page/$lang" );
-			}
-			self::onTarget( $tpcState, $targetTitle, $temp, $patch );
-		}
-		return true;
-	}
-
 	public static function onPrefixInclude( &$tpcState, &$title, &$temp ) {
 		// NSML needs [ and ] in some filenames, which are illegal in MediaWiki
 		// page names, so we use dashes instead.
@@ -113,7 +96,6 @@ class TPCInclude {
 
 $wgTPCHooks['thcrap_target'][] = 'TPCInclude::onTarget';
 $wgTPCHooks['thcrap_include'][] = 'TPCInclude::onInclude';
-$wgTPCHooks['thcrap_tl_include'][] = 'TPCInclude::onTLInclude';
 $wgTPCHooks['thcrap_prefix_include'][] = 'TPCInclude::onPrefixInclude';
 $wgTPCHooks['thcrap_prefix_file_include'][] = 'TPCInclude::onPrefixFileInclude';
 $wgTPCHooks['thcrap_image'][] = 'TPCInclude::onPrefixFileInclude';

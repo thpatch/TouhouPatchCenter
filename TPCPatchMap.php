@@ -51,13 +51,33 @@ class TPCPatchMap {
 	  * See tpc_patch_map.sql for the format.
 	  */
 	public static function get( $title ) {
-		return self::getMapping(
+		$namespace = $title->getNamespace();
+		$ret = self::getMapping(
 			'tpc_patch_map',
 			'*',
 			array(
-				'pm_namespace' => $title->getNamespace(),
+				'pm_namespace' => $namespace,
 				'pm_title' => $title->getText()
 			)
+		);
+		if ( $ret or $namespace == NS_FILE ) {
+			return $ret;
+		}
+		// Not actually a gross hack, Title::isSubpage() works just like this.
+		$code = substr_count( $title->getText(), "/" ) >= 2
+			? $title->getSubpageText()
+			: TPCUtil::getNamespaceBaseLanguage( $namespace );
+
+		$dbr = wfGetDB( DB_SLAVE );
+		$patchForLang = $dbr->select( 'tpc_tl_patches', 'tl_patch', array(
+			'tl_code' => $code
+		) )->fetchObject();
+		if ( !$patchForLang ) {
+			return null;
+		}
+		return ( object )array(
+			'pm_patch' => array( $patchForLang->tl_patch ),
+			'pm_game' => lcfirst( $title->getRootText() )
 		);
 	}
 
