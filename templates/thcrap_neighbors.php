@@ -32,8 +32,8 @@ class thcrap_neighbors extends TPCTemplate {
 					$ret .= "*<tt>$id</tt> ($title)\n";
 				}
 			} else {
-				$ret .= '| ?\n';
-				$ret .= '| ?\n';
+				$ret .= "| ?\n";
+				$ret .= "| ?\n";
 			}
 		}
 		$ret .= "|}";
