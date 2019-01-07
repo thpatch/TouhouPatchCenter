@@ -64,9 +64,11 @@ class TPCPatchMap {
 			return $ret;
 		}
 		// Not actually a gross hack, Title::isSubpage() works just like this.
-		$code = substr_count( $title->getText(), "/" ) >= 2
+		$subpageLevels = substr_count( $title->getText(), "/" );
+		$code = ( $subpageLevels >= 1 )
 			? $title->getSubpageText()
 			: TPCUtil::getNamespaceBaseLanguage( $namespace );
+		$game = ( $subpageLevels >= 2 ) ? lcfirst( $title->getRootText() ) : "";
 
 		$dbr = wfGetDB( DB_SLAVE );
 		$patchForLang = $dbr->select( 'tpc_tl_patches', 'tl_patch', array(
@@ -77,7 +79,7 @@ class TPCPatchMap {
 		}
 		return ( object )array(
 			'pm_patch' => array( $patchForLang->tl_patch ),
-			'pm_game' => lcfirst( $title->getRootText() )
+			'pm_game' => $game
 		);
 	}
 
