@@ -19,9 +19,8 @@ class TPCFmtMissions {
 	}
 
 	protected static function renderRuby( &$lines, &$furi ) {
-		$REGEX_RUBY = '/\{\{\s*ruby(-ja)*\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\}\}/';
 		foreach ( $lines as $key => &$i ) {
-			if ( !preg_match( $REGEX_RUBY, $i, $m, PREG_OFFSET_CAPTURE) ) {
+			if ( !TPCParse::parseRuby( $m, $i ) ) {
 				continue;
 			}
 			$offset = substr( $i, 0, $m[0][1] );

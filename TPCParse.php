@@ -91,6 +91,18 @@ class TPCParse {
 	}
 
 	/**
+	  * Searches the given line for a ruby annotation.
+	  *
+	  * @param array &$matches Search results, in preg_match() format.
+	  * @param string &$line The line of text to search.
+	  * @return mixed The return value from preg_match().
+	  */
+	public static function parseRuby( &$matches, &$line ) {
+		$REGEX_RUBY = '/\{\{\s*ruby(-ja)*\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\}\}/';
+		return preg_match( $REGEX_RUBY, $line, $matches, PREG_OFFSET_CAPTURE );
+	}
+
+	/**
 	  * Parses function calls. For example,
 	  *
 	  * 	parseFunc( "util_xor(0x77, 7, 16)" );
