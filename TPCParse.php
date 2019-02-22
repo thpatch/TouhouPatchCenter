@@ -40,17 +40,22 @@ class TPCParse {
 		}
 		// Splice each version
 		$curSplice = 0;
+		$spliceDrift = 0;
+		$last = $str;
 		foreach ( $versions as $i ) {
+			$splicePoint = $splice[$curSplice] + $spliceDrift;
 			// Splice
-			$ret[ $i->params['ver'] ] =
+			$last =
 				// before
-				substr( $str, 0, $splice[$curSplice] ) .
+				substr( $last, 0, $splicePoint ) .
 				// this version
 				$i->params[1] .
 				// after
-				substr( $str, $splice[$curSplice] )
+				substr( $last, $splicePoint )
 			;
+			$ret[ $i->params['ver'] ] = $last;
 			$curSplice++;
+			$spliceDrift += strlen( $i->params[1] );
 		}
 		$ret[null] = $str;
 		return $ret;
