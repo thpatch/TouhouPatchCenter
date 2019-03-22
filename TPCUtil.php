@@ -100,10 +100,10 @@ class TPCUtil {
 		}
 		// TL notes. We don't remove trailing whitespace here because you
 		// can *technically* have more than one per template…
-		$REGEX_TLNOTE = '/\{\{\s*tlnote\s*\|\s*(.*?)(\|.*)*}}/i';
+		$REGEX_TLNOTE = '/(\n)*\{\{\s*tlnote\s*\|\s*(.*?)(\|.*)*}}/is';
 		if ( preg_match_all( $REGEX_TLNOTE, $param, $tlnotes ) ) {
 			$param = preg_replace( $REGEX_TLNOTE, '', $param );
-			$param .= json_decode( '"\u0014"' ) . implode( $tlnotes[1] );
+			$param .= json_decode( '"\u0014"' ) . implode( $tlnotes[2] );
 		}
 		// Do more MediaWiki stuff...
 		return $param;

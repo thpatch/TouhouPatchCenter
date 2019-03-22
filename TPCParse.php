@@ -92,6 +92,14 @@ class TPCParse {
 			return null;
 		}
 		$param = TPCUtil::sanitize( $param, $escape_percents );
+		$tlnotePos = strpos( $param, json_decode( '"\u0014"' ) );
+		if( $tlnotePos !== FALSE ) {
+			$tlnote = substr( $param, $tlnotePos );
+			$regular = substr( $param, 0, $tlnotePos );
+			$ret = preg_split( $REGEX_LINE, $regular, null ) ;
+			$ret[ count($ret) - 1] .= $tlnote;
+			return $ret;
+		}
 		return preg_split( $REGEX_LINE, $param, null );
 	}
 
