@@ -97,7 +97,9 @@ class TPCParse {
 			$tlnote = substr( $param, $tlnotePos );
 			$regular = substr( $param, 0, $tlnotePos );
 			$ret = preg_split( $REGEX_LINE, $regular, null ) ;
-			$ret[ count($ret) - 1] .= $tlnote;
+			$tlnoteret = preg_split( $REGEX_LINE, $tlnote, null ) ;
+			foreach ($tlnoteret as $tltoken) {
+				$ret[ count($ret) - 1] .= $tltoken;
 			return $ret;
 		}
 		return preg_split( $REGEX_LINE, $param, null );
