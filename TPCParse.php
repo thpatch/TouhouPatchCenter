@@ -97,7 +97,7 @@ class TPCParse {
 			$tlnote = substr( $param, $tlnotePos );
 			$regular = substr( $param, 0, $tlnotePos );
 			$ret = preg_split( $REGEX_LINE, $regular, null ) ;
-			$ret[ count($ret) - 1] .= $tlnote;
+			$ret[ count($ret) - 1] .= preg_replace("#<br\s*/?>#", "", $tlnote);
 			return $ret;
 		}
 		return preg_split( $REGEX_LINE, $param, null );
