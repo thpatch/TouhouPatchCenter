@@ -83,9 +83,6 @@ class TPCPatchMap {
 		);
 	}
 
-	/**
-	  * @return bool true if mapping was updated
-	  */
 	public static function update( $title, $patch, $game = null, $target = null ) {
 		$map = self::get( $title );
 		$patches = self::mergePatch( $map, $patch );
@@ -96,10 +93,9 @@ class TPCPatchMap {
 			( TPCUtil::dictGet( $map->pm_game ) === $game ) and
 			( TPCUtil::dictGet( $map->pm_target ) === $target )
 		) {
-				return false;
+				return;
 		}
 		self::updateMapping( $title, $patches, $game, $target );
-		return true;
 	}
 
 	/**

@@ -47,14 +47,12 @@ class TPCInclude {
 			$file = TPCUtil::dictGet( $temp->params['target'] );
 		}
 
-		$titleID = $title->getArticleID();
-
 		if ( !$patch ) {
 			$patch = $tpcState->patches[0];
 		}
 
-		$parse = TPCPatchMap::update( $title, $patch, $game, $file );
-		if ( $parse and $titleID ) {
+		TPCPatchMap::update( $title, $patch, $game, $file );
+		if ( $title->getArticleID() ) {
 			TouhouPatchCenter::evalTitle( $title );
 		}
 		return true;
