@@ -39,7 +39,17 @@ class TPCFmtGentext {
 		self::addGentext( $tpcState, $id . "_1", TPCParse::parseLines( $unlocked ));
 		return true;
 	}
+
+	public static function onAbility( &$tpcState, &$title, &$temp ) {
+		$id = TPCUtil::dictGet( $temp->params['id'] );
+		$title = TPCUtil::dictGet( $temp->params['title'] );
+		$description = TPCUtil::dictGet( $temp->params['description'] );
+		self::addGentext( $tpcState, $id, TPCUtil::sanitize( $title ));
+		self::addGentext( $tpcState, $id . "_0", TPCParse::parseLines( $description ));
+		return true;
+	}
 }
 $wgTPCHooks['thcrap_gentext'][] = 'TPCFmtGentext::onGentext';
 $wgTPCHooks['gentext'][] = 'TPCFmtGentext::onGentext';
 $wgTPCHooks['trophy'][] = 'TPCFmtGentext::onTrophy';
+$wgTPCHooks['ability'][] = 'TPCFmtGentext::onAbility';
