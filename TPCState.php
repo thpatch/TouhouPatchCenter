@@ -78,6 +78,9 @@ class TPCState
 	public function init( $title ) {
 		// Part of the theme DB?
 		if ( $title->getNamespace() === NS_THEMEDB ) {
+			if ( !$title->isSubpage() ) {
+				return false;
+			}
 			$this->patches = array( "lang_" . $title->getSubpageText() );
 			return true;
 		}
