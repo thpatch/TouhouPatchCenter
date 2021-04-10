@@ -12,7 +12,7 @@ require_once( dirname( __FILE__ ) . "/../../../maintenance/Maintenance.php" );
 class TPCRebuild extends Maintenance {
 
 	public function parseTranslatablePages() {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$pages = $dbr->select(
 			'tpc_patch_map',
 			array( 'pm_namespace', 'pm_title' ),

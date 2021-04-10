@@ -19,7 +19,7 @@ class TPCTLPatches {
 		if ( !empty( self::$patches ) ) {
 			return self::$patches;
 		}
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$query = $dbr->select( 'tpc_tl_patches', "*" );
 		$ret = array();
 		foreach ( $query as $q ) {

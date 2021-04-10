@@ -23,7 +23,7 @@ class TPCPatchMap {
 	// Database access functions
 	// -------------------------
 	protected static function getMapping( $table, $vars, $conds ) {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		// Get old value
 		$query = $dbr->select( $table, $vars, $conds );
 		$map = $query->fetchObject();
@@ -70,7 +70,7 @@ class TPCPatchMap {
 			: TPCUtil::getNamespaceBaseLanguage( $namespace );
 		$game = ( $subpageLevels >= 2 ) ? lcfirst( $title->getRootText() ) : "";
 
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$patchForLang = $dbr->select( 'tpc_tl_patches', 'tl_patch', array(
 			'tl_code' => $code
 		) )->fetchObject();
@@ -113,7 +113,7 @@ class TPCPatchMap {
 
 	public static function getPatchRootPages() {
 		global $wgTPCPatchNamespace;
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		return $dbr->select(
 			'page',
 			array( 'page_namespace', 'page_title'),
