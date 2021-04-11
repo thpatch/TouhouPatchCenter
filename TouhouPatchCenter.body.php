@@ -43,6 +43,10 @@ class TouhouPatchCenter {
 			if ( !$content ) {
 				$newPage = WikiPage::factory( $title );
 				$content = $newPage->getContent();
+				// Might still be `null` if the page isn't present in the database.
+				if( !$content ) {
+					return;
+				}
 			}
 			self::evalContent( $tpcState, $title, $content );
 			TPCStorage::writeState( $tpcState );
@@ -53,6 +57,10 @@ class TouhouPatchCenter {
 		$pages = array( $fileTitle );
 		if ( $fileTitle->isRedirect() ) {
 			$content = WikiPage::factory( $fileTitle )->getContent();
+			// Might still be `null` if the page isn't present in the database.
+			if ( !$content ) {
+				return;
+			}
 			$fileTitle = $content->getUltimateRedirectTarget();
 		} else {
 			// could be a target page for a redirect
