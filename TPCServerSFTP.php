@@ -62,7 +62,7 @@ class TPCServerSFTP extends TPCServer {
 	}
 
 	function mkdir( &$dir ) {
-		if ( !empty( $dir ) ) {
+		if ( $dir !== "" ) {
 			$this->sftp->mkdir( $dir, -1, true );
 		}
 	}

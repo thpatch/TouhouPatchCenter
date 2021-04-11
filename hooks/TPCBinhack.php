@@ -43,7 +43,7 @@ class TPCBinhack {
 		foreach ( $code as $build => $val ) {
 			$buildFile = &$tpcState->getBuild( $build );
 			$val = preg_replace( '/\s+/', '', $val );
-			if ( !empty( $val ) ) {
+			if ( $val !== "" ) {
 				$buildFile['binhacks'][$id]['code'] = $val;
 			}
 		}

@@ -33,7 +33,7 @@ class TPCFmtMusic {
 		$tl = TPCParse::parseLines( $tl );
 		foreach ( $tl as $i ) {
 			$test = trim( $i, " 　@" );
-			if ( !empty( $test ) ) {
+			if ( $test !== "" ) {
 				$musiccmt[$num] = $tl;
 				break;
 			}

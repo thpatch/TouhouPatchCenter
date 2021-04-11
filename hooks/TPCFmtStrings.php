@@ -40,7 +40,7 @@ class TPCFmtStrings {
 
 		$builds = TPCParse::parseVer( $addr );
 		foreach ( $builds as $build => $val ) {
-			if ( !empty( $val ) ) {
+			if ( $val !== "" ) {
 				$buildFile = &$tpcState->getBuild( $build );
 				$buildFile[$val] = $id;
 			}
