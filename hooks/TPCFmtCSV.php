@@ -20,7 +20,7 @@ class TPCFmtCSV {
 	public static function onCSV( &$tpcState, &$title, &$temp ) {
 		$id = TPCUtil::dictGet( $temp->params['id'] );
 		$tl = TPCUtil::dictGet( $temp->params['tl'] );
-		if ( empty( $tl ) ) {
+		if ( $tl === "" ) {
 			return true;
 		}
 		$tl = TPCUtil::sanitize( $tl, false );
