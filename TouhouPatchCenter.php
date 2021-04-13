@@ -42,6 +42,9 @@ $wgAutoloadClasses['TPCStorage'] = "$dir/TPCStorage.php";
 require_once("$dir/TPCTLPatches.php"); // contains a TPC hook
 $wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
 
+$wgAutoloadClasses['ApiEvalTitle'] = "$dir/ApiEvalTitle.php";
+$wgAPIModules['evaltitle'] = 'ApiEvalTitle';
+
 $wgExtensionMessagesFiles['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.i18n.php";
 // --------
 
