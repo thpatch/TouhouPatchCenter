@@ -139,12 +139,15 @@ class TouhouPatchCenter {
 		return true;
 	}
 
-	public static function onPageContentSaveComplete(
-		$article, $user, $content, $summary, $isMinor,
-		$null1, $null2, $flags, $revision, $status, $baseRevId
+	public static function onPageSaveComplete(
+		WikiPage $wikiPage,
+		MediaWiki\User\UserIdentity $user,
+		string $summary,
+		int $flags,
+		MediaWiki\Revision\RevisionRecord $revisionRecord,
+		MediaWiki\Storage\EditResult $editResult
 	) {
-		$title = $article->getTitle();
-		self::evalTitle( $title, $content );
+		self::evalTitle( $wikiPage->getTitle(), $wikiPage->getContent() );
 		return true;
 	}
 
