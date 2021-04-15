@@ -69,6 +69,19 @@ class TPCInclude {
 		return self::onTarget( $tpcState, $targetTitle, $temp );
 	}
 
+	public static function onTLInclude( &$tpcState, &$title, &$temp ) {
+		$page = $temp->params[1];
+		$targetTitle = self::getTitleFromLink( $title, $page );
+
+		$dbw = wfGetDB( DB_MASTER );
+		$insert = array(
+			'tlsp_namespace' => $targetTitle->getNamespace(),
+			'tlsp_title' => $targetTitle->getText(),
+		);
+		$dbw->insert( 'tpc_tl_source_pages', $insert, __METHOD__, 'IGNORE' );
+		return true;
+	}
+
 	public static function onPrefixInclude( &$tpcState, &$title, &$temp ) {
 		// NSML needs [ and ] in some filenames, which are illegal in MediaWiki
 		// page names, so we use dashes instead.
@@ -94,6 +107,7 @@ class TPCInclude {
 
 $wgTPCHooks['thcrap_target'][] = 'TPCInclude::onTarget';
 $wgTPCHooks['thcrap_include'][] = 'TPCInclude::onInclude';
+$wgTPCHooks['thcrap_tl_include'][] = 'TPCInclude::onTLInclude';
 $wgTPCHooks['thcrap_prefix_include'][] = 'TPCInclude::onPrefixInclude';
 $wgTPCHooks['thcrap_prefix_file_include'][] = 'TPCInclude::onPrefixFileInclude';
 $wgTPCHooks['thcrap_image'][] = 'TPCInclude::onPrefixFileInclude';

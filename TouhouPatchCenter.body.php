@@ -208,6 +208,7 @@ class TouhouPatchCenter {
 		$dir = __DIR__;
 		$updater->addExtensionTable( 'tpc_patch_map', "$dir/tpc_patch_map.sql" );
 		$updater->addExtensionTable( 'tpc_tl_patches', "$dir/tpc_tl_patches.sql" );
+		$updater->addExtensionTable( 'tpc_tl_source_pages', "$dir/tpc_tl_source_pages.sql" );
 		return true;
 	}
 	// =====
@@ -216,5 +217,6 @@ class TouhouPatchCenter {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->delete( 'tpc_patch_map', '*' );
 		$dbw->delete( 'tpc_tl_patches', '*' );
+		$dbw->delete( 'tpc_tl_source_pages', '*' );
 	}
 }

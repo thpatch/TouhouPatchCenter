@@ -22,6 +22,34 @@ class TPCPatchMap {
 	// -------------------------
 	// Database access functions
 	// -------------------------
+
+	/**
+	  * @return bool `true` if the given page is part of `tpc_tl_source_pages`.
+	  */
+	public static function isTLIncludedPage( int $namespace, string $title ): bool {
+		$dbr = wfGetDB( DB_REPLICA );
+		return $dbr->selectRow( 'tpc_tl_source_pages', 1, array(
+			'tlsp_namespace' => $namespace,
+			'tlsp_title' => $title
+		)) !== false;
+	}
+
+	/**
+	  * @return array Mapping information for this page.
+	  * See tpc_patch_map.sql for the format.
+	  */
+	public static function buildTLMapping( string $game, string $lang ) {
+		$dbr = wfGetDB( DB_REPLICA );
+		$tl = $dbr->selectRow( 'tpc_tl_patches', 'tl_patch', array( 'tl_code' => $lang ) );
+		if ( $tl === false ) {
+			return null;
+		}
+		return ( object )array(
+			'pm_patch' => array( $tl->tl_patch ),
+			'pm_game' => $game,
+		);
+	}
+
 	protected static function getMapping( $table, $vars, $conds ) {
 		$dbr = wfGetDB( DB_REPLICA );
 		// Get old value
@@ -52,6 +80,7 @@ class TPCPatchMap {
 	  */
 	public static function get( $title ) {
 		$namespace = $title->getNamespace();
+
 		$ret = self::getMapping(
 			'tpc_patch_map',
 			'*',
@@ -63,24 +92,34 @@ class TPCPatchMap {
 		if ( $ret or $namespace == NS_FILE ) {
 			return $ret;
 		}
-		// Not actually a gross hack, Title::isSubpage() works just like this.
-		$subpageLevels = substr_count( $title->getText(), "/" );
-		$code = ( $subpageLevels >= 1 )
-			? $title->getSubpageText()
-			: TPCUtil::getNamespaceBaseLanguage( $namespace );
-		$game = ( $subpageLevels >= 2 ) ? lcfirst( $title->getRootText() ) : "";
 
-		$dbr = wfGetDB( DB_REPLICA );
-		$patchForLang = $dbr->select( 'tpc_tl_patches', 'tl_patch', array(
-			'tl_code' => $code
-		) )->fetchObject();
-		if ( !$patchForLang ) {
-			return null;
+		// Auto-generate the mapping from the page title. This has to work for the following cases:
+		//
+		// | Case                       | $title         | tl_source_page | Mapped game / patch |
+		// |----------------------------+----------------+----------------+---------------------|
+		// | Multi-game, source page    | Game titles    | Game titles    |     "", "lang_ja"   |
+		// | Multi-game, translated     | Game titles/en | Game titles    |     "", "lang_en"   |
+		// | Specific game, source page | Th06/Images    | Th06/Images    | "th06", "lang_ja"   |
+		// | Specific game, translated  | Th06/Images/en | Th06/Images    | "th06", "lang_en"   |
+
+		$root = $title->getRootText(); // Might indicate a game
+
+		// Source page?
+		if ( self::isTLIncludedPage( $namespace, $title->getText() ) ) {
+			$game = $title->isSubpage() ? lcfirst( $root ) : "";
+			return self::buildTLMapping( $game, TPCUtil::getNamespaceBaseLanguage( $namespace ) );
 		}
-		return ( object )array(
-			'pm_patch' => array( $patchForLang->tl_patch ),
-			'pm_game' => $game
-		);
+
+		// If $title is a translated page, getBaseText() gives us the source page…
+		$base = $title->getBaseText();
+
+		// … which we can check against the same database table to check if this is a translated
+		// page of a registered source page.
+		if ( self::isTLIncludedPage( $namespace, $base ) ) {
+			$game = ( $root != $base ) ? lcfirst( $root ) : "";
+			return self::buildTLMapping( $game, $title->getSubpageText() );
+		}
+		return null;
 	}
 
 	public static function update( $title, $patch, $game = null, $target = null ) {

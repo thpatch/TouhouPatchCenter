@@ -11,37 +11,54 @@ require_once( dirname( __FILE__ ) . "/../../../maintenance/Maintenance.php" );
 
 class TPCRebuild extends Maintenance {
 
-	public function parseTranslatablePages() {
+	public function logAndEval( $i, $num, $pad, Title $title ) {
+		if( !$title->exists() ) {
+			return;
+		}
+		$this->output( sprintf(
+			"\t(%{$pad}d/%{$pad}d) %s...\n",
+			$i, $num, $title->getFullText()
+		) );
+		TouhouPatchCenter::evalTitle( $title );
+	}
+
+	public function parsePatchMap() {
 		$dbr = wfGetDB( DB_REPLICA );
-		$pages = $dbr->select(
-			'tpc_patch_map',
-			array( 'pm_namespace', 'pm_title' ),
-			array(
-				'pm_namespace' => 0,
-				"pm_title LIKE '%/%'"
-			)
-		);
-		$num = $pages->numRows();
+		$files = $dbr->select( 'tpc_patch_map', array( 'pm_namespace', 'pm_title' ) );
+		$num = $files->numRows();
 		$i = 1;
 		$pad = preg_match_all( "/[0-9]/", $num );
-		foreach ( $pages as $page ) {
-			$title = Title::makeTitle( $page->pm_namespace, $page->pm_title );
-
-			if( $title->exists() ) {
-				$out = sprintf(
-					"\t(%{$pad}d/%{$pad}d) %s...\n",
-					$i, $num, $title->getFullText()
-				);
-				$this->output( $out );
-
-				TouhouPatchCenter::evalTitle( $title );
-			}
+		foreach ( $files as $file ) {
+			$title = Title::makeTitle( $file->pm_namespace, $file->pm_title );
+			$this->logAndEval( $i, $num, $pad, $title );
 			$i++;
+		}
+	}
+
+	public function parseTranslatablePages() {
+		$dbr = wfGetDB( DB_REPLICA );
+		$sourcePages = $dbr->select( 'tpc_tl_source_pages', '*' );
+		$patches = $dbr->select( 'tpc_tl_patches', 'tl_code' );
+		$num = ( $sourcePages->numRows() * $patches->numRows() );
+		$i = 1;
+		$pad = preg_match_all( "/[0-9]/", $num );
+		foreach ( $sourcePages as $page ) {
+			foreach ( $patches as $patch ) {
+				$title = Title::makeTitle(
+					$page->tlsp_namespace, "{$page->tlsp_title}/{$patch->tl_code}"
+				);
+				$this->logAndEval( $i, $num, $pad, $title );
+				$i++;
+			}
 		}
 	}
 
 	public function rebuild() {
 		TPCStorage::init();
+
+		$this->output( "Copying all patch-mapped files…\n ");
+		$this->parsePatchMap();
+
 		$this->output( "Parsing all translatable pages…\n ");
 		$this->parseTranslatablePages();
 	}
