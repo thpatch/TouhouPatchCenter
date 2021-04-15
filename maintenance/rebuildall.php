@@ -12,12 +12,6 @@ require_once( dirname( __FILE__ ) . "/../../../maintenance/Maintenance.php" );
 
 class TPCRebuild extends Maintenance {
 
-	public function clearMappings() {
-		$dbw = wfGetDB( DB_MASTER );
-		$dbw->delete( 'tpc_patch_map', '*' );
-		$dbw->delete( 'tpc_tl_patches', '*' );
-	}
-
 	public function parsePatches() {
 		$patches = TPCPatchMap::getPatchRootPages();
 		$num = $patches->numRows();
@@ -40,7 +34,7 @@ class TPCRebuild extends Maintenance {
 	public function rebuild() {
 		TPCStorage::init();
 		$this->output( "Clearing page->patch mappings in database...\n" );
-		$this->clearMappings();
+		TouhouPatchCenter::clearDatabase();
 
 		$this->output( "Removing all files on all servers...\n" );
 		TPCStorage::wipe();

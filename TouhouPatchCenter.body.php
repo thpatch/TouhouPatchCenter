@@ -212,4 +212,10 @@ class TouhouPatchCenter {
 		return true;
 	}
 	// =====
+
+	public static function clearDatabase() {
+		$dbw = wfGetDB( DB_MASTER );
+		$dbw->delete( 'tpc_patch_map', '*' );
+		$dbw->delete( 'tpc_tl_patches', '*' );
+	}
 }
