@@ -54,9 +54,9 @@ class Template
 	  * @param int $assign Offset of assignment character. Can be null for unnamed parameters.
 	  *
 	  */
-	public function add( &$str, &$start, &$assign, &$end )	{
+	public function add( &$str, &$start, &$assign, &$end ) {
 		// "|param = value"
-		if ( $assign )	{
+		if ( $assign ) {
 			$key = trim( substr( $str, $start, $assign - $start ) );
 			$assign++;	// Jump over assign character
 			$value = trim( substr( $str, $assign, $end - $assign ) );
@@ -199,7 +199,7 @@ class MWScrape {
 				$nest++;
 			} elseif ( $curToken === self::MW_TR ) {
 				$nest--;
-				if ( $nest === 0 )	{
+				if ( $nest === 0 ) {
 					$temps[] = self::parseTemplate( $page, $tokens, $tempOff, $i );
 				}
 			}

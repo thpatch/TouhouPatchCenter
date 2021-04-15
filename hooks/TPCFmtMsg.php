@@ -32,7 +32,7 @@ class TPCFmtMsg {
 
 	public static function formatSlot( &$time, &$type, &$index ) {
 		// Much faster than sprintf, by the way
-		if ( $type )	{
+		if ( $type ) {
 			return $time . '_' . $type . '_' . $index;
 		} else {
 			return $time . '_' . $index;

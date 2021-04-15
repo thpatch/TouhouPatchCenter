@@ -172,7 +172,7 @@ class TouhouPatchCenter {
 		return true;
 	}
 
-	public static function onCanonicalNamespaces( &$list )	{
+	public static function onCanonicalNamespaces( &$list ) {
 		global $wgTPCPatchNamespace;
 		global $wgNamespacesWithSubpages;
 		if ( !defined( 'NS_PATCH' ) ) {
