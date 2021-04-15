@@ -207,7 +207,6 @@ class TouhouPatchCenter {
 	public static function onDatabaseUpdate( DatabaseUpdater $updater ) {
 		$dir = __DIR__;
 		$updater->addExtensionTable( 'tpc_patch_map', "$dir/tpc_patch_map.sql" );
-		$updater->addExtensionIndex( 'tpc_patch_map', 'tpc_pm_lookup', "$dir/tpc_pm_lookup.sql" );
 		$updater->addExtensionTable( 'tpc_tl_patches', "$dir/tpc_tl_patches.sql" );
 		return true;
 	}
