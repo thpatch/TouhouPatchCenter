@@ -9,6 +9,8 @@
 
 class TPCStorage {
 
+	const JSON_OPTS = (JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
 	// TPCServer objects.
 	static protected $servers = null;
 
@@ -120,7 +122,7 @@ class TPCStorage {
 					// Nothing to do here.
 					return;
 				}
-				$json = json_encode( (object)$array, TPC_JSON_OPTS );
+				$json = json_encode( (object)$array, self::JSON_OPTS );
 				$renderFile = false;
 				$ret = crc32( $json );
 			}
