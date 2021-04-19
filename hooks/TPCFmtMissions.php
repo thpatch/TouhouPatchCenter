@@ -92,6 +92,6 @@ class TPCFmtMissions {
 
 }
 
-$wgTPCHooks['thcrap_mission'][] = 'TPCFmtMissions::onMission';
+TouhouPatchCenter::registerHook( 'thcrap_mission', 'TPCFmtMissions::onMission' );
 // Short versions
-$wgTPCHooks['mission'][] = 'TPCFmtMissions::onMission';
+TouhouPatchCenter::registerHook( 'mission', 'TPCFmtMissions::onMission' );

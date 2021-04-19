@@ -105,9 +105,9 @@ class TPCInclude {
 	}
 }
 
-$wgTPCHooks['thcrap_target'][] = 'TPCInclude::onTarget';
-$wgTPCHooks['thcrap_include'][] = 'TPCInclude::onInclude';
-$wgTPCHooks['thcrap_tl_include'][] = 'TPCInclude::onTLInclude';
-$wgTPCHooks['thcrap_prefix_include'][] = 'TPCInclude::onPrefixInclude';
-$wgTPCHooks['thcrap_prefix_file_include'][] = 'TPCInclude::onPrefixFileInclude';
-$wgTPCHooks['thcrap_image'][] = 'TPCInclude::onPrefixFileInclude';
+TouhouPatchCenter::registerHook( 'thcrap_target', 'TPCInclude::onTarget' );
+TouhouPatchCenter::registerHook( 'thcrap_include', 'TPCInclude::onInclude' );
+TouhouPatchCenter::registerHook( 'thcrap_tl_include', 'TPCInclude::onTLInclude' );
+TouhouPatchCenter::registerHook( 'thcrap_prefix_include', 'TPCInclude::onPrefixInclude' );
+TouhouPatchCenter::registerHook( 'thcrap_prefix_file_include', 'TPCInclude::onPrefixFileInclude' );
+TouhouPatchCenter::registerHook( 'thcrap_image', 'TPCInclude::onPrefixFileInclude' );

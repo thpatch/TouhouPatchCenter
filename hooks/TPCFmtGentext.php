@@ -49,7 +49,7 @@ class TPCFmtGentext {
 		return true;
 	}
 }
-$wgTPCHooks['thcrap_gentext'][] = 'TPCFmtGentext::onGentext';
-$wgTPCHooks['gentext'][] = 'TPCFmtGentext::onGentext';
-$wgTPCHooks['trophy'][] = 'TPCFmtGentext::onTrophy';
-$wgTPCHooks['ability'][] = 'TPCFmtGentext::onAbility';
+TouhouPatchCenter::registerHook( 'thcrap_gentext', 'TPCFmtGentext::onGentext' );
+TouhouPatchCenter::registerHook( 'gentext', 'TPCFmtGentext::onGentext' );
+TouhouPatchCenter::registerHook( 'trophy', 'TPCFmtGentext::onTrophy' );
+TouhouPatchCenter::registerHook( 'ability', 'TPCFmtGentext::onAbility' );

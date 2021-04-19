@@ -183,12 +183,12 @@ class TPCFmtMsg {
 	}
 }
 
-$wgTPCHooks['thcrap_msg'][] = 'TPCFmtMsg::onMsg';
-$wgTPCHooks['thcrap_msg_assist'][] = 'TPCFmtMsg::onMsgAssist';
-$wgTPCHooks['thcrap_msg/footer'][] = 'TPCFmtMsg::onMsgFooter';
+TouhouPatchCenter::registerHook( 'thcrap_msg', 'TPCFmtMsg::onMsg' );
+TouhouPatchCenter::registerHook( 'thcrap_msg_assist', 'TPCFmtMsg::onMsgAssist' );
+TouhouPatchCenter::registerHook( 'thcrap_msg/footer', 'TPCFmtMsg::onMsgFooter' );
 // Short versions
-$wgTPCHooks['dt'][] = 'TPCFmtMsg::onMsg';
-$wgTPCHooks['dialogtable'][] = 'TPCFmtMsg::onMsg';
-$wgTPCHooks['dt/footer'][] = 'TPCFmtMsg::onMsgFooter';
-$wgTPCHooks['msgassist'][] = 'TPCFmtMsg::onMsgAssist';
-$wgTPCHooks['msgparse'][] = 'TPCFmtMsg::onMsgParse';
+TouhouPatchCenter::registerHook( 'dt', 'TPCFmtMsg::onMsg' );
+TouhouPatchCenter::registerHook( 'dialogtable', 'TPCFmtMsg::onMsg' );
+TouhouPatchCenter::registerHook( 'dt/footer', 'TPCFmtMsg::onMsgFooter' );
+TouhouPatchCenter::registerHook( 'msgassist', 'TPCFmtMsg::onMsgAssist' );
+TouhouPatchCenter::registerHook( 'msgparse', 'TPCFmtMsg::onMsgParse' );

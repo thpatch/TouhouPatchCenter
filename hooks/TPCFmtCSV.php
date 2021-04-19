@@ -37,4 +37,5 @@ class TPCFmtCSV {
 		return true;
 	}
 }
-$wgTPCHooks['csv'][] = 'TPCFmtCSV::onCSV';
+
+TouhouPatchCenter::registerHook( 'csv', 'TPCFmtCSV::onCSV' );

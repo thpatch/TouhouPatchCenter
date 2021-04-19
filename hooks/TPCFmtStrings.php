@@ -48,8 +48,8 @@ class TPCFmtStrings {
 		return true;
 	}
 }
-$wgTPCHooks['thcrap_string_def'][] = 'TPCFmtStrings::onDef';
-$wgTPCHooks['thcrap_string_loc'][] = 'TPCFmtStrings::onLoc';
+TouhouPatchCenter::registerHook( 'thcrap_string_def', 'TPCFmtStrings::onDef' );
+TouhouPatchCenter::registerHook( 'thcrap_string_loc', 'TPCFmtStrings::onLoc' );
 // Short versions
-$wgTPCHooks['stringdef'][] = 'TPCFmtStrings::onDef';
-$wgTPCHooks['stringloc'][] = 'TPCFmtStrings::onLoc';
+TouhouPatchCenter::registerHook( 'stringdef', 'TPCFmtStrings::onDef' );
+TouhouPatchCenter::registerHook( 'stringloc', 'TPCFmtStrings::onLoc' );

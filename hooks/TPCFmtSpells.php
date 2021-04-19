@@ -48,6 +48,6 @@ class TPCFmtSpells {
 	}
 }
 
-$wgTPCHooks['thcrap_spell'][] = 'TPCFmtSpells::onSpell';
+TouhouPatchCenter::registerHook( 'thcrap_spell', 'TPCFmtSpells::onSpell' );
 // Short versions
-$wgTPCHooks['spell_card'][] = 'TPCFmtSpells::onSpell';
+TouhouPatchCenter::registerHook( 'spell_card', 'TPCFmtSpells::onSpell' );

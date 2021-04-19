@@ -39,7 +39,6 @@ $wgAutoloadClasses['TPCServer'] = "$dir/TPCServer.php";
 $wgAutoloadClasses['TPCServerLocal'] = "$dir/TPCServerLocal.php";
 $wgAutoloadClasses['TPCState'] = "$dir/TPCState.php";
 $wgAutoloadClasses['TPCStorage'] = "$dir/TPCStorage.php";
-require_once("$dir/TPCTLPatches.php"); // contains a TPC hook
 $wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
 
 $wgAutoloadClasses['ApiEvalTitle'] = "$dir/ApiEvalTitle.php";
@@ -54,28 +53,6 @@ $wgAvailableRights[] = 'tpc-restricted';
 $wgGroupPermissions['sysop']['tpc-restricted'] = true;
 $wgGroupPermissions['patchdev']['tpc-restricted'] = true;
 // ------
-
-// TPC Hooks
-// ---------
-$hookDir = "$dir/hooks";
-require_once("$hookDir/TPCBinhack.php");
-require_once("$hookDir/TPCBreakpoint.php");
-require_once("$hookDir/TPCInclude.php");
-require_once("$hookDir/TPCInfo.php");
-require_once("$hookDir/TPCParseContext.php");
-require_once("$hookDir/TPCVersions.php");
-
-require_once("$hookDir/TPCFmtCSV.php");
-require_once("$hookDir/TPCFmtGentext.php");
-require_once("$hookDir/TPCFmtMissions.php");
-require_once("$hookDir/TPCFmtMsg.php");
-require_once("$hookDir/TPCFmtMusic.php");
-require_once("$hookDir/TPCFmtSpells.php");
-require_once("$hookDir/TPCFmtStrings.php");
-require_once("$hookDir/TPCFmtTheme.php");
-
-require_once("$hookDir/TPCFmtTasofro.php");
-// ---------
 
 // Templates
 // --------
@@ -104,3 +81,5 @@ $wgHooks['GetMagicVariableIDs'][] = 'thcrap_servers::setup';
 
 // Patch namespace
 $wgTPCPatchNamespace = 238;
+
+TouhouPatchCenter::setup();

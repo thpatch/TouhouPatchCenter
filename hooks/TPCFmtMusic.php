@@ -41,6 +41,6 @@ class TPCFmtMusic {
 		return true;
 	}
 }
-$wgTPCHooks['thcrap_music'][] = 'TPCFmtMusic::onMusic';
+TouhouPatchCenter::registerHook( 'thcrap_music', 'TPCFmtMusic::onMusic' );
 // Short versions
-$wgTPCHooks['musicroom'][] = 'TPCFmtMusic::onMusic';
+TouhouPatchCenter::registerHook( 'musicroom', 'TPCFmtMusic::onMusic' );

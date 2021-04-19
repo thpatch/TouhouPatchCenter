@@ -42,9 +42,7 @@ class TPCVersions {
 	}
 }
 
-$wgTPCHooks['thcrap_version_info/header'][] = 'TPCVersions::onVerInfoHeader';
-$wgTPCHooks['thcrap_ver_info/header'][] = 'TPCVersions::onVerInfoHeader';
-$wgTPCHooks['thcrap_version_info'][] = 'TPCVersions::onVerInfo';
-$wgTPCHooks['thcrap_ver_info'][] = 'TPCVersions::onVerInfo';
-$wgTPCRestrictedTemplates[] = 'thcrap_version_info';
-$wgTPCRestrictedTemplates[] = 'thcrap_ver_info';
+TouhouPatchCenter::registerHook( 'thcrap_version_info/header', 'TPCVersions::onVerInfoHeader' );
+TouhouPatchCenter::registerHook( 'thcrap_ver_info/header', 'TPCVersions::onVerInfoHeader' );
+TouhouPatchCenter::registerRestrictedHook( 'thcrap_version_info', 'TPCVersions::onVerInfo' );
+TouhouPatchCenter::registerRestrictedHook( 'thcrap_ver_info', 'TPCVersions::onVerInfo' );

@@ -45,4 +45,4 @@ class TPCInfo {
 	}
 }
 
-$wgTPCHooks['thcrap_patch_info'][] = 'TPCInfo::onPatchInfo';
+TouhouPatchCenter::registerHook( 'thcrap_patch_info', 'TPCInfo::onPatchInfo' );

@@ -56,5 +56,4 @@ class TPCBinhack {
 	}
 }
 
-$wgTPCHooks['thcrap_binhack'][] = 'TPCBinhack::onBinhack';
-$wgTPCRestrictedTemplates[] = 'thcrap_binhack';
+TouhouPatchCenter::registerRestrictedHook( 'thcrap_binhack', 'TPCBinhack::onBinhack' );

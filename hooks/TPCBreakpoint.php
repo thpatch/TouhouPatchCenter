@@ -44,5 +44,4 @@ class TPCBreakpoint {
 	}
 }
 
-$wgTPCHooks['thcrap_breakpoint'][] = 'TPCBreakpoint::onBreakpoint';
-$wgTPCRestrictedTemplates[] = 'thcrap_breakpoint';
+TouhouPatchCenter::registerRestrictedHook( 'thcrap_breakpoint', 'TPCBreakpoint::onBreakpoint' );

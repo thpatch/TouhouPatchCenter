@@ -14,12 +14,32 @@ class TouhouPatchCenter {
 	// Patch generation hooks
 	// ----------------------
 
+	// Maps TPC template names to their patch generation functions.
+	static protected $tpcHooks = [];
+
+	// Array of restricted templates. A user needs the tpc-restricted right in order to save
+	// edits that modify any of these templates on a page.
+	static protected $restrictedTemplateNames = [];
+
+	public static function registerHook( $templateName, $func ) {
+		self::$tpcHooks[$templateName][] = $func;
+	}
+
+	// More readable than an optional parameter to registerHook().
+	public static function registerRestrictedHook( $templateName, $func ) {
+		self::registerHook( $templateName, $func );
+		self::$restrictedTemplateNames[] = $templateName;
+	}
+
+	public static function getRestrictedTemplateNames() {
+		return self::$restrictedTemplateNames;
+	}
+
 	public static function runTPCHooks( $hook, &$tpcState, &$title, &$temp ) {
-		global $wgTPCHooks;
 		$params = array( &$tpcState, &$title, &$temp );
 		$hook = TPCUtil::normalizeHook( $hook );
-		if ( isset( $wgTPCHooks[$hook] ) ) {
-			foreach ( $wgTPCHooks[$hook] as $func) {
+		if ( isset( self::$tpcHooks[$hook] ) ) {
+			foreach ( self::$tpcHooks[$hook] as $func ) {
 				return call_user_func_array( $func, $params );
 			}
 		} else {
@@ -28,9 +48,8 @@ class TouhouPatchCenter {
 	}
 
 	public static function isRestricted( $temp ) {
-		global $wgTPCRestrictedTemplates;
 		$hook = TPCUtil::normalizeHook( $temp->name );
-		return in_array( $hook, $wgTPCRestrictedTemplates );
+		return in_array( $hook, self::$restrictedTemplateNames );
 	}
 
 	public static function scrapeRestrictedTemplates( $content ) {
@@ -219,5 +238,28 @@ class TouhouPatchCenter {
 		$dbw->delete( 'tpc_patch_map', '*' );
 		$dbw->delete( 'tpc_tl_patches', '*' );
 		$dbw->delete( 'tpc_tl_source_pages', '*' );
+	}
+
+	public static function setup() {
+		$dir = __DIR__ . "/hooks";
+		require_once("$dir/TPCBinhack.php");
+		require_once("$dir/TPCBreakpoint.php");
+		require_once("$dir/TPCInclude.php");
+		require_once("$dir/TPCInfo.php");
+		require_once("$dir/TPCParseContext.php");
+		require_once("$dir/TPCVersions.php");
+
+		require_once("$dir/TPCFmtCSV.php");
+		require_once("$dir/TPCFmtGentext.php");
+		require_once("$dir/TPCFmtMissions.php");
+		require_once("$dir/TPCFmtMsg.php");
+		require_once("$dir/TPCFmtMusic.php");
+		require_once("$dir/TPCFmtSpells.php");
+		require_once("$dir/TPCFmtStrings.php");
+		require_once("$dir/TPCFmtTheme.php");
+
+		require_once("$dir/TPCFmtTasofro.php");
+
+		require_once("$dir/TPCTLPatches.php");
 	}
 }
