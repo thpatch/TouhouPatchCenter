@@ -32,5 +32,3 @@ class thcrap_servers extends TPCTemplate {
 		return true;
 	}
 }
-
-$wgHooks['MagicWordwgVariableIDs'][] = 'thcrap_servers::setup';

@@ -80,10 +80,10 @@ require_once("$hookDir/TPCFmtTasofro.php");
 // Templates
 // --------
 $templateDir = "$dir/templates";
-require_once("$templateDir/TPCTemplate.php");
-require_once("$templateDir/thcrap_restricted_templates.php");
-require_once("$templateDir/thcrap_servers.php");
-require_once("$templateDir/thcrap_neighbors.php");
+$wgAutoloadClasses['TPCTemplate'] = "$templateDir/TPCTemplate.php";
+$wgAutoloadClasses['thcrap_restricted_templates'] = "$templateDir/thcrap_restricted_templates.php";
+$wgAutoloadClasses['thcrap_servers'] = "$templateDir/thcrap_servers.php";
+$wgAutoloadClasses['thcrap_neighbors'] = "$templateDir/thcrap_neighbors.php";
 // --------
 
 // MediaWiki hooks
@@ -95,6 +95,11 @@ $wgHooks['PageSaveComplete'][] = 'TouhouPatchCenter::onPageSaveComplete';
 $wgHooks['TitleMoveComplete'][] = 'TouhouPatchCenter::onTitleMoveComplete';
 $wgHooks['CanonicalNamespaces'][] = 'TouhouPatchCenter::onCanonicalNamespaces';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'TouhouPatchCenter::onDatabaseUpdate';
+
+$wgHooks['ParserGetVariableValueSwitch'][] = 'TPCTemplate::runSubclass';
+$wgHooks['GetMagicVariableIDs'][] = 'thcrap_neighbors::setup';
+$wgHooks['GetMagicVariableIDs'][] = 'thcrap_restricted_templates::setup';
+$wgHooks['GetMagicVariableIDs'][] = 'thcrap_servers::setup';
 // ---------------
 
 // Patch namespace

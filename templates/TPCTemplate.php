@@ -20,12 +20,10 @@ abstract class TPCTemplate {
 	}
 
 	/**
-	  * MagicWordwgVariableIDs hook.
+	  * GetMagicVariableIDs hook.
 	  */
 	public static function setup( &$variableIDs ) {
 		$variableIDs[] = get_called_class();
 		return true;
 	}
 }
-
-$wgHooks['ParserGetVariableValueSwitch'][] = 'TPCTemplate::runSubclass';

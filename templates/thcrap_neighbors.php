@@ -40,5 +40,3 @@ class thcrap_neighbors extends TPCTemplate {
 		return true;
 	}
 }
-
-$wgHooks['MagicWordwgVariableIDs'][] = 'thcrap_neighbors::setup';

@@ -21,5 +21,3 @@ class thcrap_restricted_templates extends TPCTemplate {
 		return true;
 	}
 }
-
-$wgHooks['MagicWordwgVariableIDs'][] = 'thcrap_restricted_templates::setup';
