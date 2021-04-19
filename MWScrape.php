@@ -181,6 +181,7 @@ class MWScrape {
 
 		// Apply basic regex
 		$page = preg_replace( '/<!--.*?-->/s', '', $page );
+		$page = preg_replace( '/\[\[[Cc]ategory:.*?\]\]/', '', $page );
 		$page = preg_replace( self::MW_PAGE_LINK_REGEX, "$3", $page );
 
 		$tokens = self::getMWTokenArray( $page );
