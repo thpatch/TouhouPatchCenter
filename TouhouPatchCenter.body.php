@@ -11,6 +11,9 @@ use MediaWiki\Revision\SlotRecord;
 
 class TouhouPatchCenter {
 
+	// Patch generation hooks
+	// ----------------------
+
 	protected static function runHooks( $hook, &$hookArray, $params ) {
 		$hook = TPCUtil::normalizeHook( $hook );
 		if ( isset( $hookArray[$hook] ) ) {
@@ -26,6 +29,23 @@ class TouhouPatchCenter {
 		global $wgTPCHooks;
 		return self::runHooks( $hook, $wgTPCHooks, array( &$tpcState, &$title, &$temp ) );
 	}
+
+	public static function isRestricted( $temp ) {
+		global $wgTPCRestrictedTemplates;
+		$hook = TPCUtil::normalizeHook( $temp->name );
+		return in_array( $hook, $wgTPCRestrictedTemplates );
+	}
+
+	public static function getRestrictedTemplates( $content ) {
+		if ( is_a( $content, 'Content' ) ) {
+			$text = $content->getNativeData();
+			$temps = MWScrape::toArray( $text );
+			return array_filter( $temps, "TouhouPatchCenter::isRestricted" );
+		} else {
+			return null;
+		}
+	}
+	// ----------------------
 
 	public static function evalContent( TPCState &$tpcState, Title $title, Content &$content ) {
 		if ( $title->getNamespace() === NS_THEMEDB ) {
@@ -99,24 +119,8 @@ class TouhouPatchCenter {
 		}
 	}
 
-	// =====
-	// Hooks
-	// =====
-	public static function isRestricted( $temp ) {
-		global $wgTPCRestrictedTemplates;
-		$hook = TPCUtil::normalizeHook( $temp->name );
-		return in_array( $hook, $wgTPCRestrictedTemplates );
-	}
-
-	public static function getRestrictedTemplates( $content ) {
-		if ( is_a( $content, 'Content' ) ) {
-			$text = $content->getNativeData();
-			$temps = MWScrape::toArray( $text );
-			return array_filter( $temps, "TouhouPatchCenter::isRestricted" );
-		} else {
-			return null;
-		}
-	}
+	// MediaWiki hooks
+	// ---------------
 
 	public static function onMultiContentSave(
 		MediaWiki\Revision\RenderedRevision $renderedRevision,
@@ -211,7 +215,7 @@ class TouhouPatchCenter {
 		$updater->addExtensionTable( 'tpc_tl_source_pages', "$dir/tpc_tl_source_pages.sql" );
 		return true;
 	}
-	// =====
+	// ---------------
 
 	public static function clearDatabase() {
 		$dbw = wfGetDB( DB_MASTER );
