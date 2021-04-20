@@ -25,9 +25,11 @@
 		}
 	},
 	"ExtensionMessagesFiles": {
+		"TouhouPatchCenterMagic": "TouhouPatchCenter.i18n.magic.php"
+	},
+	"MessagesDirs": {
 		"TouhouPatchCenter": [
-			"TouhouPatchCenter.i18n.php",
-			"TouhouPatchCenter.i18n.magic.php"
+			"i18n"
 		]
 	},
 	"AutoloadClasses": {

@@ -9,6 +9,9 @@
 
 if ( function_exists( 'wfLoadExtension' ) ) {
 	wfLoadExtension( 'TouhouPatchCenter' );
+	// Keep i18n globals so mergeMessageFileList.php doesn't break
+	$wgMessagesDirs['TouhouPatchCenter'] = __DIR__ . '/i18n';
+	$wgExtensionMessagesFiles['TouhouPatchCenterMagic'] = __DIR__ . '/TouhouPatchCenter.i18n.magic.php';
 	wfWarn(
 		'Deprecated PHP entry point used for the TouhouPatchCenter extension. ' .
 		'Please use wfLoadExtension() instead, ' .

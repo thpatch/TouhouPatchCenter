@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Nmlgc"
+		]
+	},
+	"group-patchdev": "Patch-Entwickler",
+	"group-patchdev-member": "{{GENDER:$1|Patch-Entwickler|Patch-Entwicklerin}}",
+	"grouppage-patchdev": "{{ns:project}}:Patch-Entwickler",
+	"right-tpc-restricted": "Beschränkte Patch-Vorlagen hinzufügen und bearbeiten",
+	"tpc-desc": "Erstellt einen Server für den ''Touhou Community Reliant Automatic Patcher'' aus MediaWiki-Seiten.",
+	"tpc-edit-blocked": "Du bist nicht berechtigt, beschränkte Patch-Vorlagen hinzuzufügen, zu löschen, oder deren Inhalt zu ändern. Zu diesen Vorlagen gehören:\\n\\n$1\\n\\nDu kannst jedoch die entsprechendenden <tt>/test</tt>-Untervorlagen nutzen. Diese werden identisch dargestellt, aber nicht in Patches einbezogen."
+}
