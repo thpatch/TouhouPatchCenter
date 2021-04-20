@@ -134,8 +134,7 @@ class TPCPatchMap {
 	  * @return bool
 	  */
 	public static function isPatchRootPage( $title ) {
-		global $wgTPCPatchNamespace;
-		return ( $title->getNamespace() === $wgTPCPatchNamespace and !$title->isSubpage() );
+		return ( $title->getNamespace() === NS_PATCH and !$title->isSubpage() );
 	}
 
 	public static function isPatchPage( $title ) {
@@ -143,13 +142,12 @@ class TPCPatchMap {
 	}
 
 	public static function getPatchRootPages() {
-		global $wgTPCPatchNamespace;
 		$dbr = wfGetDB( DB_REPLICA );
 		return $dbr->select(
 			'page',
 			array( 'page_namespace', 'page_title'),
 			array(
-				'page_namespace' => $wgTPCPatchNamespace,
+				'page_namespace' => NS_PATCH,
 				"page_title NOT LIKE '%/%'"
 			)
 		);

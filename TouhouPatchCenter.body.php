@@ -210,20 +210,6 @@ class TouhouPatchCenter {
 		return true;
 	}
 
-	public static function onCanonicalNamespaces( &$list ) {
-		global $wgTPCPatchNamespace;
-		global $wgNamespacesWithSubpages;
-		if ( !defined( 'NS_PATCH' ) ) {
-			define( 'NS_PATCH', $wgTPCPatchNamespace );
-			define( 'NS_PATCH_TALK', $wgTPCPatchNamespace + 1 );
-		}
-		$list[NS_PATCH] = 'Patch';
-		$list[NS_PATCH_TALK] = 'Patch_talk';
-		$wgNamespacesWithSubpages[NS_PATCH] = 1;
-		$wgNamespacesWithSubpages[NS_PATCH_TALK] = 1;
-		return true;
-	}
-
 	public static function onDatabaseUpdate( DatabaseUpdater $updater ) {
 		$dir = __DIR__;
 		$updater->addExtensionTable( 'tpc_patch_map', "$dir/tpc_patch_map.sql" );

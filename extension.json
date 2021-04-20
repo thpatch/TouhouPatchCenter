@@ -1,0 +1,79 @@
+{
+	"name": "TouhouPatchCenter",
+	"author": "Nmlgc",
+	"url": "https://github.com/nmlgc/TouhouPatchCenter",
+	"descriptionmsg": "tpc-desc",
+	"type": "other",
+	"license-type": "Unlicense",
+	"requires": {
+		"MediaWiki": ">= 1.35.0"
+	},
+	"AvailableRights": [
+		"tpc-restricted"
+	],
+	"GroupPermissions": {
+		"sysop": {
+			"tpc-restricted": true
+		},
+		"patchdev": {
+			"tpc-restricted": true
+		}
+	},
+	"ExtensionMessagesFiles": {
+		"TouhouPatchCenter": [
+			"TouhouPatchCenter.i18n.php",
+			"TouhouPatchCenter.i18n.magic.php"
+		]
+	},
+	"AutoloadClasses": {
+		"TouhouPatchCenter": "TouhouPatchCenter.body.php",
+		"MWScrape": "MWScrape.php",
+		"TPCPatchMap": "TPCPatchMap.php",
+		"TPCParse": "TPCParse.php",
+		"TPCServer": "TPCServer.php",
+		"TPCServerLocal": "TPCServerLocal.php",
+		"TPCServerSFTP": "TPCServerSFTP.php",
+		"TPCState": "TPCState.php",
+		"TPCStorage": "TPCStorage.php",
+		"TPCUtil": "TPCUtil.php",
+		"ApiEvalTitle": "ApiEvalTitle.php",
+		"TPCTemplate": "templates/TPCTemplate.php",
+		"thcrap_restricted_templates": "templates/thcrap_restricted_templates.php",
+		"thcrap_servers": "templates/thcrap_servers.php",
+		"thcrap_neighbors": "templates/thcrap_neighbors.php"
+	},
+	"APIModules": {
+		"evaltitle": "ApiEvalTitle"
+	},
+	"Hooks": {
+		"FileUpload": "TouhouPatchCenter::onFileUpload",
+		"FileDeleteComplete": "TouhouPatchCenter::onFileDeleteComplete",
+		"MultiContentSave": "TouhouPatchCenter::onMultiContentSave",
+		"PageSaveComplete": "TouhouPatchCenter::onPageSaveComplete",
+		"TitleMoveComplete": "TouhouPatchCenter::onTitleMoveComplete",
+		"LoadExtensionSchemaUpdates": "TouhouPatchCenter::onDatabaseUpdate",
+		"ParserGetVariableValueSwitch": "TPCTemplate::runSubclass",
+		"GetMagicVariableIDs": [
+			"thcrap_neighbors::setup",
+			"thcrap_restricted_templates::setup",
+			"thcrap_servers::setup"
+		]
+	},
+	"callback": "TouhouPatchCenter::setup",
+	"load_composer_autoloader": true,
+	"manifest_version": 2,
+	"namespaces": [
+		{
+			"id": 238,
+			"constant": "NS_PATCH",
+			"name": "Patch",
+			"subpages": true
+		},
+		{
+			"id": 239,
+			"constant": "NS_PATCH_TALK",
+			"name": "Patch_talk",
+			"subpages": true
+		}
+	]
+}
