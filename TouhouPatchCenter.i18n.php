@@ -6,7 +6,6 @@
  */
 
 $messages = array();
-$magicWords = array();
 
 /** English (English) */
 $messages['en'] = array(
@@ -17,11 +16,6 @@ $messages['en'] = array(
 	'tpc-desc' => "Creates a repository for the ''Touhou Community Reliant Automatic Patcher'' from MediaWiki pages.",
 	'tpc-edit-blocked' => "You do not have permission to add, remove or modify the content of restricted patch templates. These are:\n\n{{thcrap_restricted_templates}}\n\nYou can, however, use the corresponding <tt>/test</tt> subtemplates, which are rendered identically, but not parsed for patches.",
 	'tpc-template' => '<code>&#123;&#123;$1&#125;&#125;</code>'
-);
-$magicWords['en'] = array(
-	'thcrap_neighbors' => array( 0, 'thcrap_neighbors' ),
-	'thcrap_servers' => array( 0, 'thcrap_servers' ),
-	'thcrap_restricted_templates' => array( 0, 'thcrap_restricted_templates' )
 );
 
 /** German (Deutsch) */

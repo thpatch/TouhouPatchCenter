@@ -44,7 +44,8 @@ $wgAutoloadClasses['TPCUtil'] = "$dir/TPCUtil.php";
 $wgAutoloadClasses['ApiEvalTitle'] = "$dir/ApiEvalTitle.php";
 $wgAPIModules['evaltitle'] = 'ApiEvalTitle';
 
-$wgExtensionMessagesFiles['TouhouPatchCenter'] = "$dir/TouhouPatchCenter.i18n.php";
+$wgExtensionMessagesFiles['TouhouPatchCenter'][] = "$dir/TouhouPatchCenter.i18n.php";
+$wgExtensionMessagesFiles['TouhouPatchCenter'][] = "$dir/TouhouPatchCenter.i18n.magic.php";
 // --------
 
 // Rights
