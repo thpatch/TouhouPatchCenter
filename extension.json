@@ -56,6 +56,7 @@
 		"FileUpload": "TouhouPatchCenter::onFileUpload",
 		"FileDeleteComplete": "TouhouPatchCenter::onFileDeleteComplete",
 		"MultiContentSave": "TouhouPatchCenter::onMultiContentSave",
+		"PageContentLanguage": "TouhouPatchCenter::onPageContentLanguage",
 		"PageSaveComplete": "TouhouPatchCenter::onPageSaveComplete",
 		"TitleMoveComplete": "TouhouPatchCenter::onTitleMoveComplete",
 		"LoadExtensionSchemaUpdates": "TouhouPatchCenter::onDatabaseUpdate",

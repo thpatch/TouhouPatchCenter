@@ -166,6 +166,13 @@ class TouhouPatchCenter {
 		return true;
 	}
 
+	public static function onPageContentLanguage( Title $title, &$pageLang, $userLang ) {
+		$namespace = $title->getNamespace();
+		if ( TPCPatchMap::isTLIncludedPage( $namespace, $title->getText() ) ) {
+			$pageLang = Language::factory( TPCUtil::getNamespaceBaseLanguage( $namespace ) );
+		}
+	}
+
 	public static function onPageSaveComplete(
 		WikiPage $wikiPage,
 		MediaWiki\User\UserIdentity $user,
