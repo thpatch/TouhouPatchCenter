@@ -14,20 +14,17 @@ class TouhouPatchCenter {
 	// Patch generation hooks
 	// ----------------------
 
-	protected static function runHooks( $hook, &$hookArray, $params ) {
+	public static function runTPCHooks( $hook, &$tpcState, &$title, &$temp ) {
+		global $wgTPCHooks;
+		$params = array( &$tpcState, &$title, &$temp );
 		$hook = TPCUtil::normalizeHook( $hook );
-		if ( isset( $hookArray[$hook] ) ) {
-			foreach ( $hookArray[$hook] as $func) {
+		if ( isset( $wgTPCHooks[$hook] ) ) {
+			foreach ( $wgTPCHooks[$hook] as $func) {
 				return call_user_func_array( $func, $params );
 			}
 		} else {
 			return false;
 		}
-	}
-
-	public static function runTPCHooks( $hook, &$tpcState, &$title, &$temp ) {
-		global $wgTPCHooks;
-		return self::runHooks( $hook, $wgTPCHooks, array( &$tpcState, &$title, &$temp ) );
 	}
 
 	public static function isRestricted( $temp ) {
@@ -36,7 +33,7 @@ class TouhouPatchCenter {
 		return in_array( $hook, $wgTPCRestrictedTemplates );
 	}
 
-	public static function getRestrictedTemplates( $content ) {
+	public static function scrapeRestrictedTemplates( $content ) {
 		if ( is_a( $content, 'Content' ) ) {
 			$text = $content->getNativeData();
 			$temps = MWScrape::toArray( $text );
@@ -135,8 +132,8 @@ class TouhouPatchCenter {
 			// seem to take newly added templates into account.)
 			$revision = $renderedRevision->getRevision();
 			$oldPage = WikiPage::factory( $revision->getPage() );
-			$newRTs = self::getRestrictedTemplates( $revision->getContent( SlotRecord::MAIN ) );
-			$oldRTs = self::getRestrictedTemplates( $oldPage->getContent() );
+			$newRTs = self::scrapeRestrictedTemplates( $revision->getContent( SlotRecord::MAIN ) );
+			$oldRTs = self::scrapeRestrictedTemplates( $oldPage->getContent() );
 
 			if ( count( $newRTs ) == count( $oldRTs ) ) {
 				$diff = array_udiff( $oldRTs, $newRTs, "Template::differs" );

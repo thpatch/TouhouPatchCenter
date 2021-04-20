@@ -63,7 +63,19 @@ class TPCPatchMap {
 		return $map;
 	}
 
-	protected static function updateMapping( &$title, &$patch, &$game, &$target ) {
+	public static function update( $title, $patch, $game = null, $target = null ) {
+		$map = self::get( $title );
+		$patches = self::mergePatch( $map, $patch );
+		// If we already have a mapping, update only if necessary
+		if (
+			( $map ) and
+			( in_array( $patch, $map->pm_patch ) ) and
+			( TPCUtil::dictGet( $map->pm_game ) === $game ) and
+			( TPCUtil::dictGet( $map->pm_target ) === $target )
+		) {
+			return;
+		}
+
 		$dbw = wfGetDB( DB_MASTER );
 		$inserts = array(
 			'pm_namespace' => $title->getNamespace(),
@@ -115,21 +127,6 @@ class TPCPatchMap {
 			return self::buildTLMapping( $game, $title->getSubpageText() );
 		}
 		return null;
-	}
-
-	public static function update( $title, $patch, $game = null, $target = null ) {
-		$map = self::get( $title );
-		$patches = self::mergePatch( $map, $patch );
-		// If we already have a mapping, update only if necessary
-		if (
-			( $map ) and
-			( in_array( $patch, $map->pm_patch ) ) and
-			( TPCUtil::dictGet( $map->pm_game ) === $game ) and
-			( TPCUtil::dictGet( $map->pm_target ) === $target )
-		) {
-				return;
-		}
-		self::updateMapping( $title, $patches, $game, $target );
 	}
 
 	/**
