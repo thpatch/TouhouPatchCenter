@@ -1,7 +1,12 @@
 {
 	"name": "TouhouPatchCenter",
-	"author": "Nmlgc",
-	"url": "https://github.com/nmlgc/TouhouPatchCenter",
+	"author": [
+		"Nmlgc",
+		"Egor",
+		"brliron",
+		"rosenrose"
+	],
+	"url": "https://github.com/thpatch/TouhouPatchCenter",
 	"descriptionmsg": "tpc-desc",
 	"type": "other",
 	"license-type": "Unlicense",
