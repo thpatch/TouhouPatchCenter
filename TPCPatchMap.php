@@ -47,6 +47,7 @@ class TPCPatchMap {
 		return ( object )array(
 			'pm_patch' => array( $tl->tl_patch ),
 			'pm_game' => $game,
+			'pm_target' => null, // Important for TPCState::from()
 		);
 	}
 

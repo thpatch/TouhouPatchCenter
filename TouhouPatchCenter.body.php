@@ -64,21 +64,27 @@ class TouhouPatchCenter {
 	// ----------------------
 
 	public static function evalPage( Title &$title, $content = null ) {
-		$tpcState = new TPCState;
-		if ( $tpcState->init( $title ) ) {
-			if ( !$content ) {
-				$content = WikiPage::factory( $title )->getContent();
+		if ( TPCPatchMap::isPatchRootPage( $title ) ) {
+			$tpcState = new TPCState( array( strtolower( $title->getDBKey() ) ), null, null );
+		} else {
+			$tpcState = TPCState::from( $title );
+			if ( !$tpcState ) {
+				return false;
 			}
-			if ( !is_a( $content, 'TextContent' ) ) {
-				return;
-			}
-			$text = $content->getText();
-			$temps = MWScrape::toArray( $text );
-			foreach ( $temps as $i ) {
-				self::runTPCHooks( $i->name, $tpcState, $title, $i );
-			}
-			TPCStorage::writeState( $tpcState );
 		}
+
+		if ( !$content ) {
+			$content = WikiPage::factory( $title )->getContent();
+		}
+		if ( !is_a( $content, 'TextContent' ) ) {
+			return;
+		}
+		$text = $content->getText();
+		$temps = MWScrape::toArray( $text );
+		foreach ( $temps as $i ) {
+			self::runTPCHooks( $i->name, $tpcState, $title, $i );
+		}
+		TPCStorage::writeState( $tpcState );
 	}
 
 	public static function evalFile( Title $fileTitle ) {
@@ -101,18 +107,11 @@ class TouhouPatchCenter {
 		}
 
 		foreach ( $pages as $i ) {
-			// Is this file already mapped to a patch?
-			$map = TPCPatchMap::get( $i );
-			if ( !$map or !$map->pm_patch ) {
-				// Nope, nothing we care about
-				continue;
+			if ( $tpcState = TPCState::from( $i ) ) {
+				$target = ( $tpcState->getCurFile() ?? $i->getBaseText() );
+				$tpcState->addCopy( $target, $filePath );
+				TPCStorage::writeState( $tpcState );
 			}
-			$tpcState = new TPCState;
-			$tpcState->patches = $map->pm_patch;
-			$tpcState->switchGame( $map->pm_game );
-			$target = ( $map->pm_target ?? $i->getBaseText() );
-			$tpcState->addCopy( $target, $filePath );
-			TPCStorage::writeState( $tpcState );
 		}
 	}
 
@@ -120,8 +119,7 @@ class TouhouPatchCenter {
 		if ( !$title->isSubpage() ) {
 			return false;
 		}
-		$tpcState = new TPCState;
-		$tpcState->patches = array( "lang_" . $title->getSubpageText() );
+		$tpcState = new TPCState( array( "lang_" . $title->getSubpageText() ), null, null );
 
 		$id = strtr( $title->getBaseText(), ' ', '_' );
 		TPCFmtTheme::onTheme( $tpcState, $title, $id );
@@ -203,16 +201,11 @@ class TouhouPatchCenter {
 			return true;
 		}
 		$title = $file->getTitle();
-		$map = TPCPatchMap::get( $title );
-		if ( !$map or !$map->pm_patch ) {
-			return true;
+		if ( $tpcState = TPCState::from( $title ) ) {
+			$target = ( $tpcState->getCurFile() ?? $title->getBaseText() );
+			$tpcState->addDeletion( $target );
+			TPCStorage::writeState( $tpcState );
 		}
-		$tpcState = new TPCState;
-		$tpcState->patches = $map->pm_patch;
-		$tpcState->switchGame( $map->pm_game );
-		$target = ( $map->pm_target ?? $title->getBaseText() );
-		$tpcState->addDeletion( $target );
-		TPCStorage::writeState( $tpcState );
 		return true;
 	}
 

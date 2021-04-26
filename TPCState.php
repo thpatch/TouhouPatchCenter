@@ -51,6 +51,12 @@ class TPCState
 	// Array of current JSON file.
 	public $jsonContents;
 
+	public function __construct( array $patches, $game, $file ) {
+		$this->patches = $patches;
+		$this->curGame = $game;
+		$this->curFile = $file;
+	}
+
 	public function getCurGame() {
 		return $this->curGame;
 	}
@@ -73,23 +79,6 @@ class TPCState
 		$ret = preg_replace( '/^\/|\.\.\//i', '', $fn );
 
 		return $ret;
-	}
-
-	public function init( $title ) {
-		// Is this page already mapped to a patch?
-		if ( !TPCPatchMap::isPatchRootPage( $title ) ) {
-			$map = TPCPatchMap::get( $title );
-			if ( !$map ) {
-				// Nope, nothing we care about
-				return false;
-			}
-			$this->patches = $map->pm_patch;
-			$this->switchGame( $map->pm_game );
-		} else {
-			// Root page of a patch. Set the name
-			$this->patches = array( strtolower( $title->getDBKey() ) );
-		}
-		return true;
 	}
 
 	/**
@@ -195,5 +184,21 @@ class TPCState
 		$code = ( $temp->params['code'] ?? ++$code );
 		$this->autoCodes[ $curFile ] = $code;
 		return $code;
+	}
+
+	/**
+	  * Creates a new patch state object, initialized with the patch and any game or target file
+	  * mapped to the given title, or returns `null` if that title isn't patch-mapped.
+	  *
+	  * @param Title $title
+	  * @return TPCState|null
+	  */
+	public static function from( Title &$title ) {
+		$map = TPCPatchMap::get( $title );
+		if ( !$map or !$map->pm_patch ) {
+			// Nope, nothing we care about
+			return null;
+		}
+		return new TPCState( $map->pm_patch, $map->pm_game, $map->pm_target );
 	}
 }
