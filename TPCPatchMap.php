@@ -137,10 +137,6 @@ class TPCPatchMap {
 		return ( $title->getNamespace() === NS_PATCH and !$title->isSubpage() );
 	}
 
-	public static function isPatchPage( $title ) {
-		return self::isPatchRootPage( $title ) or self::get( $title );
-	}
-
 	public static function getPatchRootPages() {
 		$dbr = wfGetDB( DB_REPLICA );
 		return $dbr->select(
