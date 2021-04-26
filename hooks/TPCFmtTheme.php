@@ -15,10 +15,14 @@ class TPCFmtTheme {
 		$themes = &$tpcState->getFile( null, "themes.js" );
 
 		do {
-			$page = WikiPage::factory( $title );
-			$content = $page->getContent();
+			$content = WikiPage::factory( $title )->getContent();
 		} while ( $content and $title = $content->getRedirectTarget() );
-		$text = $page->getText();
+
+		if ( !is_a( $content, 'TextContent' ) ) {
+			return;
+		}
+
+		$text = $content->getText();
 		if ( $text ) {
 			$themes[$id] = TPCUtil::sanitize( $text );
 		}

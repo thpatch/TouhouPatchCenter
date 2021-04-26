@@ -53,8 +53,8 @@ class TouhouPatchCenter {
 	}
 
 	public static function scrapeRestrictedTemplates( $content ) {
-		if ( is_a( $content, 'Content' ) ) {
-			$text = $content->getNativeData();
+		if ( is_a( $content, 'TextContent' ) ) {
+			$text = $content->getText();
 			$temps = MWScrape::toArray( $text );
 			return array_filter( $temps, "TouhouPatchCenter::isRestricted" );
 		} else {
@@ -64,11 +64,14 @@ class TouhouPatchCenter {
 	// ----------------------
 
 	public static function evalContent( TPCState &$tpcState, Title $title, Content &$content ) {
+		if ( !is_a( $content, 'TextContent' ) ) {
+			return;
+		}
 		if ( $title->getNamespace() === NS_THEMEDB ) {
 			$id = strtr( $title->getBaseText(), ' ', '_' );
 			return TPCFmtTheme::onTheme( $tpcState, $title, $id );
 		}
-		$text = $content->getNativeData();
+		$text = $content->getText();
 		$temps = MWScrape::toArray( $text );
 		foreach ( $temps as $i ) {
 			self::runTPCHooks( $i->name, $tpcState, $title, $i );
@@ -79,12 +82,7 @@ class TouhouPatchCenter {
 		$tpcState = new TPCState;
 		if ( $tpcState->init( $title ) ) {
 			if ( !$content ) {
-				$newPage = WikiPage::factory( $title );
-				$content = $newPage->getContent();
-				// Might still be `null` if the page isn't present in the database.
-				if( !$content ) {
-					return;
-				}
+				$content = WikiPage::factory( $title )->getContent();
 			}
 			self::evalContent( $tpcState, $title, $content );
 			TPCStorage::writeState( $tpcState );
