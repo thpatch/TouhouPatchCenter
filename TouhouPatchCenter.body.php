@@ -63,28 +63,20 @@ class TouhouPatchCenter {
 	}
 	// ----------------------
 
-	public static function evalContent( TPCState &$tpcState, Title $title, Content &$content ) {
-		if ( !is_a( $content, 'TextContent' ) ) {
-			return;
-		}
-		if ( $title->getNamespace() === NS_THEMEDB ) {
-			$id = strtr( $title->getBaseText(), ' ', '_' );
-			return TPCFmtTheme::onTheme( $tpcState, $title, $id );
-		}
-		$text = $content->getText();
-		$temps = MWScrape::toArray( $text );
-		foreach ( $temps as $i ) {
-			self::runTPCHooks( $i->name, $tpcState, $title, $i );
-		}
-	}
-
 	public static function evalPage( Title &$title, $content = null ) {
 		$tpcState = new TPCState;
 		if ( $tpcState->init( $title ) ) {
 			if ( !$content ) {
 				$content = WikiPage::factory( $title )->getContent();
 			}
-			self::evalContent( $tpcState, $title, $content );
+			if ( !is_a( $content, 'TextContent' ) ) {
+				return;
+			}
+			$text = $content->getText();
+			$temps = MWScrape::toArray( $text );
+			foreach ( $temps as $i ) {
+				self::runTPCHooks( $i->name, $tpcState, $title, $i );
+			}
 			TPCStorage::writeState( $tpcState );
 		}
 	}
@@ -124,12 +116,28 @@ class TouhouPatchCenter {
 		}
 	}
 
+	protected static function evalTheme( Title $title ) {
+		if ( !$title->isSubpage() ) {
+			return false;
+		}
+		$tpcState = new TPCState;
+		$tpcState->patches = array( "lang_" . $title->getSubpageText() );
+
+		$id = strtr( $title->getBaseText(), ' ', '_' );
+		TPCFmtTheme::onTheme( $tpcState, $title, $id );
+
+		TPCStorage::writeState( $tpcState );
+	}
+
 	public static function evalTitle( Title $title, $content = null ) {
 		// Yes, this is how the MediaWiki core differentiates, too.
-		if ( $title->getNamespace() === NS_FILE ) {
-			self::evalFile( $title );
-		} else {
-			self::evalPage( $title, $content );
+		switch ( $title->getNamespace() ) {
+			case NS_THEMEDB:
+				return self::evalTheme( $title );
+			case NS_FILE:
+				return self::evalFile( $title );
+			default:
+				return self::evalPage( $title, $content );
 		}
 	}
 
