@@ -52,13 +52,16 @@ class TouhouPatchCenter {
 		return in_array( $hook, self::$restrictedTemplateNames );
 	}
 
+	/**
+	  * @return array Array of Template objects
+	  */
 	public static function scrapeRestrictedTemplates( $content ) {
 		if ( is_a( $content, 'TextContent' ) ) {
 			$text = $content->getText();
 			$temps = MWScrape::toArray( $text );
 			return array_filter( $temps, "TouhouPatchCenter::isRestricted" );
 		} else {
-			return null;
+			return array();
 		}
 	}
 	// ----------------------
