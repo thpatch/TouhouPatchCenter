@@ -19,11 +19,7 @@ class TPCVersions {
 	}
 
 	public static function onVerInfo( &$tpcState, $title, $temp ) {
-		$ver = array(
-			TPCUtil::dictGet( $temp->params[1] ),
-			TPCUtil::dictGet( $temp->params[2] ),
-			TPCUtil::dictGet( $temp->params[3], '(original)' )
-		);
+		$ver = array( $temp->params[1], $temp->params[2], ( $temp->params[3] ?? '(original)' ) );
 
 		// Optional code page specification
 		if ( isset( $temp->params[4] ) ) {

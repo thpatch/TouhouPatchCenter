@@ -13,8 +13,8 @@
 class TPCFmtMusic {
 
 	public static function onMusic( &$tpcState, &$title, &$temp ) {
-		$num = TPCUtil::dictGet( $temp->params['num'] );
-		$tl = TPCUtil::dictGet( $temp->params['tl'] );
+		$num = ( $temp->params['num'] ?? null );
+		$tl = ( $temp->params['tl'] ?? null );
 		$game = $tpcState->getCurGame();
 		if ( empty( $num ) or empty( $game ) ) {
 			return true;

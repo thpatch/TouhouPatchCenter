@@ -13,12 +13,12 @@
 class TPCFmtSpells {
 
 	public static function onSpell( &$tpcState, &$title, &$temp ) {
-		$id = TPCUtil::dictGet( $temp->params['id'] );
+		$id = ( $temp->params['id'] ?? null );
 		if ( !$id ) {
 			return true;
 		}
-		$name = TPCUtil::dictGet( $temp->params['name'] );
-		$owner = TPCUtil::dictGet( $temp->params['owner'] );
+		$name = ( $temp->params['name'] ?? null );
+		$owner = ( $temp->params['owner'] ?? null );
 		if ( is_numeric( $id ) ) {
 			// In-game ID starts from 0
 			$id = intval( $id ) - 1;

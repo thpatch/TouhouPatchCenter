@@ -56,7 +56,7 @@ class TPCFmtMsg {
 	}
 
 	public static function onMsg( &$tpcState, &$title, &$temp ) {
-		$code = TPCUtil::dictGet( $temp->params['code'] );
+		$code = ( $temp->params['code'] ?? null );
 		if ( !preg_match( self::REGEX_CODE, $code, $m ) ) {
 			return true;
 		}
@@ -66,7 +66,7 @@ class TPCFmtMsg {
 		$time = $m['time'];
 
 		$lines = TPCParse::parseLines( $temp->params['tl'] );
-		$type = TPCUtil::dictGet( $temp->params[1] );
+		$type = ( $temp->params[1] ?? null );
 
 		// h1 index hack... meh.
 		if ( $temp->params[1] === 'h1') {
@@ -78,8 +78,8 @@ class TPCFmtMsg {
 		// Time index
 		$timeIndex = &$tpcState->msgTimeIndex[$indexType];
 		if(
-			( $entry === TPCUtil::dictGet( $tpcState->msgLastEntry[$indexType] ) ) and
-			( $time === TPCUtil::dictGet( $tpcState->msgLastTime[$indexType] ) ) and
+			( $entry === ( $tpcState->msgLastEntry[$indexType] ?? null ) ) and
+			( $time === ( $tpcState->msgLastTime[$indexType] ?? null ) ) and
 			( $tpcState->msgLastType === $indexType )
 		) {
 			$timeIndex++;
@@ -135,7 +135,7 @@ class TPCFmtMsg {
 			$cont['lines'] = &$lines;
 
 			// Copy-paste the dialogue for th18 Stage 6, so that translators don't have to.
-			$altentry = TPCUtil::dictGet( $temp->params['altentry'] );
+			$altentry = ( $temp->params['altentry'] ?? null );
 			if ( $altentry !== null ) {
 				$tpcState->jsonContents[$altentry][$slot]['lines'] = &$lines;
 			}
@@ -178,7 +178,7 @@ class TPCFmtMsg {
 	}
 
 	public static function onMsgParse( &$tpcState, &$title, &$temp ) {
-		$tpcState->switchGameFilePatch( TPCUtil::dictGet( $temp->params['file'] ) );
+		$tpcState->switchGameFilePatch( $temp->params['file'] ?? null );
 		return true;
 	}
 }

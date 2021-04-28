@@ -110,7 +110,7 @@ class TouhouPatchCenter {
 			$tpcState = new TPCState;
 			$tpcState->patches = $map->pm_patch;
 			$tpcState->switchGame( $map->pm_game );
-			$target = TPCUtil::dictGet( $map->pm_target, $i->getBaseText() );
+			$target = ( $map->pm_target ?? $i->getBaseText() );
 			$tpcState->addCopy( $target, $filePath );
 			TPCStorage::writeState( $tpcState );
 		}
@@ -210,7 +210,7 @@ class TouhouPatchCenter {
 		$tpcState = new TPCState;
 		$tpcState->patches = $map->pm_patch;
 		$tpcState->switchGame( $map->pm_game );
-		$target = TPCUtil::dictGet( $map->pm_target, $title->getBaseText() );
+		$target = ( $map->pm_target ?? $title->getBaseText() );
 		$tpcState->addDeletion( $target );
 		TPCStorage::writeState( $tpcState );
 		return true;

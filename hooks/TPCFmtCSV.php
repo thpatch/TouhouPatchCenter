@@ -18,8 +18,8 @@ class TPCFmtCSV {
 	}
 
 	public static function onCSV( &$tpcState, &$title, &$temp ) {
-		$id = TPCUtil::dictGet( $temp->params['id'] );
-		$tl = TPCUtil::dictGet( $temp->params['tl'] );
+		$id = ( $temp->params['id'] ?? null );
+		$tl = ( $temp->params['tl'] ?? null );
 		if ( $tl === "" ) {
 			return true;
 		}

@@ -54,13 +54,10 @@ class TPCFmtMissions {
 	}
 
 	public static function onMission( &$tpcState, &$title, &$temp ) {
-		$chara = TPCUtil::dictGet( $temp->params['chara'] );
-		$stage = TPCUtil::dictGet( $temp->params['stage'] );
-		$scene = TPCUtil::dictGet( $temp->params['scene'] );
-		if( !$chara ) {
-			$chara = 1;
-		}
-		if( !$stage || !$scene ) {
+		$chara = ( $temp->params['chara'] ?? 1 );
+		$stage = ( $temp->params['stage'] ?? null );
+		$scene = ( $temp->params['scene'] ?? null );
+		if ( !$stage || !$scene ) {
 			return true;
 		}
 		self::fixBase1( $chara );

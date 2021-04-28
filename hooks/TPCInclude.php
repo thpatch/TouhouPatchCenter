@@ -14,7 +14,7 @@
 class TPCInclude {
 
 	protected static function getGame( &$tpcState, &$temp ) {
-		return TPCUtil::dictGet( $temp->params['game'], $tpcState->getCurGame() );
+		return ( $temp->params['game'] ?? $tpcState->getCurGame() );
 	}
 
 	public static function getTitleFromLink( &$curTitle, $str, $namespace = NS_MAIN ) {
@@ -42,10 +42,7 @@ class TPCInclude {
 			return true;
 		}
 		$game = self::getGame( $tpcState, $temp );
-		$file = TPCUtil::dictGet( $temp->params['file'] );
-		if ( !$file ) {
-			$file = TPCUtil::dictGet( $temp->params['target'] );
-		}
+		$file = ( $temp->params['file'] ?? $temp->params['target'] ?? null );
 
 		if ( !$patch ) {
 			$patch = $tpcState->patches[0];
@@ -89,7 +86,7 @@ class TPCInclude {
 		$page = str_replace( array( '[', ']' ), '-', $temp->params[1] );
 
 		$game = self::getGame( $tpcState, $temp );
-		$namespace = intval( TPCUtil::dictGet( $temp->params['namespace'] ) );
+		$namespace = intval( $temp->params['namespace'] ?? 0 );
 		foreach ( TPCTLPatches::get() as $patch => $lang ) {
 			$fullPage = "$patch-$game-$page";
 			$targetTitle = self::getTitleFromLink( $title, $fullPage, $namespace );

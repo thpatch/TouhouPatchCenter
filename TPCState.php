@@ -191,8 +191,8 @@ class TPCState
 	  */
 	public function autoCode( &$temp ) {
 		$curFile = $this->getCurFile();
-		$code = TPCUtil::dictGet( $this->autoCodes[ $curFile ], 0 );
-		$code = TPCUtil::dictGet( $temp->params['code'], ++$code );
+		$code = ( $this->autoCodes[ $curFile ] ?? 0 );
+		$code = ( $temp->params['code'] ?? ++$code );
 		$this->autoCodes[ $curFile ] = $code;
 		return $code;
 	}

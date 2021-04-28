@@ -14,8 +14,8 @@
 class TPCFmtStrings {
 
 	public static function onDef( &$tpcState, &$title, &$temp ) {
-		$id = TPCUtil::dictGet( $temp->params['id'] );
-		$tl = TPCUtil::dictGet( $temp->params['tl'] );
+		$id = ( $temp->params['id'] ?? null );
+		$tl = ( $temp->params['tl'] ?? null );
 		if ( empty( $id ) or empty( $tl ) ) {
 			return true;
 		}
@@ -31,8 +31,8 @@ class TPCFmtStrings {
 	}
 
 	public static function onLoc( &$tpcState, &$title, &$temp ) {
-		$addr = TPCUtil::dictGet( $temp->params['addr'] );
-		$id = TPCUtil::dictGet( $temp->params['id'] );
+		$addr = ( $temp->params['addr'] ?? null );
+		$id = ( $temp->params['id'] ?? null );
 		if ( empty( $addr ) or empty( $id ) ) {
 			return true;
 		}

@@ -70,8 +70,8 @@ class TPCPatchMap {
 		if (
 			( $map ) and
 			( in_array( $patch, $map->pm_patch ) ) and
-			( TPCUtil::dictGet( $map->pm_game ) === $game ) and
-			( TPCUtil::dictGet( $map->pm_target ) === $target )
+			( $map->pm_game == $game ) and
+			( $map->pm_target == $target )
 		) {
 			return;
 		}
