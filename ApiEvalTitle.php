@@ -9,7 +9,9 @@ class ApiEvalTitle extends ApiBase {
 			$this->dieUsageMsg( 'notanarticle' );
 		}
 
+		PageTranslationHooks::$allowTargetEdit = true;
 		$errors = $title->getUserPermissionsErrors( 'edit', $this->getUser() );
+		PageTranslationHooks::$allowTargetEdit = false;
 		if ( $errors ) {
 			$this->dieUsageMsg( reset( $errors ) );
 		}
