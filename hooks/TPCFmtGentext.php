@@ -14,7 +14,7 @@
 class TPCFmtGentext {
 
 	public static function addGentext( &$tpcState, $id, $tl ) {
-		if ( $tl !== "" ) {
+		if ( $tl !== "" && $tl !== null ) {
 			if ( is_array( $tl ) && count( $tl ) == 1 ) {
 				$tl = $tl[0];
 			}
