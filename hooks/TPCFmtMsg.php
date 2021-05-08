@@ -134,6 +134,12 @@ class TPCFmtMsg {
 			$cont = &$tpcState->jsonContents[$entry][$slot];
 			$cont['lines'] = &$lines;
 
+			// Copy-paste the dialogue for th18 Stage 6, so that translators don't have to.
+			$altentry = TPCUtil::dictGet( $temp->params['altentry'] );
+			if ( $altentry !== null ) {
+				$tpcState->jsonContents[$altentry][$slot]['lines'] = &$lines;
+			}
+
 			// Remember the first one for tabref
 			if ( !isset( $tpcState->msgFirstLine ) ) {
 				$tpcState->msgFirstLine = &$lines[0];
