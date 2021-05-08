@@ -1,4 +1,4 @@
- <?php
+<?php
 
 /**
   * Parser for binary hacks.
