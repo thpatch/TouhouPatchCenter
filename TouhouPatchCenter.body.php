@@ -113,7 +113,7 @@ class TouhouPatchCenter {
 		$localFile = self::resolveLocalFile( $fileTitle );
 		$filePath = $localFile->getLocalRefPath();
 		if ( !$filePath ) {
-			return;
+			return self::deleteFiles( $pages );
 		}
 
 		foreach ( $pages as $i ) {
