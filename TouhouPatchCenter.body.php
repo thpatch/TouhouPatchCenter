@@ -149,6 +149,22 @@ class TouhouPatchCenter {
 		}
 	}
 
+	// Deletes $title, and all files that link to it.
+	public static function deleteFilesAndRedirects( Title $title ) {
+		self::deleteFiles( array_merge( [ $title ], $title->getRedirectsHere() ) );
+	}
+
+	// Deletes the given list of $pages.
+	public static function deleteFiles( array $pages ) {
+		foreach ( $pages as $i ) {
+			if ( $tpcState = TPCState::from( $i ) ) {
+				$target = ( $tpcState->getCurFile() ?? $i->getBaseText() );
+				$tpcState->addDeletion( $target );
+				TPCStorage::writeState( $tpcState );
+			}
+		}
+	}
+
 	// MediaWiki hooks
 	// ---------------
 
@@ -210,12 +226,7 @@ class TouhouPatchCenter {
 		if ( $oldimage ) {
 			return true;
 		}
-		$title = $file->getTitle();
-		if ( $tpcState = TPCState::from( $title ) ) {
-			$target = ( $tpcState->getCurFile() ?? $title->getBaseText() );
-			$tpcState->addDeletion( $target );
-			TPCStorage::writeState( $tpcState );
-		}
+		self::deleteFilesAndRedirects( $file->getTitle() );
 		return true;
 	}
 
