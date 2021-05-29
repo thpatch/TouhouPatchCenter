@@ -9,7 +9,7 @@
 
 class thcrap_neighbors extends TPCTemplate {
 
-	public static function run( &$parser, &$cache, &$magicWordId, &$ret, &$frame ) {
+	public static function run( &$parser, &$frame ): string {
 		global $wgTPCRepoNeighbors;
 
 		// Table header
@@ -37,6 +37,6 @@ class thcrap_neighbors extends TPCTemplate {
 			}
 		}
 		$ret .= "|}";
-		return true;
+		return $ret;
 	}
 }

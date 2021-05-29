@@ -10,7 +10,7 @@
 
 class thcrap_servers extends TPCTemplate {
 
-	public static function run( &$parser, &$cache, &$magicWordId, &$ret, &$frame ) {
+	public static function run( &$parser, &$frame ): string {
 		global $wgTPCServers;
 		$doGeoIP = function_exists( 'geoip_record_by_name' );
 
@@ -29,6 +29,6 @@ class thcrap_servers extends TPCTemplate {
 			$ret .= TPCUtil::getGeoIPCell( $i['url'] );
 		}
 		$ret .= "|}";
-		return true;
+		return $ret;
 	}
 }
