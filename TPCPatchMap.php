@@ -50,11 +50,13 @@ class TPCPatchMap {
 		);
 	}
 
-	protected static function getMapping( $table, $vars, $conds ) {
+	protected static function getMapping( Title &$title ) {
 		$dbr = wfGetDB( DB_REPLICA );
 		// Get old value
-		$query = $dbr->select( $table, $vars, $conds );
-		$map = $query->fetchObject();
+		$map = $dbr->selectRow( 'tpc_patch_map', '*', array(
+			'pm_namespace' => $title->getNamespace(),
+			'pm_title' => $title->getText(),
+		) );
 		if ( $map ) {
 			$map->pm_patch = explode( "\n", $map->pm_patch );
 		}
@@ -81,14 +83,7 @@ class TPCPatchMap {
 	public static function get( $title ) {
 		$namespace = $title->getNamespace();
 
-		$ret = self::getMapping(
-			'tpc_patch_map',
-			'*',
-			array(
-				'pm_namespace' => $namespace,
-				'pm_title' => $title->getText()
-			)
-		);
+		$ret = self::getMapping( $title );
 		if ( $ret or $namespace == NS_FILE ) {
 			return $ret;
 		}
