@@ -9,16 +9,17 @@ class ApiEvalTitle extends ApiBase {
 		$page = $this->getTitleOrPageId( $params, 'fromdbmaster' );
 		$title = $page->getTitle();
 		if ( !$title->exists() ) {
-			$this->dieUsageMsg( 'notanarticle' );
+			$this->dieWithError( 'notanarticle' );
 		}
 
 		$pm = MediaWikiServices::getInstance()->getPermissionManager();
+		$user = $this->getUser();
 
 		PageTranslationHooks::$allowTargetEdit = true;
-		$errors = $pm->getPermissionErrors( 'edit', $this->getUser(), $title );
+		$errors = $pm->getPermissionErrors( 'edit', $user, $title );
 		PageTranslationHooks::$allowTargetEdit = false;
 		if ( $errors ) {
-			$this->dieUsageMsg( reset( $errors ) );
+			$this->dieStatus( $this->errorArrayToStatus( $errors, $user ) );
 		}
 
 		TouhouPatchCenter::evalTitle( $title );
