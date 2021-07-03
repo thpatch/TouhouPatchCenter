@@ -1,4 +1,7 @@
 <?php
+
+use MediaWiki\MediaWikiServices;
+
 class ApiEvalTitle extends ApiBase {
 	public function execute() {
 		$params = $this->extractRequestParams();
@@ -9,8 +12,10 @@ class ApiEvalTitle extends ApiBase {
 			$this->dieUsageMsg( 'notanarticle' );
 		}
 
+		$pm = MediaWikiServices::getInstance()->getPermissionManager();
+
 		PageTranslationHooks::$allowTargetEdit = true;
-		$errors = $title->getUserPermissionsErrors( 'edit', $this->getUser() );
+		$errors = $pm->getPermissionErrors( 'edit', $this->getUser(), $title );
 		PageTranslationHooks::$allowTargetEdit = false;
 		if ( $errors ) {
 			$this->dieUsageMsg( reset( $errors ) );
