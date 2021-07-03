@@ -29,10 +29,6 @@ class ApiEvalTitle extends ApiBase {
 	public function needsToken() {
 		return 'csrf';
 	}
-	// TODO: Remove this after upgrade
-	public function getTokenSalt() {
-		return '';
-	}
 
 	public function getDescription() {
 		return 'TouhouPatchCenter: Evaluate a title';
