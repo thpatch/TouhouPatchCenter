@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Nmlgc"
+			"Nmlgc",
+			"Egor"
 		]
 	},
 	"group-patchdev": "Patch developers",
@@ -12,5 +13,10 @@
 	"tpc-edit-blocked": "You do not have permission to add, remove or modify the content of restricted patch templates. These are:\n\n{{thcrap_restricted_templates}}\n\nYou can, however, use the corresponding <tt>/test</tt> subtemplates, which are rendered identically, but not parsed for patches.",
 	"tpc-file-redirect-overriding-upload": "This would turn [[:$1]] into both a redirect and an uploaded file. Remove all files uploaded under this name before creating this redirect.",
 	"tpc-file-upload-overriding-redirect": "This would turn [[:$1]] into both a redirect and an uploaded file. Remove the redirect before uploading a file with this name.",
-	"tpc-template": "<code>&#123;&#123;$1&#125;&#125;</code>"
+	"tpc-template": "<code>&#123;&#123;$1&#125;&#125;</code>",
+
+	"apihelp-evaltitle-summary": "TouhouPatchCenter: Evaluate a title",
+	"apihelp-evaltitle-param-title": "Title of the page to evaltitle. Cannot be used together with <var>$1pageid</var>",
+	"apihelp-evaltitle-param-pageid": "Page ID of the page to evaltitle. Cannot be used together with <var>$1title</var>",
+	"apihelp-evaltitle-example-title": "Evaluate [[Main Page]]"
 }

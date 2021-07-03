@@ -30,11 +30,10 @@ class ApiEvalTitle extends ApiBase {
 		return 'csrf';
 	}
 
-	public function getDescription() {
-		return 'TouhouPatchCenter: Evaluate a title';
-	}
-	public function getExamples() {
-		return array( 'api.php?action=evaltitle&title=Main%20Page&token=123ABC' );
+	public function getExamplesMessages() {
+		return [
+			'action=evaltitle&title=Main%20Page' => 'apihelp-evaltitle-example-title'
+		];
 	}
 	public function getAllowedParams() {
 		return array(
@@ -44,13 +43,6 @@ class ApiEvalTitle extends ApiBase {
 				ApiBase::PARAM_TYPE => 'string',
 				ApiBase::PARAM_REQUIRED => true
 			)
-		);
-	}
-	public function getParamDescription() {
-		return array(
-			'title' => 'Title of the page to evaltitle. Cannot be used together with pageid',
-			'pageid' => 'Page ID of the page to evaltitle. Cannot be used together with title',
-			'token' => 'An edit/csrf token previously retrieved through prop=info, action=tokens or meta=tokens'
 		);
 	}
 }
