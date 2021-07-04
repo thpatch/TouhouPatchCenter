@@ -7,6 +7,7 @@
   * @author Nmlgc
   */
 
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\SlotRecord;
 
 class TouhouPatchCenter {
@@ -66,6 +67,12 @@ class TouhouPatchCenter {
 	}
 	// ----------------------
 
+	// wfLocalFile() is deprecated as of MediaWiki 1.37, and we're really supposed to replace it
+	// with this piece of bloat. Indistinguishable from satire.
+	protected static function resolveLocalFile( Title &$title ): ?LocalFile {
+		return MediaWikiServices::getInstance()->getRepoGroup()->getLocalRepo()->newFile( $title );
+	}
+
 	public static function evalPage( Title &$title, $content = null ) {
 		if ( TPCPatchMap::isPatchRootPage( $title ) ) {
 			$tpcState = new TPCState( array( strtolower( $title->getDBKey() ) ), null, null );
@@ -103,7 +110,7 @@ class TouhouPatchCenter {
 			// could be a target page for a redirect
 			$pages = array_merge( $fileTitle->getRedirectsHere(), $pages );
 		}
-		$localFile = wfLocalFile( $fileTitle );
+		$localFile = self::resolveLocalFile( $fileTitle );
 		$filePath = $localFile->getLocalRefPath();
 		if ( !$filePath ) {
 			return;
