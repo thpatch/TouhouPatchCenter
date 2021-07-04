@@ -7,6 +7,8 @@
   * @author Nmlgc
   */
 
+use MediaWiki\Revision\SlotRecord;
+
 class TouhouPatchCenter {
 
 	protected static function runHooks( $hook, &$hookArray, $params ) {
@@ -116,15 +118,20 @@ class TouhouPatchCenter {
 		}
 	}
 
-	public static function onPageContentSave(
-		$article, $user, $content, $summary, $isMinor, $null1, $null2, $flags, $status
+	public static function onMultiContentSave(
+		MediaWiki\Revision\RenderedRevision $renderedRevision,
+		User $user,
+		CommentStoreComment $summary,
+		$flags,
+		Status $hookStatus
 	) {
 		if ( !$user->isAllowed( 'tpc-restricted' ) ) {
 			// Does this edit add, remove or modify any restricted templates?
 			// (Yes, we need the count comparison because array_udiff() doesn't
 			// seem to take newly added templates into account.)
-			$oldPage = WikiPage::factory( $article->getTitle() );
-			$newRTs = self::getRestrictedTemplates( $content );
+			$revision = $renderedRevision->getRevision();
+			$oldPage = WikiPage::factory( $revision->getPage() );
+			$newRTs = self::getRestrictedTemplates( $revision->getContent( SlotRecord::MAIN ) );
 			$oldRTs = self::getRestrictedTemplates( $oldPage->getContent() );
 
 			if ( count( $newRTs ) == count( $oldRTs ) ) {
@@ -133,7 +140,7 @@ class TouhouPatchCenter {
 					return true;
 				}
 			}
-			$status->fatal( 'tpc-edit-blocked' );
+			$hookStatus->fatal( 'tpc-edit-blocked' );
 			return false;
 		}
 		return true;

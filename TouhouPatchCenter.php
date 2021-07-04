@@ -90,7 +90,7 @@ require_once("$templateDir/thcrap_neighbors.php");
 // ---------------
 $wgHooks['FileUpload'][] = 'TouhouPatchCenter::onFileUpload';
 $wgHooks['FileDeleteComplete'][] = 'TouhouPatchCenter::onFileDeleteComplete';
-$wgHooks['PageContentSave'][] = 'TouhouPatchCenter::onPageContentSave';
+$wgHooks['MultiContentSave'][] = 'TouhouPatchCenter::onMultiContentSave';
 $wgHooks['PageSaveComplete'][] = 'TouhouPatchCenter::onPageSaveComplete';
 $wgHooks['TitleMoveComplete'][] = 'TouhouPatchCenter::onTitleMoveComplete';
 $wgHooks['CanonicalNamespaces'][] = 'TouhouPatchCenter::onCanonicalNamespaces';
