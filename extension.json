@@ -59,6 +59,7 @@
 		"PageContentLanguage": "TouhouPatchCenter::onPageContentLanguage",
 		"PageSaveComplete": "TouhouPatchCenter::onPageSaveComplete",
 		"TitleMoveComplete": "TouhouPatchCenter::onTitleMoveComplete",
+		"UploadVerifyFile": "TouhouPatchCenter::onUploadVerifyFile",
 		"LoadExtensionSchemaUpdates": "TouhouPatchCenter::onDatabaseUpdate",
 		"ParserGetVariableValueSwitch": "TPCTemplate::runSubclass",
 		"GetMagicVariableIDs": [

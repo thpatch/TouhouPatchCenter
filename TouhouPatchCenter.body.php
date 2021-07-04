@@ -73,6 +73,17 @@ class TouhouPatchCenter {
 		return MediaWikiServices::getInstance()->getRepoGroup()->getLocalRepo()->newFile( $title );
 	}
 
+	// Why does MediaWiki even allow this case to exist?!
+	protected static function isBothUploadAndRedirect(
+		Title &$title, Content $content = null
+	): bool {
+		$localFile = self::resolveLocalFile( $title );
+		if ( !$localFile ) {
+			return false;
+		}
+		return ( $localFile->exists() && ( ( $content ?? $title )->isRedirect() ) );
+	}
+
 	public static function evalPage( Title &$title, $content = null ) {
 		if ( TPCPatchMap::isPatchRootPage( $title ) ) {
 			$tpcState = new TPCState( array( strtolower( $title->getDBKey() ) ), null, null );
@@ -98,6 +109,13 @@ class TouhouPatchCenter {
 	}
 
 	public static function evalFile( Title $fileTitle ) {
+		if ( self::isBothUploadAndRedirect( $fileTitle ) ) {
+			$title = $fileTitle->getPrefixedText();
+			throw new MWException(
+				"`$title` is both a redirect and an uploaded file. Delete one of those."
+			);
+		}
+
 		$pages = array( $fileTitle );
 		if ( $fileTitle->isRedirect() ) {
 			$content = WikiPage::factory( $fileTitle )->getContent();
@@ -175,13 +193,20 @@ class TouhouPatchCenter {
 		$flags,
 		Status $hookStatus
 	) {
+		$revision = $renderedRevision->getRevision();
+		$page = $revision->getPage();
+		$newContent = $revision->getContent( SlotRecord::MAIN );
+
+		if ( self::isBothUploadAndRedirect( $page, $newContent ) ) {
+			$hookStatus->fatal( 'tpc-file-redirect-overriding-upload', $page );
+			return false;
+		}
 		if ( !$user->isAllowed( 'tpc-restricted' ) ) {
 			// Does this edit add, remove or modify any restricted templates?
 			// (Yes, we need the count comparison because array_udiff() doesn't
 			// seem to take newly added templates into account.)
-			$revision = $renderedRevision->getRevision();
-			$oldPage = WikiPage::factory( $revision->getPage() );
-			$newRTs = self::scrapeRestrictedTemplates( $revision->getContent( SlotRecord::MAIN ) );
+			$oldPage = WikiPage::factory( $page );
+			$newRTs = self::scrapeRestrictedTemplates( $newContent );
 			$oldRTs = self::scrapeRestrictedTemplates( $oldPage->getContent() );
 
 			if ( count( $newRTs ) == count( $oldRTs ) ) {
@@ -235,6 +260,17 @@ class TouhouPatchCenter {
 	) {
 		self::evalTitle( $newtitle );
 		return true;
+	}
+
+	public static function onUploadVerifyFile( $upload, $mime, &$error ) {
+		$title = $upload->getTitle();
+		if ( $title->isRedirect() ) {
+			$error = new ApiMessage(
+				[ 'tpc-file-upload-overriding-redirect', $title->getPrefixedText() ]
+			);
+			return;
+		}
+		$error = true;
 	}
 
 	public static function onDatabaseUpdate( DatabaseUpdater $updater ) {
