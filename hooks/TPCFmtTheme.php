@@ -13,14 +13,21 @@ class TPCFmtTheme {
 	// in the process.
 	public static function onTheme( &$tpcState, &$title, &$id ) {
 		$themes = &$tpcState->getFile( null, "themes.js" );
+		$lang = $title->getSubpageText();
 
-		do {
+		while( $title ) {
 			$content = WikiPage::factory( $title )->getContent();
-		} while ( $content and $title = $content->getRedirectTarget() );
+			if ( !is_a( $content, 'TextContent' ) ) {
+				return;
+			}
+			$title = $content->getRedirectTarget();
 
-		if ( !is_a( $content, 'TextContent' ) ) {
-			return;
-		}
+			// Don't cross language boundaries. That's what
+			// client-side patch stacking is there for.
+			if ( $title && ( $title->getSubpageText() != $lang ) ) {
+				return;
+			}
+		};
 
 		$text = $content->getText();
 		if ( $text ) {
