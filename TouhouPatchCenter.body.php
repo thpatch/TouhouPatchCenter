@@ -116,7 +116,9 @@ class TouhouPatchCenter {
 			);
 		}
 
-		$pages = array( $fileTitle );
+		// Could be a target page for a redirect, even if it's a redirect itself.
+		$pages = array_merge( [ $fileTitle ], $fileTitle->getRedirectsHere() );
+
 		if ( $fileTitle->isRedirect() ) {
 			$content = WikiPage::factory( $fileTitle )->getContent();
 			// Might still be `null` if the page isn't present in the database.
@@ -124,9 +126,6 @@ class TouhouPatchCenter {
 				return;
 			}
 			$fileTitle = $content->getUltimateRedirectTarget();
-		} else {
-			// could be a target page for a redirect
-			$pages = array_merge( $fileTitle->getRedirectsHere(), $pages );
 		}
 		$localFile = self::resolveLocalFile( $fileTitle );
 		$filePath = $localFile->getLocalRefPath();
