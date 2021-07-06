@@ -53,6 +53,7 @@
 		"evaltitle": "ApiEvalTitle"
 	},
 	"Hooks": {
+		"ArticleDeleteAfterSuccess": "TouhouPatchCenter::onArticleDeleteAfterSuccess",
 		"FileUpload": "TouhouPatchCenter::onFileUpload",
 		"FileDeleteComplete": "TouhouPatchCenter::onFileDeleteComplete",
 		"MultiContentSave": "TouhouPatchCenter::onMultiContentSave",

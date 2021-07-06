@@ -186,6 +186,10 @@ class TouhouPatchCenter {
 	// MediaWiki hooks
 	// ---------------
 
+	public static function onArticleDeleteAfterSuccess( Title $title, OutputPage $output ) {
+		self::deleteFilesAndRedirects( $title );
+	}
+
 	public static function onMultiContentSave(
 		MediaWiki\Revision\RenderedRevision $renderedRevision,
 		User $user,
