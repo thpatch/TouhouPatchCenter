@@ -57,7 +57,7 @@ class TPCFmtMsg {
 
 	public static function onMsg( &$tpcState, &$title, &$temp ) {
 		$code = ( $temp->params['code'] ?? null );
-		if ( !preg_match( self::REGEX_CODE, $code, $m ) ) {
+		if ( ( $code === null ) || !preg_match( self::REGEX_CODE, $code, $m ) ) {
 			return true;
 		}
 		$lang = $title->getPageLanguage();

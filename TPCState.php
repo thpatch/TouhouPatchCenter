@@ -67,10 +67,10 @@ class TPCState
 	/**
 	  * Removes potentially dangerous stuff from a file name.
 	  *
-	  * @param string $fn File name
+	  * @param string File name
 	  * @return string Sanitized file name
 	  */
-	public static function sanitizeFileName( $fn ) {
+	public static function sanitizeFileName( string $fn ): string {
 		// This _will_ need to be changed once we patch Tasofro games, since they
 		// tend to use Japanese characters in their file names...
 		$ret = preg_replace( '/[^a-z0-9\._\- \/]/i', '', $fn );
@@ -87,9 +87,9 @@ class TPCState
 	 */
 	public function getFileName( $game, $build, $file ) {
 		// Wave the magic wand
-		$this->curGame = self::sanitizeFileName( $game );
-		$this->curBuild = self::sanitizeFileName( $build );
-		$this->curFile = self::sanitizeFileName( $file );
+		$this->curGame = ( $game ? self::sanitizeFileName( $game ) : null );
+		$this->curBuild = ( $build ? self::sanitizeFileName( $build ) : null );
+		$this->curFile = ( $file ? self::sanitizeFileName( $file ) : null );
 
 		if ( !$this->curFile ) {
 			$fn = $this->curGame . '.js';

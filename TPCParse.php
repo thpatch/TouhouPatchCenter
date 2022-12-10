@@ -69,7 +69,7 @@ class TPCParse {
 	  */
 	public static function parseCSV( &$param ) {
 		$REGEX_CSV = '/\s*,\s*/';
-		$ret = preg_split( $REGEX_CSV, $param, null, PREG_SPLIT_NO_EMPTY );
+		$ret = preg_split( $REGEX_CSV, $param, -1, PREG_SPLIT_NO_EMPTY );
 		if ( count( $ret ) == 1 ) {
 			return $ret[0];
 		} else {
@@ -80,7 +80,7 @@ class TPCParse {
 	/**
 	  * Parses a wikitext string into an array of lines.
 	  *
-	  * @param string &$param The string to split.
+	  * @param ?string &$param The string to split.
 	  * @param bool $escape_percents Keep literal percent signs for a printf format string.
 	  * @return array Array of lines.
 	  */
@@ -88,7 +88,7 @@ class TPCParse {
 		$REGEX_LINE = '#<br\s*/?>|\n#';
 
 		// Important! Breaks patch stacking otherwise!
-		if ( strlen( $param ) == 0 ) {
+		if ( ( $param === null ) || ( strlen( $param ) == 0 ) ) {
 			return null;
 		}
 		$param = TPCUtil::sanitize( $param, $escape_percents );
@@ -96,11 +96,11 @@ class TPCParse {
 		if( $tlnotePos !== FALSE ) {
 			$tlnote = substr( $param, $tlnotePos );
 			$regular = substr( $param, 0, $tlnotePos );
-			$ret = preg_split( $REGEX_LINE, $regular, null ) ;
+			$ret = preg_split( $REGEX_LINE, $regular ) ;
 			$ret[ count($ret) - 1] .= preg_replace("#<br\s*/?>#", "", $tlnote);
 			return $ret;
 		}
-		return preg_split( $REGEX_LINE, $param, null );
+		return preg_split( $REGEX_LINE, $param );
 	}
 
 	/**
