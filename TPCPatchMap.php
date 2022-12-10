@@ -7,6 +7,8 @@
   * @author Nmlgc
   */
 
+use MediaWiki\MediaWikiServices;
+
 class TPCPatchMap {
 
 	protected static function mergePatch( &$map, &$patch ) {
@@ -27,7 +29,7 @@ class TPCPatchMap {
 	  * @return bool `true` if the given page is part of `tpc_tl_source_pages`.
 	  */
 	public static function isTLIncludedPage( int $namespace, string $title ): bool {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		return $dbr->selectRow( 'tpc_tl_source_pages', 1, array(
 			'tlsp_namespace' => $namespace,
 			'tlsp_title' => $title
@@ -39,7 +41,7 @@ class TPCPatchMap {
 	  * See tpc_patch_map.sql for the format.
 	  */
 	public static function buildTLMapping( string $game, string $lang ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		$tl = $dbr->selectRow( 'tpc_tl_patches', 'tl_patch', array( 'tl_code' => $lang ) );
 		if ( $tl === false ) {
 			return null;
@@ -52,7 +54,7 @@ class TPCPatchMap {
 	}
 
 	protected static function getMapping( Title &$title ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		// Get old value
 		$map = $dbr->selectRow( 'tpc_patch_map', '*', array(
 			'pm_namespace' => $title->getNamespace(),
@@ -77,7 +79,7 @@ class TPCPatchMap {
 			return;
 		}
 
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
 		$inserts = array(
 			'pm_namespace' => $title->getNamespace(),
 			'pm_title' => $title->getText(),
@@ -139,7 +141,7 @@ class TPCPatchMap {
 	}
 
 	public static function getPatchRootPages() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		return $dbr->select(
 			'page',
 			array( 'page_namespace', 'page_title'),

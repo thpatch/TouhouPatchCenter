@@ -286,7 +286,7 @@ class TouhouPatchCenter {
 	// ---------------
 
 	public static function clearDatabase() {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
 		$dbw->delete( 'tpc_patch_map', '*' );
 		$dbw->delete( 'tpc_tl_patches', '*' );
 		$dbw->delete( 'tpc_tl_source_pages', '*' );

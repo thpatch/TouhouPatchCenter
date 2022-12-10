@@ -10,6 +10,8 @@
   * @author Nmlgc
   */
 
+use MediaWiki\MediaWikiServices;
+
 class TPCTLPatches {
 
 	// All mappings that have been written to or read from the database.
@@ -31,7 +33,7 @@ class TPCTLPatches {
 
 	public static function update( $mappings ) {
 		self::$patches = array_merge( self::$patches, $mappings );
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
 		$rows = array();
 		foreach ( $mappings as $patch => $lang ) {
 			$rows[] = array(

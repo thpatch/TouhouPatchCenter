@@ -11,6 +11,8 @@
   * {{thcrap_prefix_file_include}}
   */
 
+use MediaWiki\MediaWikiServices;
+
 class TPCInclude {
 
 	protected static function getGame( &$tpcState, &$temp ) {
@@ -70,7 +72,7 @@ class TPCInclude {
 		$page = $temp->params[1];
 		$targetTitle = self::getTitleFromLink( $title, $page );
 
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
 		$insert = array(
 			'tlsp_namespace' => $targetTitle->getNamespace(),
 			'tlsp_title' => $targetTitle->getText(),

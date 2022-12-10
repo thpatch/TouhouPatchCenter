@@ -7,6 +7,8 @@
   * @author Nmlgc
   */
 
+use MediaWiki\MediaWikiServices;
+
 require_once( dirname( __FILE__ ) . "/../../../maintenance/Maintenance.php" );
 
 class TPCRebuild extends Maintenance {
@@ -23,7 +25,7 @@ class TPCRebuild extends Maintenance {
 	}
 
 	public function parsePatchMap() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		$files = $dbr->select( 'tpc_patch_map', array( 'pm_namespace', 'pm_title' ) );
 		$num = $files->numRows();
 		$i = 1;
@@ -36,7 +38,7 @@ class TPCRebuild extends Maintenance {
 	}
 
 	public function parseTranslatablePages() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		$sourcePages = $dbr->select( 'tpc_tl_source_pages', '*' );
 		$patches = $dbr->select( 'tpc_tl_patches', 'tl_code' );
 		$num = ( $sourcePages->numRows() * $patches->numRows() );
