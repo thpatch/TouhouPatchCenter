@@ -87,7 +87,7 @@ class TPCPatchMap {
 			'pm_game' => $game,
 			'pm_target' => $target
 		);
-		$dbw->replace( 'tpc_patch_map', null, $inserts );
+		$dbw->replace( 'tpc_patch_map', 'pm_title', $inserts );
 	}
 	// -------------------------
 

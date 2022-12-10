@@ -41,7 +41,7 @@ class TPCTLPatches {
 				'tl_code' => $lang
 			);
 		}
-		$dbw->replace( 'tpc_tl_patches', null, $rows );
+		$dbw->replace( 'tpc_tl_patches', 'tl_patch', $rows );
 		return true;
 	}
 
