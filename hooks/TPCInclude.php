@@ -76,6 +76,10 @@ class TPCInclude {
 		$insert = array(
 			'tlsp_namespace' => $targetTitle->getNamespace(),
 			'tlsp_title' => $targetTitle->getText(),
+
+			// This makes hypothetical support for non-Japanese games as easy as reading this value
+			// from $temp->params[2] instead.
+			'tlsp_code' => 'ja',
 		);
 		$dbw->insert( 'tpc_tl_source_pages', $insert, __METHOD__, 'IGNORE' );
 		return true;

@@ -9,16 +9,6 @@
 
 class TPCUtil {
 	/**
-	  * Returns the language of original content in the given namespace.
-	  *
-	  * @param int $namespace Namespace number
-	  * @return string Language code
-	  */
-	public static function getNamespaceBaseLanguage( $namespace ) {
-		return $namespace == 0 ? 'ja' : $wgLanguageCode;
-	}
-
-	/**
 	  * Normalizes a hook name.
 	  *
 	  * @param string &$hook Hook name

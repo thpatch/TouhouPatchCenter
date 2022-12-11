@@ -7,5 +7,8 @@ CREATE TABLE /*_*/tpc_tl_source_pages (
 	-- Page title
 	tlsp_title varchar(255) NOT NULL,
 
+	-- Source language code
+	tlsp_code varchar(63) NOT NULL,
+
 	PRIMARY KEY (tlsp_namespace, tlsp_title)
 ) /*$wgDBTableOptions*/;

@@ -226,8 +226,8 @@ class TouhouPatchCenter {
 
 	public static function onPageContentLanguage( Title $title, &$pageLang, $userLang ) {
 		$namespace = $title->getNamespace();
-		if ( TPCPatchMap::isTLIncludedPage( $namespace, $title->getText() ) ) {
-			$pageLang = Language::factory( TPCUtil::getNamespaceBaseLanguage( $namespace ) );
+		if ( $code = TPCPatchMap::getTLPageSourceLanguage( $namespace, $title->getText() ) ) {
+			$pageLang = Language::factory( $code );
 		}
 	}
 

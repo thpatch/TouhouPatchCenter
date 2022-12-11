@@ -26,14 +26,15 @@ class TPCPatchMap {
 	// -------------------------
 
 	/**
-	  * @return bool `true` if the given page is part of `tpc_tl_source_pages`.
+	  * @return ?string Source language of the given page, if it is part of `tpc_tl_source_pages`.
 	  */
-	public static function isTLIncludedPage( int $namespace, string $title ): bool {
+	public static function getTLPageSourceLanguage( int $namespace, string $title ): ?string {
 		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
-		return $dbr->selectRow( 'tpc_tl_source_pages', 1, array(
+		$row = $dbr->selectRow( 'tpc_tl_source_pages', 'tlsp_code', array(
 			'tlsp_namespace' => $namespace,
 			'tlsp_title' => $title
-		)) !== false;
+		));
+		return ( $row->tlsp_code ?? null );
 	}
 
 	/**
@@ -115,9 +116,9 @@ class TPCPatchMap {
 		$root = $title->getRootText(); // Might indicate a game
 
 		// Source page?
-		if ( self::isTLIncludedPage( $namespace, $title->getText() ) ) {
+		if ( $code = self::getTLPageSourceLanguage( $namespace, $title->getText() ) ) {
 			$game = $title->isSubpage() ? lcfirst( $root ) : "";
-			return self::buildTLMapping( $game, TPCUtil::getNamespaceBaseLanguage( $namespace ) );
+			return self::buildTLMapping( $game, $code );
 		}
 
 		// If $title is a translated page, getBaseText() gives us the source page…
@@ -125,7 +126,7 @@ class TPCPatchMap {
 
 		// … which we can check against the same database table to check if this is a translated
 		// page of a registered source page.
-		if ( self::isTLIncludedPage( $namespace, $base ) ) {
+		if ( self::getTLPageSourceLanguage( $namespace, $base ) ) {
 			$game = ( $root != $base ) ? lcfirst( $root ) : "";
 			return self::buildTLMapping( $game, $title->getSubpageText() );
 		}
