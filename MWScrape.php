@@ -179,8 +179,11 @@ class MWScrape {
 	public static function toArray( &$page ) {
 		$temps = array();
 
-		// Apply basic regex
-		$page = preg_replace( '/<!--.*?-->/s', '', $page );
+		// Apply basic regex. We leave translation unit ID removal to
+		// TPCUtil::sanitize(); if we did it here, we'd leave empty lines in
+		// place of these ID comments, and couldn't distinguish intended line
+		// breaks after <translate> from unintended ones anymore.
+		$page = preg_replace( '/<!--(?!T:).*?-->/s', '', $page );
 		$page = preg_replace( '/\[\[[Cc]ategory:.*?\]\]/', '', $page );
 		$page = preg_replace( self::MW_PAGE_LINK_REGEX, "$3", $page );
 
