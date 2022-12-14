@@ -69,11 +69,7 @@ class TPCFmtMsg {
 		$type = ( $temp->params[1] ?? null );
 
 		// h1 index hack... meh.
-		if ( $temp->params[1] === 'h1') {
-			$indexType = 'h1';
-		} else {
-			$indexType = null;
-		}
+		$indexType = ( ( $type === "h1" ) ? "h1" : null );
 
 		// Time index
 		$timeIndex = &$tpcState->msgTimeIndex[$indexType];
