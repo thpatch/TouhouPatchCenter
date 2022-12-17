@@ -69,7 +69,7 @@ class TPCUtil {
 		$REGEX_LANG_REP = '\1';
 		$param = preg_replace( $REGEX_LANG_PAT, $REGEX_LANG_REP, $param );
 		// &nbsp;
-		$param = preg_replace( '/&nbsp;/', json_decode( '"\u00a0"' ), $param );
+		$param = preg_replace( '/&nbsp;/', "\u{00a0}", $param );
 		// MediaWiki markup
 		$param = preg_replace( "/'''''(.*?)'''''/", '<bi$\1>', $param );
 		$param = preg_replace( "/'''(.*?)'''/", '<b$\1>', $param );
@@ -82,7 +82,7 @@ class TPCUtil {
 		$REGEX_TLNOTE = '/(\n)*\{\{\s*tlnote\s*\|\s*(.*?)(\|.*)*}}/is';
 		if ( preg_match_all( $REGEX_TLNOTE, $param, $tlnotes ) ) {
 			$param = preg_replace( $REGEX_TLNOTE, '', $param );
-			$param .= json_decode( '"\u0014"' ) . implode( $tlnotes[2] );
+			$param .= "\u{0014}" . implode( $tlnotes[2] );
 		}
 		// Do more MediaWiki stuff...
 		return $param;

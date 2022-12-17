@@ -92,7 +92,7 @@ class TPCParse {
 			return null;
 		}
 		$param = TPCUtil::sanitize( $param, $escape_percents );
-		$tlnotePos = strpos( $param, json_decode( '"\u0014"' ) );
+		$tlnotePos = strpos( $param, "\u{0014}" );
 		if( $tlnotePos !== FALSE ) {
 			$tlnote = substr( $param, $tlnotePos );
 			$regular = substr( $param, 0, $tlnotePos );
