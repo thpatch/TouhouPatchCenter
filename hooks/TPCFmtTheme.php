@@ -31,7 +31,7 @@ class TPCFmtTheme {
 
 		$text = $content->getText();
 		if ( $text ) {
-			$themes[$id] = TPCUtil::sanitize( $text );
+			$themes[$id] = TouhouThemeDB\Title::sanitize( $text );
 		}
 	}
 }

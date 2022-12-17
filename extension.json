@@ -11,7 +11,10 @@
 	"type": "other",
 	"license-type": "Unlicense",
 	"requires": {
-		"MediaWiki": ">= 1.35.0"
+		"MediaWiki": ">= 1.35.0",
+		"extensions": {
+			"TouhouThemeDB": "*"
+		}
 	},
 	"AvailableRights": [
 		"tpc-restricted"
