@@ -54,8 +54,10 @@
 	},
 	"Hooks": {
 		"ArticleDeleteAfterSuccess": "TouhouPatchCenter::onArticleDeleteAfterSuccess",
+		"ArticleUndelete": "TouhouPatchCenter::onArticleUndelete",
 		"FileUpload": "TouhouPatchCenter::onFileUpload",
 		"FileDeleteComplete": "TouhouPatchCenter::onFileDeleteComplete",
+		"FileUndeleteComplete": "TouhouPatchCenter::onFileUndeleteComplete",
 		"MultiContentSave": "TouhouPatchCenter::onMultiContentSave",
 		"PageContentLanguage": "TouhouPatchCenter::onPageContentLanguage",
 		"PageSaveComplete": "TouhouPatchCenter::onPageSaveComplete",

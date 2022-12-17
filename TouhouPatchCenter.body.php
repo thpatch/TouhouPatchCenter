@@ -189,6 +189,13 @@ class TouhouPatchCenter {
 		self::deleteFilesAndRedirects( $title );
 	}
 
+	public static function onArticleUndelete(
+		Title $title, $create, $comment, $oldPageId, $restoredPages
+	) {
+		self::evalTitle( $title );
+		return true;
+	}
+
 	public static function onMultiContentSave(
 		MediaWiki\Revision\RenderedRevision $renderedRevision,
 		User $user,
@@ -255,6 +262,11 @@ class TouhouPatchCenter {
 			return true;
 		}
 		self::deleteFilesAndRedirects( $file->getTitle() );
+		return true;
+	}
+
+	public static function onFileUndeleteComplete( $title, $fileVersions, $user, $reason ) {
+		self::evalFile( $title );
 		return true;
 	}
 
