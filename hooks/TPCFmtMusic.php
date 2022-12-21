@@ -31,6 +31,9 @@ class TPCFmtMusic {
 		$musiccmt = &$tpcState->getFile( $game, "musiccmt.js" );
 
 		$tl = TPCParse::parseLines( $tl );
+		if ( !$tl ) {
+			return true;
+		}
 		foreach ( $tl as $i ) {
 			$test = trim( $i, " 　@" );
 			if ( $test !== "" ) {
