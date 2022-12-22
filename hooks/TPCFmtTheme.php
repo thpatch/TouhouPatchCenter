@@ -31,7 +31,11 @@ class TPCFmtTheme {
 
 		$text = $content->getText();
 		if ( $text ) {
-			$themes[$id] = TouhouThemeDB\Title::sanitize( $text );
+			$text = TouhouThemeDB\Title::sanitize( $text );
+			$themes[$id] = $text;
+			foreach ( array_keys( TouhouThemeDB\Title::REDIRECTS, $id ) as &$id ) {
+				$themes[$id] = $text;
+			}
 		}
 	}
 }
