@@ -9,15 +9,18 @@
 
 class TPCParse {
 	/**
-	  * Parses thcrap_ver.
+	  * Parses {{thcrap_ver}} templates inside the given string, returning an array with the
+	  * interpolated variant of $str for every version found.
 	  */
-	public static function parseVer( $str ) {
+	public static function parseVer( $str ): array {
 		$scrape = MWScrape::toArray( $str );
 		$ret = array();
-		$versions = array();
-		// Splice points in the original string
+		// Per-version splice (point, string) tuples
 		$splice = array();
+
+		// Number of characters cut out of $str
 		$cut = 0;
+
 		// Find valid versions
 		foreach ( $scrape as $i ) {
 			if (
@@ -31,31 +34,23 @@ class TPCParse {
 				$start = $i->srcStart - $cut;
 				$end = $i->srcEnd - $cut + MWScrape::MW_TEMPLATE_TOKEN_LEN;
 				$len = $end - $start;
-
 				$str = substr( $str, 0, $start ) . substr( $str, $end );
+
 				// Remember splice point
-				$splice[] = $start;
+				$splice[ $i->params['ver'] ] ??= array();
+				$splice[ $i->params['ver'] ][] = [ $start, $i->params[1] ];
 				$cut += $len;
 			}
 		}
 		// Splice each version
-		$curSplice = 0;
-		$spliceDrift = 0;
-		$last = $str;
-		foreach ( $versions as $i ) {
-			$splicePoint = $splice[$curSplice] + $spliceDrift;
-			// Splice
-			$last =
-				// before
-				substr( $last, 0, $splicePoint ) .
-				// this version
-				$i->params[1] .
-				// after
-				substr( $last, $splicePoint )
-			;
-			$ret[ $i->params['ver'] ] = $last;
-			$curSplice++;
-			$spliceDrift += strlen( $i->params[1] );
+		foreach ( $splice as $version => &$points ) {
+			$spliced = $str;
+			$spliceDrift = 0;
+			foreach ( $points as &$point ) {
+				$spliced = substr_replace( $spliced, $point[1], ( $point[0] + $spliceDrift ), 0 );
+				$spliceDrift += strlen( $point[1] );
+			}
+			$ret[ $version ] = $spliced;
 		}
 		$ret[null] = $str;
 		return $ret;
