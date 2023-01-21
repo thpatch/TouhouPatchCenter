@@ -106,7 +106,7 @@ class TPCParse {
 	  * @return mixed The return value from preg_match().
 	  */
 	public static function parseRuby( &$matches, &$line ) {
-		$REGEX_RUBY = '/{{\s*ruby(-ja)*\s*\|\s*(.*?)\s*\|\s*(.*?)\s*(\|.*)*}}/';
+		$REGEX_RUBY = '/{{\s*[Rr]uby(-ja)*\s*\|\s*(.*?)\s*\|\s*(.*?)\s*(\|.*)*}}/';
 		return preg_match( $REGEX_RUBY, $line, $matches, PREG_OFFSET_CAPTURE );
 	}
 
