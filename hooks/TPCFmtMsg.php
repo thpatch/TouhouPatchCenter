@@ -41,17 +41,19 @@ class TPCFmtMsg {
 
 	protected static function renderRuby( &$lines ) {
 		$FORMAT_RUBY = "|\t%s\t,\t%s\t,%s";
-		foreach ( $lines as $key => &$i ) {
-			if ( !TPCParse::parseRuby( $m, $i ) ) {
+		for( $i = 0; $i < count( $lines ); $i++ ) {
+			$line = &$lines[$i];
+			if ( !TPCParse::parseRuby( $m, $line ) ) {
 				continue;
 			}
-			$offset = substr( $i, 0, $m[0][1] );
+			$offset = substr( $line, 0, $m[0][1] );
 			$base = $m[2][0];
-			$rest = substr( $i, $m[0][1] + strlen( $m[0][0] ) );
-			$i = $offset . $base . $rest;
+			$rest = substr( $line, $m[0][1] + strlen( $m[0][0] ) );
+			$lines[$i] = ( $offset . $base . $rest );
 
 			$rubyLine = sprintf( $FORMAT_RUBY, $offset, $base, $m[3][0] );
-			array_splice( $lines, $key, 0, $rubyLine );
+			array_splice( $lines, $i, 0, $rubyLine );
+			$i++;
 		}
 	}
 
