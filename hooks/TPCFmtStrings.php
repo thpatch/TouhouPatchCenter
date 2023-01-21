@@ -26,6 +26,11 @@ class TPCFmtStrings {
 			// linked to, so let's at least define some clear rules for whitespace.
 			$tl = str_replace( [ "\u{00a0}", "\u{3000}" ], ' ', $tl );
 
+			// Hooray, locale dependence! Required for iconv() to do any transliteration at all,
+			// instead of just swallowing non-ASCII characters.
+			// (See the various comments at https://www.php.net/manual/en/function.iconv.php.)
+			setlocale( LC_CTYPE, 'en_US.UTF-8' );
+
 			$tl = iconv( "UTF-8", "ASCII//TRANSLIT//IGNORE", $tl );
 			$tl = preg_replace( '/[^(\x20-\x7F)]/i', '', $tl );
 		}
