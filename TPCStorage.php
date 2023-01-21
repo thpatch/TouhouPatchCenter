@@ -68,6 +68,11 @@ class TPCStorage {
 			return $array;
 		}
 		$oldArray = json_decode( $oldJson, true );
+		if ( $oldArray === null ) {
+			throw new MWException(
+				"`$fn` is invalid JSON. Ask an admin to fix the error on the server."
+			);
+		}
 		return self::arrayMergeRecursiveDistinct( $oldArray, $array, $changed );
 	}
 
