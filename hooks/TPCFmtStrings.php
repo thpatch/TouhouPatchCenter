@@ -22,6 +22,10 @@ class TPCFmtStrings {
 		$tl = TPCUtil::sanitize( $tl, false );
 		if ( isset( $temp->params['ascii'] ) ) {
 			// Try to transliterate the string, then limit it to the ASCII range
+			// The exact transliteration results are up to the version of libiconv that PHP is
+			// linked to, so let's at least define some clear rules for whitespace.
+			$tl = str_replace( [ "\u{00a0}", "\u{3000}" ], ' ', $tl );
+
 			$tl = iconv( "UTF-8", "ASCII//TRANSLIT//IGNORE", $tl );
 			$tl = preg_replace( '/[^(\x20-\x7F)]/i', '', $tl );
 		}
