@@ -20,8 +20,9 @@ class TPCInfo {
 
 		$patchJS['id'] = $pageTitle;
 
-		$patchTitle = TPCUtil::dictGet( $temp->params['title'] );
-		$patchJS['title'] = $patchTitle;
+		if ( isset( $temp->params['title'] ) ) {
+			$patchJS['title'] = $temp->params['title'];
+		}
 
 		if ( isset( $temp->params['min_build'] ) ) {
 			global $wgTPCRepoEngineURL;
@@ -45,4 +46,4 @@ class TPCInfo {
 	}
 }
 
-$wgTPCHooks['thcrap_patch_info'][] = 'TPCInfo::onPatchInfo';
+TouhouPatchCenter::registerHook( 'thcrap_patch_info', 'TPCInfo::onPatchInfo' );

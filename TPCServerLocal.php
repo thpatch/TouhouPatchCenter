@@ -33,8 +33,7 @@ class TPCServerLocal extends TPCServer {
 	// ------------ lixlpixel recursive PHP functions -------------
 	// removePath( directory to delete, empty )
 	// ------------------------------------------------------------
-	public static function removePath( $path, $empty = FALSE )
-	{
+	public static function removePath( $path, $empty = FALSE ) {
 		if ( substr( $path, -1 ) == '/' ) {
 			$path = substr( $path, 0, -1 );
 		}

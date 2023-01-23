@@ -13,8 +13,8 @@
 class TPCFmtMusic {
 
 	public static function onMusic( &$tpcState, &$title, &$temp ) {
-		$num = TPCUtil::dictGet( $temp->params['num'] );
-		$tl = TPCUtil::dictGet( $temp->params['tl'] );
+		$num = ( $temp->params['num'] ?? null );
+		$tl = ( $temp->params['tl'] ?? null );
 		$game = $tpcState->getCurGame();
 		if ( empty( $num ) or empty( $game ) ) {
 			return true;
@@ -31,6 +31,9 @@ class TPCFmtMusic {
 		$musiccmt = &$tpcState->getFile( $game, "musiccmt.js" );
 
 		$tl = TPCParse::parseLines( $tl );
+		if ( !$tl ) {
+			return true;
+		}
 		foreach ( $tl as $i ) {
 			$test = trim( $i, " 　@" );
 			if ( $test !== "" ) {
@@ -41,6 +44,6 @@ class TPCFmtMusic {
 		return true;
 	}
 }
-$wgTPCHooks['thcrap_music'][] = 'TPCFmtMusic::onMusic';
+TouhouPatchCenter::registerHook( 'thcrap_music', 'TPCFmtMusic::onMusic' );
 // Short versions
-$wgTPCHooks['musicroom'][] = 'TPCFmtMusic::onMusic';
+TouhouPatchCenter::registerHook( 'musicroom', 'TPCFmtMusic::onMusic' );

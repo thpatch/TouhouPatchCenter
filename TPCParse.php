@@ -9,15 +9,18 @@
 
 class TPCParse {
 	/**
-	  * Parses thcrap_ver.
+	  * Parses {{thcrap_ver}} templates inside the given string, returning an array with the
+	  * interpolated variant of $str for every version found.
 	  */
-	public static function parseVer( $str ) {
+	public static function parseVer( $str ): array {
 		$scrape = MWScrape::toArray( $str );
 		$ret = array();
-		$versions = array();
-		// Splice points in the original string
+		// Per-version splice (point, string) tuples
 		$splice = array();
+
+		// Number of characters cut out of $str
 		$cut = 0;
+
 		// Find valid versions
 		foreach ( $scrape as $i ) {
 			if (
@@ -31,31 +34,23 @@ class TPCParse {
 				$start = $i->srcStart - $cut;
 				$end = $i->srcEnd - $cut + MWScrape::MW_TEMPLATE_TOKEN_LEN;
 				$len = $end - $start;
-
 				$str = substr( $str, 0, $start ) . substr( $str, $end );
+
 				// Remember splice point
-				$splice[] = $start;
+				$splice[ $i->params['ver'] ] ??= array();
+				$splice[ $i->params['ver'] ][] = [ $start, $i->params[1] ];
 				$cut += $len;
 			}
 		}
 		// Splice each version
-		$curSplice = 0;
-		$spliceDrift = 0;
-		$last = $str;
-		foreach ( $versions as $i ) {
-			$splicePoint = $splice[$curSplice] + $spliceDrift;
-			// Splice
-			$last =
-				// before
-				substr( $last, 0, $splicePoint ) .
-				// this version
-				$i->params[1] .
-				// after
-				substr( $last, $splicePoint )
-			;
-			$ret[ $i->params['ver'] ] = $last;
-			$curSplice++;
-			$spliceDrift += strlen( $i->params[1] );
+		foreach ( $splice as $version => &$points ) {
+			$spliced = $str;
+			$spliceDrift = 0;
+			foreach ( $points as &$point ) {
+				$spliced = substr_replace( $spliced, $point[1], ( $point[0] + $spliceDrift ), 0 );
+				$spliceDrift += strlen( $point[1] );
+			}
+			$ret[ $version ] = $spliced;
 		}
 		$ret[null] = $str;
 		return $ret;
@@ -69,7 +64,7 @@ class TPCParse {
 	  */
 	public static function parseCSV( &$param ) {
 		$REGEX_CSV = '/\s*,\s*/';
-		$ret = preg_split( $REGEX_CSV, $param, null, PREG_SPLIT_NO_EMPTY );
+		$ret = preg_split( $REGEX_CSV, $param, -1, PREG_SPLIT_NO_EMPTY );
 		if ( count( $ret ) == 1 ) {
 			return $ret[0];
 		} else {
@@ -80,7 +75,7 @@ class TPCParse {
 	/**
 	  * Parses a wikitext string into an array of lines.
 	  *
-	  * @param string &$param The string to split.
+	  * @param ?string &$param The string to split.
 	  * @param bool $escape_percents Keep literal percent signs for a printf format string.
 	  * @return array Array of lines.
 	  */
@@ -88,19 +83,19 @@ class TPCParse {
 		$REGEX_LINE = '#<br\s*/?>|\n#';
 
 		// Important! Breaks patch stacking otherwise!
-		if ( strlen( $param ) == 0 ) {
+		if ( ( $param === null ) || ( strlen( $param ) == 0 ) ) {
 			return null;
 		}
 		$param = TPCUtil::sanitize( $param, $escape_percents );
-		$tlnotePos = strpos( $param, json_decode( '"\u0014"' ) );
+		$tlnotePos = strpos( $param, "\u{0014}" );
 		if( $tlnotePos !== FALSE ) {
 			$tlnote = substr( $param, $tlnotePos );
 			$regular = substr( $param, 0, $tlnotePos );
-			$ret = preg_split( $REGEX_LINE, $regular, null ) ;
+			$ret = preg_split( $REGEX_LINE, $regular ) ;
 			$ret[ count($ret) - 1] .= preg_replace("#<br\s*/?>#", "", $tlnote);
 			return $ret;
 		}
-		return preg_split( $REGEX_LINE, $param, null );
+		return preg_split( $REGEX_LINE, $param );
 	}
 
 	/**
@@ -111,7 +106,7 @@ class TPCParse {
 	  * @return mixed The return value from preg_match().
 	  */
 	public static function parseRuby( &$matches, &$line ) {
-		$REGEX_RUBY = '/{{\s*ruby(-ja)*\s*\|\s*(.*?)\s*\|\s*(.*?)\s*(\|.*)*}}/';
+		$REGEX_RUBY = '/{{\s*[Rr]uby(-ja)*\s*\|\s*(.*?)\s*\|\s*(.*?)\s*(\|.*)*}}/';
 		return preg_match( $REGEX_RUBY, $line, $matches, PREG_OFFSET_CAPTURE );
 	}
 

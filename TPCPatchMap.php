@@ -7,6 +7,8 @@
   * @author Nmlgc
   */
 
+use MediaWiki\MediaWikiServices;
+
 class TPCPatchMap {
 
 	protected static function mergePatch( &$map, &$patch ) {
@@ -22,65 +24,47 @@ class TPCPatchMap {
 	// -------------------------
 	// Database access functions
 	// -------------------------
-	protected static function getMapping( $table, $vars, $conds ) {
-		$dbr = wfGetDB( DB_SLAVE );
-		// Get old value
-		$query = $dbr->select( $table, $vars, $conds );
-		$map = $query->fetchObject();
-		if ( $map ) {
-			$map->pm_patch = explode( "\n", $map->pm_patch );
-		}
-		return $map;
-	}
 
-	protected static function updateMapping( &$title, &$patch, &$game, &$target ) {
-		$dbw = wfGetDB( DB_MASTER );
-		$inserts = array(
-			'pm_namespace' => $title->getNamespace(),
-			'pm_title' => $title->getText(),
-			'pm_patch' => $patch,
-			'pm_game' => $game,
-			'pm_target' => $target
-		);
-		$dbw->replace( 'tpc_patch_map', null, $inserts );
+	/**
+	  * @return ?string Source language of the given page, if it is part of `tpc_tl_source_pages`.
+	  */
+	public static function getTLPageSourceLanguage( int $namespace, string $title ): ?string {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+		$row = $dbr->selectRow( 'tpc_tl_source_pages', 'tlsp_code', array(
+			'tlsp_namespace' => $namespace,
+			'tlsp_title' => $title
+		));
+		return ( $row->tlsp_code ?? null );
 	}
-	// -------------------------
 
 	/**
 	  * @return array Mapping information for this page.
 	  * See tpc_patch_map.sql for the format.
 	  */
-	public static function get( $title ) {
-		$namespace = $title->getNamespace();
-		$ret = self::getMapping(
-			'tpc_patch_map',
-			'*',
-			array(
-				'pm_namespace' => $namespace,
-				'pm_title' => $title->getText()
-			)
-		);
-		if ( $ret or $namespace == NS_FILE ) {
-			return $ret;
-		}
-		// Not actually a gross hack, Title::isSubpage() works just like this.
-		$subpageLevels = substr_count( $title->getText(), "/" );
-		$code = ( $subpageLevels >= 1 )
-			? $title->getSubpageText()
-			: TPCUtil::getNamespaceBaseLanguage( $namespace );
-		$game = ( $subpageLevels >= 2 ) ? lcfirst( $title->getRootText() ) : "";
-
-		$dbr = wfGetDB( DB_SLAVE );
-		$patchForLang = $dbr->select( 'tpc_tl_patches', 'tl_patch', array(
-			'tl_code' => $code
-		) )->fetchObject();
-		if ( !$patchForLang ) {
+	public static function buildTLMapping( string $game, string $lang ) {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+		$tl = $dbr->selectRow( 'tpc_tl_patches', 'tl_patch', array( 'tl_code' => $lang ) );
+		if ( $tl === false ) {
 			return null;
 		}
 		return ( object )array(
-			'pm_patch' => array( $patchForLang->tl_patch ),
-			'pm_game' => $game
+			'pm_patch' => array( $tl->tl_patch ),
+			'pm_game' => $game,
+			'pm_target' => null, // Important for TPCState::from()
 		);
+	}
+
+	protected static function getMapping( Title &$title ) {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+		// Get old value
+		$map = $dbr->selectRow( 'tpc_patch_map', '*', array(
+			'pm_namespace' => $title->getNamespace(),
+			'pm_title' => $title->getText(),
+		) );
+		if ( $map ) {
+			$map->pm_patch = explode( "\n", $map->pm_patch );
+		}
+		return $map;
 	}
 
 	public static function update( $title, $patch, $game = null, $target = null ) {
@@ -90,12 +74,63 @@ class TPCPatchMap {
 		if (
 			( $map ) and
 			( in_array( $patch, $map->pm_patch ) ) and
-			( TPCUtil::dictGet( $map->pm_game ) === $game ) and
-			( TPCUtil::dictGet( $map->pm_target ) === $target )
+			( $map->pm_game == $game ) and
+			( $map->pm_target == $target )
 		) {
-				return;
+			return;
 		}
-		self::updateMapping( $title, $patches, $game, $target );
+
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
+		$inserts = array(
+			'pm_namespace' => $title->getNamespace(),
+			'pm_title' => $title->getText(),
+			'pm_patch' => $patch,
+			'pm_game' => $game,
+			'pm_target' => $target
+		);
+		$dbw->replace( 'tpc_patch_map', 'pm_title', $inserts );
+	}
+	// -------------------------
+
+	/**
+	  * @return array Mapping information for this page.
+	  * See tpc_patch_map.sql for the format.
+	  */
+	public static function get( $title ) {
+		$namespace = $title->getNamespace();
+
+		$ret = self::getMapping( $title );
+		if ( $ret or $namespace == NS_FILE ) {
+			return $ret;
+		}
+
+		// Auto-generate the mapping from the page title. This has to work for the following cases:
+		//
+		// | Case                       | $title         | tl_source_page | Mapped game / patch |
+		// |----------------------------+----------------+----------------+---------------------|
+		// | Multi-game, source page    | Game titles    | Game titles    |     "", "lang_ja"   |
+		// | Multi-game, translated     | Game titles/en | Game titles    |     "", "lang_en"   |
+		// | Specific game, source page | Th06/Images    | Th06/Images    | "th06", "lang_ja"   |
+		// | Specific game, translated  | Th06/Images/en | Th06/Images    | "th06", "lang_en"   |
+
+		$root = $title->getRootText(); // Might indicate a game
+
+		// Source page?
+		if ( $code = self::getTLPageSourceLanguage( $namespace, $title->getText() ) ) {
+			$game = $title->isSubpage() ? lcfirst( $root ) : "";
+			return self::buildTLMapping( $game, $code );
+		}
+
+		// If $title is a translated page, getBaseText() gives us the source page…
+		$base = $title->getBaseText();
+
+		// … which we can check against the same database table to check if this is a translated
+		// page of a registered source page.
+		if ( self::getTLPageSourceLanguage( $namespace, $base ) ) {
+			$game = ( $root != $base ) ? lcfirst( $root ) : "";
+			return self::buildTLMapping( $game, $title->getSubpageText() );
+		}
+		return null;
 	}
 
 	/**
@@ -103,22 +138,16 @@ class TPCPatchMap {
 	  * @return bool
 	  */
 	public static function isPatchRootPage( $title ) {
-		global $wgTPCPatchNamespace;
-		return ( $title->getNamespace() === $wgTPCPatchNamespace and !$title->isSubpage() );
-	}
-
-	public static function isPatchPage( $title ) {
-		return self::isPatchRootPage( $title ) or self::get( $title );
+		return ( $title->getNamespace() === NS_PATCH and !$title->isSubpage() );
 	}
 
 	public static function getPatchRootPages() {
-		global $wgTPCPatchNamespace;
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		return $dbr->select(
 			'page',
 			array( 'page_namespace', 'page_title'),
 			array(
-				'page_namespace' => $wgTPCPatchNamespace,
+				'page_namespace' => NS_PATCH,
 				"page_title NOT LIKE '%/%'"
 			)
 		);

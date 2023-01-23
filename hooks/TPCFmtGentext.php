@@ -24,16 +24,16 @@ class TPCFmtGentext {
 	}
 
 	public static function onGentext( &$tpcState, &$title, &$temp ) {
-		$id = TPCUtil::dictGet( $temp->params['id'] );
-		$tl = TPCUtil::dictGet( $temp->params['tl'] );
+		$id = $temp->params['id'];
+		$tl = ( $temp->params['tl'] ?? null );
 		return self::addGentext( $tpcState, $id, TPCParse::parseLines( $tl ));
 	}
 
 	public static function onTrophy( &$tpcState, &$title, &$temp ) {
-		$id = TPCUtil::dictGet( $temp->params['id'] );
-		$title = TPCUtil::dictGet( $temp->params['title'] );
-		$locked = TPCUtil::dictGet( $temp->params['locked'] );
-		$unlocked = TPCUtil::dictGet( $temp->params['unlocked'] );
+		$id = $temp->params['id'];
+		$title = ( $temp->params['title'] ?? null );
+		$locked = ( $temp->params['locked'] ?? null );
+		$unlocked = ( $temp->params['unlocked'] ?? null );
 		self::addGentext( $tpcState, $id, TPCUtil::sanitize( $title ));
 		self::addGentext( $tpcState, $id . "_0", TPCParse::parseLines( $locked ));
 		self::addGentext( $tpcState, $id . "_1", TPCParse::parseLines( $unlocked ));
@@ -41,15 +41,15 @@ class TPCFmtGentext {
 	}
 
 	public static function onAbility( &$tpcState, &$title, &$temp ) {
-		$id = TPCUtil::dictGet( $temp->params['id'] );
-		$title = TPCUtil::dictGet( $temp->params['title'] );
-		$description = TPCUtil::dictGet( $temp->params['description'] );
+		$id = $temp->params['id'];
+		$title = ( $temp->params['title'] ?? null );
+		$description = ( $temp->params['description'] ?? null );
 		self::addGentext( $tpcState, $id, TPCUtil::sanitize( $title ));
 		self::addGentext( $tpcState, $id . "_0", TPCParse::parseLines( $description ));
 		return true;
 	}
 }
-$wgTPCHooks['thcrap_gentext'][] = 'TPCFmtGentext::onGentext';
-$wgTPCHooks['gentext'][] = 'TPCFmtGentext::onGentext';
-$wgTPCHooks['trophy'][] = 'TPCFmtGentext::onTrophy';
-$wgTPCHooks['ability'][] = 'TPCFmtGentext::onAbility';
+TouhouPatchCenter::registerHook( 'thcrap_gentext', 'TPCFmtGentext::onGentext' );
+TouhouPatchCenter::registerHook( 'gentext', 'TPCFmtGentext::onGentext' );
+TouhouPatchCenter::registerHook( 'trophy', 'TPCFmtGentext::onTrophy' );
+TouhouPatchCenter::registerHook( 'ability', 'TPCFmtGentext::onAbility' );

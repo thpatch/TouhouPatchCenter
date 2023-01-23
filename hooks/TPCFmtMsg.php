@@ -32,7 +32,7 @@ class TPCFmtMsg {
 
 	public static function formatSlot( &$time, &$type, &$index ) {
 		// Much faster than sprintf, by the way
-		if ( $type )	{
+		if ( $type ) {
 			return $time . '_' . $type . '_' . $index;
 		} else {
 			return $time . '_' . $index;
@@ -41,23 +41,25 @@ class TPCFmtMsg {
 
 	protected static function renderRuby( &$lines ) {
 		$FORMAT_RUBY = "|\t%s\t,\t%s\t,%s";
-		foreach ( $lines as $key => &$i ) {
-			if ( !TPCParse::parseRuby( $m, $i ) ) {
+		for( $i = 0; $i < count( $lines ); $i++ ) {
+			$line = &$lines[$i];
+			if ( !TPCParse::parseRuby( $m, $line ) ) {
 				continue;
 			}
-			$offset = substr( $i, 0, $m[0][1] );
+			$offset = substr( $line, 0, $m[0][1] );
 			$base = $m[2][0];
-			$rest = substr( $i, $m[0][1] + strlen( $m[0][0] ) );
-			$i = $offset . $base . $rest;
+			$rest = substr( $line, $m[0][1] + strlen( $m[0][0] ) );
+			$lines[$i] = ( $offset . $base . $rest );
 
 			$rubyLine = sprintf( $FORMAT_RUBY, $offset, $base, $m[3][0] );
-			array_splice( $lines, $key, 0, $rubyLine );
+			array_splice( $lines, $i, 0, $rubyLine );
+			$i++;
 		}
 	}
 
 	public static function onMsg( &$tpcState, &$title, &$temp ) {
-		$code = TPCUtil::dictGet( $temp->params['code'] );
-		if ( !preg_match( self::REGEX_CODE, $code, $m ) ) {
+		$code = ( $temp->params['code'] ?? null );
+		if ( ( $code === null ) || !preg_match( self::REGEX_CODE, $code, $m ) ) {
 			return true;
 		}
 		$lang = $title->getPageLanguage();
@@ -66,20 +68,16 @@ class TPCFmtMsg {
 		$time = $m['time'];
 
 		$lines = TPCParse::parseLines( $temp->params['tl'] );
-		$type = TPCUtil::dictGet( $temp->params[1] );
+		$type = ( $temp->params[1] ?? null );
 
 		// h1 index hack... meh.
-		if ( $temp->params[1] === 'h1') {
-			$indexType = 'h1';
-		} else {
-			$indexType = null;
-		}
+		$indexType = ( ( $type === "h1" ) ? "h1" : null );
 
 		// Time index
 		$timeIndex = &$tpcState->msgTimeIndex[$indexType];
 		if(
-			( $entry === TPCUtil::dictGet( $tpcState->msgLastEntry[$indexType] ) ) and
-			( $time === TPCUtil::dictGet( $tpcState->msgLastTime[$indexType] ) ) and
+			( $entry === ( $tpcState->msgLastEntry[$indexType] ?? null ) ) and
+			( $time === ( $tpcState->msgLastTime[$indexType] ?? null ) ) and
 			( $tpcState->msgLastType === $indexType )
 		) {
 			$timeIndex++;
@@ -135,7 +133,7 @@ class TPCFmtMsg {
 			$cont['lines'] = &$lines;
 
 			// Copy-paste the dialogue for th18 Stage 6, so that translators don't have to.
-			$altentry = TPCUtil::dictGet( $temp->params['altentry'] );
+			$altentry = ( $temp->params['altentry'] ?? null );
 			if ( $altentry !== null ) {
 				$tpcState->jsonContents[$altentry][$slot]['lines'] = &$lines;
 			}
@@ -178,17 +176,17 @@ class TPCFmtMsg {
 	}
 
 	public static function onMsgParse( &$tpcState, &$title, &$temp ) {
-		$tpcState->switchGameFilePatch( TPCUtil::dictGet( $temp->params['file'] ) );
+		$tpcState->switchGameFilePatch( $temp->params['file'] ?? null );
 		return true;
 	}
 }
 
-$wgTPCHooks['thcrap_msg'][] = 'TPCFmtMsg::onMsg';
-$wgTPCHooks['thcrap_msg_assist'][] = 'TPCFmtMsg::onMsgAssist';
-$wgTPCHooks['thcrap_msg/footer'][] = 'TPCFmtMsg::onMsgFooter';
+TouhouPatchCenter::registerHook( 'thcrap_msg', 'TPCFmtMsg::onMsg' );
+TouhouPatchCenter::registerHook( 'thcrap_msg_assist', 'TPCFmtMsg::onMsgAssist' );
+TouhouPatchCenter::registerHook( 'thcrap_msg/footer', 'TPCFmtMsg::onMsgFooter' );
 // Short versions
-$wgTPCHooks['dt'][] = 'TPCFmtMsg::onMsg';
-$wgTPCHooks['dialogtable'][] = 'TPCFmtMsg::onMsg';
-$wgTPCHooks['dt/footer'][] = 'TPCFmtMsg::onMsgFooter';
-$wgTPCHooks['msgassist'][] = 'TPCFmtMsg::onMsgAssist';
-$wgTPCHooks['msgparse'][] = 'TPCFmtMsg::onMsgParse';
+TouhouPatchCenter::registerHook( 'dt', 'TPCFmtMsg::onMsg' );
+TouhouPatchCenter::registerHook( 'dialogtable', 'TPCFmtMsg::onMsg' );
+TouhouPatchCenter::registerHook( 'dt/footer', 'TPCFmtMsg::onMsgFooter' );
+TouhouPatchCenter::registerHook( 'msgassist', 'TPCFmtMsg::onMsgAssist' );
+TouhouPatchCenter::registerHook( 'msgparse', 'TPCFmtMsg::onMsgParse' );

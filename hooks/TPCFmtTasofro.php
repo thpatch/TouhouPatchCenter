@@ -42,5 +42,5 @@ class TPCFmtTasofro {
 }
 
 // Short versions
-$wgTPCHooks['tt'][] = 'TPCFmtTasofro::onTT';
-$wgTPCHooks['tt/stagename'][] = 'TPCFmtTasofro::onTTStageName';
+TouhouPatchCenter::registerHook( 'tt', 'TPCFmtTasofro::onTT' );
+TouhouPatchCenter::registerHook( 'tt/stagename', 'TPCFmtTasofro::onTTStageName' );

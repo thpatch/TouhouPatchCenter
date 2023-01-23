@@ -8,24 +8,22 @@
   */
 
 abstract class TPCTemplate {
-	abstract public static function run( &$parser, &$cache, &$magicWordId, &$ret, &$frame );
+	abstract public static function run( &$parser, &$frame ): string;
 
 	public static function runSubclass( &$parser, &$cache, &$magicWordId, &$ret, &$frame ) {
 		if ( is_subclass_of( $magicWordId, get_called_class() ) ) {
-			// Necessary workaround to use references with call_user_func()
-			$refWrap = array( &$parser, &$cache, &$magicWordId, &$ret, &$frame );
-			return call_user_func_array( "$magicWordId::run", $refWrap );
+			$ret = $magicWordId::run( $parser, $frame );
+			// Why do *we* have to write this line, as of MediaWiki 1.35?! WHY?!?
+			$cache[$magicWordId] = $ret;
 		}
 		return true;
 	}
 
 	/**
-	  * MagicWordwgVariableIDs hook.
+	  * GetMagicVariableIDs hook.
 	  */
 	public static function setup( &$variableIDs ) {
 		$variableIDs[] = get_called_class();
 		return true;
 	}
 }
-
-$wgHooks['ParserGetVariableValueSwitch'][] = 'TPCTemplate::runSubclass';

@@ -29,8 +29,8 @@ class TPCServerSFTP extends TPCServer {
 		// Required $serverInfo elements
 		$sftp_host = &$serverInfo['sftp_host'];
 		$sftp_user = &$serverInfo['sftp_user'];
-		$sftp_pass = TPCUtil::dictGet( $serverInfo['sftp_pass'] );
-		$local_path = TPCUtil::dictGet( $serverInfo['local_path'] );
+		$sftp_pass = ( $serverInfo['sftp_pass'] ?? '' );
+		$local_path = ( $serverInfo['local_path'] ?? '' );
 
 		if ( !$sftp_pass and $wgTPCServerRSAPrivKey ) {
 			$key = new Crypt_RSA();

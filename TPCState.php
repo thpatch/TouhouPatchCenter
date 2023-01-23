@@ -51,6 +51,12 @@ class TPCState
 	// Array of current JSON file.
 	public $jsonContents;
 
+	public function __construct( array $patches, $game, $file ) {
+		$this->patches = $patches;
+		$this->curGame = $game;
+		$this->curFile = $file;
+	}
+
 	public function getCurGame() {
 		return $this->curGame;
 	}
@@ -61,10 +67,10 @@ class TPCState
 	/**
 	  * Removes potentially dangerous stuff from a file name.
 	  *
-	  * @param string $fn File name
+	  * @param string File name
 	  * @return string Sanitized file name
 	  */
-	public static function sanitizeFileName( $fn ) {
+	public static function sanitizeFileName( string $fn ): string {
 		// This _will_ need to be changed once we patch Tasofro games, since they
 		// tend to use Japanese characters in their file names...
 		$ret = preg_replace( '/[^a-z0-9\._\- \/]/i', '', $fn );
@@ -75,40 +81,15 @@ class TPCState
 		return $ret;
 	}
 
-	public function init( $title ) {
-		// Part of the theme DB?
-		if ( $title->getNamespace() === NS_THEMEDB ) {
-			if ( !$title->isSubpage() ) {
-				return false;
-			}
-			$this->patches = array( "lang_" . $title->getSubpageText() );
-			return true;
-		}
-		// Is this page already mapped to a patch?
-		if ( !TPCPatchMap::isPatchRootPage( $title ) ) {
-			$map = TPCPatchMap::get( $title );
-			if ( !$map ) {
-				// Nope, nothing we care about
-				return false;
-			}
-			$this->patches = $map->pm_patch;
-			$this->switchGame( $map->pm_game );
-		} else {
-			// Root page of a patch. Set the name
-			$this->patches = array( strtolower( $title->getDBKey() ) );
-		}
-		return true;
-	}
-
 	/**
 	  * Combines any permutation of $game, $build and $file
 	  * to a complete, patch-relative file name.
 	 */
 	public function getFileName( $game, $build, $file ) {
 		// Wave the magic wand
-		$this->curGame = self::sanitizeFileName( $game );
-		$this->curBuild = self::sanitizeFileName( $build );
-		$this->curFile = self::sanitizeFileName( $file );
+		$this->curGame = ( $game ? self::sanitizeFileName( $game ) : null );
+		$this->curBuild = ( $build ? self::sanitizeFileName( $build ) : null );
+		$this->curFile = ( $file ? self::sanitizeFileName( $file ) : null );
 
 		if ( !$this->curFile ) {
 			$fn = $this->curGame . '.js';
@@ -199,9 +180,25 @@ class TPCState
 	  */
 	public function autoCode( &$temp ) {
 		$curFile = $this->getCurFile();
-		$code = TPCUtil::dictGet( $this->autoCodes[ $curFile ], 0 );
-		$code = TPCUtil::dictGet( $temp->params['code'], ++$code );
+		$code = ( $this->autoCodes[ $curFile ] ?? 0 );
+		$code = ( $temp->params['code'] ?? ++$code );
 		$this->autoCodes[ $curFile ] = $code;
 		return $code;
+	}
+
+	/**
+	  * Creates a new patch state object, initialized with the patch and any game or target file
+	  * mapped to the given title, or returns `null` if that title isn't patch-mapped.
+	  *
+	  * @param Title $title
+	  * @return TPCState|null
+	  */
+	public static function from( Title &$title ) {
+		$map = TPCPatchMap::get( $title );
+		if ( !$map or !$map->pm_patch ) {
+			// Nope, nothing we care about
+			return null;
+		}
+		return new TPCState( $map->pm_patch, $map->pm_game, $map->pm_target );
 	}
 }

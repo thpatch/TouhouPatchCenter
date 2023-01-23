@@ -27,7 +27,7 @@ class TPCParseContext {
 	}
 }
 
-$wgTPCHooks['thcrap_game'][] = 'TPCParseContext::onGame';
-$wgTPCHooks['thcrap_game_file'][] = 'TPCParseContext::onGameFile';
-$wgTPCHooks['thcrap_patch_file'][] = 'TPCParseContext::onPatchFile';
+TouhouPatchCenter::registerHook( 'thcrap_game', 'TPCParseContext::onGame' );
+TouhouPatchCenter::registerHook( 'thcrap_game_file', 'TPCParseContext::onGameFile' );
+TouhouPatchCenter::registerHook( 'thcrap_patch_file', 'TPCParseContext::onPatchFile' );
 

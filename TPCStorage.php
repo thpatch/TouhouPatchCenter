@@ -9,6 +9,8 @@
 
 class TPCStorage {
 
+	const JSON_OPTS = (JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
 	// TPCServer objects.
 	static protected $servers = null;
 
@@ -66,6 +68,11 @@ class TPCStorage {
 			return $array;
 		}
 		$oldArray = json_decode( $oldJson, true );
+		if ( $oldArray === null ) {
+			throw new MWException(
+				"`$fn` is invalid JSON. Ask an admin to fix the error on the server."
+			);
+		}
 		return self::arrayMergeRecursiveDistinct( $oldArray, $array, $changed );
 	}
 
@@ -120,7 +127,7 @@ class TPCStorage {
 					// Nothing to do here.
 					return;
 				}
-				$json = json_encode( (object)$array, TPC_JSON_OPTS );
+				$json = json_encode( (object)$array, self::JSON_OPTS );
 				$renderFile = false;
 				$ret = crc32( $json );
 			}
@@ -150,6 +157,8 @@ class TPCStorage {
 	  * 	Function to call for each element. Should return a hash or equivalent
 	  * 	integer identifying the element's current version.
 	  *
+	  * @param string $cacheFunc Name of the cache function. Must be a static method of this
+	  *   class.
 	  * @param array $cache
 	  * @param string $patch
 	  * @return array Array of the form ( [filename] => [hash] )
@@ -157,7 +166,7 @@ class TPCStorage {
 	protected static function writeCache( $cacheFunc, &$cache, $patch = null ) {
 		$ret = array();
 		foreach ( $cache as $target => &$source ) {
-			$hash = call_user_func( $cacheFunc, $target, $source, $patch );
+			$hash = self::$cacheFunc( $target, $source, $patch );
 			if ( $hash ) {
 				$ret[$target] = $hash;
 			}
@@ -166,11 +175,11 @@ class TPCStorage {
 	}
 
 	protected static function writeJSONCache( &$jsonCache, $patch = null ) {
-		return self::writeCache( 'self::writeJSONFile', $jsonCache, $patch );
+		return self::writeCache( 'writeJSONFile', $jsonCache, $patch );
 	}
 
 	protected static function writeCopyCache( &$copyCache, $patch = null ) {
-		return self::writeCache( 'self::writeCopyFile', $copyCache, $patch );
+		return self::writeCache( 'writeCopyFile', $copyCache, $patch );
 	}
 
 	protected static function writeDeletionCache( &$deletionCache, $patch = null ) {

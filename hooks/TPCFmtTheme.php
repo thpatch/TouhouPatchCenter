@@ -13,14 +13,29 @@ class TPCFmtTheme {
 	// in the process.
 	public static function onTheme( &$tpcState, &$title, &$id ) {
 		$themes = &$tpcState->getFile( null, "themes.js" );
+		$lang = $title->getSubpageText();
 
-		do {
-			$page = WikiPage::factory( $title );
-			$content = $page->getContent();
-		} while ( $content and $title = $content->getRedirectTarget() );
-		$text = $page->getText();
+		while( $title ) {
+			$content = WikiPage::factory( $title )->getContent();
+			if ( !is_a( $content, 'TextContent' ) ) {
+				return;
+			}
+			$title = $content->getRedirectTarget();
+
+			// Don't cross language boundaries. That's what
+			// client-side patch stacking is there for.
+			if ( $title && ( $title->getSubpageText() != $lang ) ) {
+				return;
+			}
+		};
+
+		$text = $content->getText();
 		if ( $text ) {
-			$themes[$id] = TPCUtil::sanitize( $text );
+			$text = TouhouThemeDB\Title::sanitize( $text );
+			$themes[$id] = $text;
+			foreach ( array_keys( TouhouThemeDB\Title::REDIRECTS, $id ) as &$id ) {
+				$themes[$id] = $text;
+			}
 		}
 	}
 }

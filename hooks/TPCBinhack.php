@@ -13,7 +13,7 @@
 class TPCBinhack {
 
 	public static function onBinhack( &$tpcState, $title, $temp ) {
-		$id = TPCUtil::dictGet( $temp->params['id'] );
+		$id = ( $temp->params['id'] ?? null );
 		if ( !$id ) {
 			// Nope, we're not even trying to create GUIDs
 			return true;
@@ -22,12 +22,12 @@ class TPCBinhack {
 		$tpcState->switchGameFile( null );
 		$baseFile = &$tpcState->getBuild( null );
 
-		$title = TPCUtil::dictGet( $temp->params['title'] );
-		$addr = TPCUtil::dictGet( $temp->params['addr'] );
-		$code = TPCUtil::dictGet( $temp->params['code'] );
+		$title = ( $temp->params['title'] ?? null );
+		$addr = ( $temp->params['addr'] ?? null );
+		$code = ( $temp->params['code'] ?? null );
 		// Only makes sense once we have a GUI
-		// $desc = TPCUtil::dictGet( $temp->params['desc'] );
-		// $dasm = TPCUtil::dictGet( $temp->params['dasm'] );
+		// $desc = ( $temp->params['desc'] ?? null );
+		// $dasm = ( $temp->params['dasm'] ?? null );
 
 		// TODO: Refactor into something callback-based?
 		$addr = TPCParse::parseVer( $addr );
@@ -56,5 +56,4 @@ class TPCBinhack {
 	}
 }
 
-$wgTPCHooks['thcrap_binhack'][] = 'TPCBinhack::onBinhack';
-$wgTPCRestrictedTemplates[] = 'thcrap_binhack';
+TouhouPatchCenter::registerRestrictedHook( 'thcrap_binhack', 'TPCBinhack::onBinhack' );

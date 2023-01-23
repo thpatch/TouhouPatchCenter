@@ -11,10 +11,12 @@
   * {{thcrap_prefix_file_include}}
   */
 
+use MediaWiki\MediaWikiServices;
+
 class TPCInclude {
 
 	protected static function getGame( &$tpcState, &$temp ) {
-		return TPCUtil::dictGet( $temp->params['game'], $tpcState->getCurGame() );
+		return ( $temp->params['game'] ?? $tpcState->getCurGame() );
 	}
 
 	public static function getTitleFromLink( &$curTitle, $str, $namespace = NS_MAIN ) {
@@ -42,10 +44,7 @@ class TPCInclude {
 			return true;
 		}
 		$game = self::getGame( $tpcState, $temp );
-		$file = TPCUtil::dictGet( $temp->params['file'] );
-		if ( !$file ) {
-			$file = TPCUtil::dictGet( $temp->params['target'] );
-		}
+		$file = ( $temp->params['file'] ?? $temp->params['target'] ?? null );
 
 		if ( !$patch ) {
 			$patch = $tpcState->patches[0];
@@ -69,6 +68,23 @@ class TPCInclude {
 		return self::onTarget( $tpcState, $targetTitle, $temp );
 	}
 
+	public static function onTLInclude( &$tpcState, &$title, &$temp ) {
+		$page = $temp->params[1];
+		$targetTitle = self::getTitleFromLink( $title, $page );
+
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
+		$insert = array(
+			'tlsp_namespace' => $targetTitle->getNamespace(),
+			'tlsp_title' => $targetTitle->getText(),
+
+			// This makes hypothetical support for non-Japanese games as easy as reading this value
+			// from $temp->params[2] instead.
+			'tlsp_code' => 'ja',
+		);
+		$dbw->insert( 'tpc_tl_source_pages', $insert, __METHOD__, 'IGNORE' );
+		return true;
+	}
+
 	public static function onPrefixInclude( &$tpcState, &$title, &$temp ) {
 		// NSML needs [ and ] in some filenames, which are illegal in MediaWiki
 		// page names, so we use dashes instead.
@@ -76,7 +92,7 @@ class TPCInclude {
 		$page = str_replace( array( '[', ']' ), '-', $temp->params[1] );
 
 		$game = self::getGame( $tpcState, $temp );
-		$namespace = intval( TPCUtil::dictGet( $temp->params['namespace'] ) );
+		$namespace = intval( $temp->params['namespace'] ?? 0 );
 		foreach ( TPCTLPatches::get() as $patch => $lang ) {
 			$fullPage = "$patch-$game-$page";
 			$targetTitle = self::getTitleFromLink( $title, $fullPage, $namespace );
@@ -92,8 +108,9 @@ class TPCInclude {
 	}
 }
 
-$wgTPCHooks['thcrap_target'][] = 'TPCInclude::onTarget';
-$wgTPCHooks['thcrap_include'][] = 'TPCInclude::onInclude';
-$wgTPCHooks['thcrap_prefix_include'][] = 'TPCInclude::onPrefixInclude';
-$wgTPCHooks['thcrap_prefix_file_include'][] = 'TPCInclude::onPrefixFileInclude';
-$wgTPCHooks['thcrap_image'][] = 'TPCInclude::onPrefixFileInclude';
+TouhouPatchCenter::registerHook( 'thcrap_target', 'TPCInclude::onTarget' );
+TouhouPatchCenter::registerHook( 'thcrap_include', 'TPCInclude::onInclude' );
+TouhouPatchCenter::registerHook( 'thcrap_tl_include', 'TPCInclude::onTLInclude' );
+TouhouPatchCenter::registerHook( 'thcrap_prefix_include', 'TPCInclude::onPrefixInclude' );
+TouhouPatchCenter::registerHook( 'thcrap_prefix_file_include', 'TPCInclude::onPrefixFileInclude' );
+TouhouPatchCenter::registerHook( 'thcrap_image', 'TPCInclude::onPrefixFileInclude' );

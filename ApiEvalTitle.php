@@ -1,4 +1,7 @@
 <?php
+
+use MediaWiki\MediaWikiServices;
+
 class ApiEvalTitle extends ApiBase {
 	public function execute() {
 		$params = $this->extractRequestParams();
@@ -6,14 +9,17 @@ class ApiEvalTitle extends ApiBase {
 		$page = $this->getTitleOrPageId( $params, 'fromdbmaster' );
 		$title = $page->getTitle();
 		if ( !$title->exists() ) {
-			$this->dieUsageMsg( 'notanarticle' );
+			$this->dieWithError( 'notanarticle' );
 		}
 
+		$pm = MediaWikiServices::getInstance()->getPermissionManager();
+		$user = $this->getUser();
+
 		PageTranslationHooks::$allowTargetEdit = true;
-		$errors = $title->getUserPermissionsErrors( 'edit', $this->getUser() );
+		$errors = $pm->getPermissionErrors( 'edit', $user, $title );
 		PageTranslationHooks::$allowTargetEdit = false;
 		if ( $errors ) {
-			$this->dieUsageMsg( reset( $errors ) );
+			$this->dieStatus( $this->errorArrayToStatus( $errors, $user ) );
 		}
 
 		TouhouPatchCenter::evalTitle( $title );
@@ -29,16 +35,11 @@ class ApiEvalTitle extends ApiBase {
 	public function needsToken() {
 		return 'csrf';
 	}
-	// TODO: Remove this after upgrade
-	public function getTokenSalt() {
-		return '';
-	}
 
-	public function getDescription() {
-		return 'TouhouPatchCenter: Evaluate a title';
-	}
-	public function getExamples() {
-		return array( 'api.php?action=evaltitle&title=Main%20Page&token=123ABC' );
+	public function getExamplesMessages() {
+		return [
+			'action=evaltitle&title=Main%20Page' => 'apihelp-evaltitle-example-title'
+		];
 	}
 	public function getAllowedParams() {
 		return array(
@@ -48,13 +49,6 @@ class ApiEvalTitle extends ApiBase {
 				ApiBase::PARAM_TYPE => 'string',
 				ApiBase::PARAM_REQUIRED => true
 			)
-		);
-	}
-	public function getParamDescription() {
-		return array(
-			'title' => 'Title of the page to evaltitle. Cannot be used together with pageid',
-			'pageid' => 'Page ID of the page to evaltitle. Cannot be used together with title',
-			'token' => 'An edit/csrf token previously retrieved through prop=info, action=tokens or meta=tokens'
 		);
 	}
 }

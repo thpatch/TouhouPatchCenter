@@ -13,7 +13,7 @@
 class TPCBreakpoint {
 
 	public static function onBreakpoint( $tpcState, $title, $temp ) {
-		$type = TPCUtil::dictGet( $temp->params['type'] );
+		$type = ( $temp->params['type'] ?? null );
 		if ( !$type ) {
 			// no type, invalid breakpoint
 			return true;
@@ -44,5 +44,4 @@ class TPCBreakpoint {
 	}
 }
 
-$wgTPCHooks['thcrap_breakpoint'][] = 'TPCBreakpoint::onBreakpoint';
-$wgTPCRestrictedTemplates[] = 'thcrap_breakpoint';
+TouhouPatchCenter::registerRestrictedHook( 'thcrap_breakpoint', 'TPCBreakpoint::onBreakpoint' );

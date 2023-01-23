@@ -14,14 +14,23 @@
 class TPCFmtStrings {
 
 	public static function onDef( &$tpcState, &$title, &$temp ) {
-		$id = TPCUtil::dictGet( $temp->params['id'] );
-		$tl = TPCUtil::dictGet( $temp->params['tl'] );
+		$id = ( $temp->params['id'] ?? null );
+		$tl = ( $temp->params['tl'] ?? null );
 		if ( empty( $id ) or empty( $tl ) ) {
 			return true;
 		}
 		$tl = TPCUtil::sanitize( $tl, false );
 		if ( isset( $temp->params['ascii'] ) ) {
 			// Try to transliterate the string, then limit it to the ASCII range
+			// The exact transliteration results are up to the version of libiconv that PHP is
+			// linked to, so let's at least define some clear rules for whitespace.
+			$tl = str_replace( [ "\u{00a0}", "\u{3000}" ], ' ', $tl );
+
+			// Hooray, locale dependence! Required for iconv() to do any transliteration at all,
+			// instead of just swallowing non-ASCII characters.
+			// (See the various comments at https://www.php.net/manual/en/function.iconv.php.)
+			setlocale( LC_CTYPE, 'en_US.UTF-8' );
+
 			$tl = iconv( "UTF-8", "ASCII//TRANSLIT//IGNORE", $tl );
 			$tl = preg_replace( '/[^(\x20-\x7F)]/i', '', $tl );
 		}
@@ -31,8 +40,8 @@ class TPCFmtStrings {
 	}
 
 	public static function onLoc( &$tpcState, &$title, &$temp ) {
-		$addr = TPCUtil::dictGet( $temp->params['addr'] );
-		$id = TPCUtil::dictGet( $temp->params['id'] );
+		$addr = ( $temp->params['addr'] ?? null );
+		$id = ( $temp->params['id'] ?? null );
 		if ( empty( $addr ) or empty( $id ) ) {
 			return true;
 		}
@@ -48,8 +57,8 @@ class TPCFmtStrings {
 		return true;
 	}
 }
-$wgTPCHooks['thcrap_string_def'][] = 'TPCFmtStrings::onDef';
-$wgTPCHooks['thcrap_string_loc'][] = 'TPCFmtStrings::onLoc';
+TouhouPatchCenter::registerHook( 'thcrap_string_def', 'TPCFmtStrings::onDef' );
+TouhouPatchCenter::registerHook( 'thcrap_string_loc', 'TPCFmtStrings::onLoc' );
 // Short versions
-$wgTPCHooks['stringdef'][] = 'TPCFmtStrings::onDef';
-$wgTPCHooks['stringloc'][] = 'TPCFmtStrings::onLoc';
+TouhouPatchCenter::registerHook( 'stringdef', 'TPCFmtStrings::onDef' );
+TouhouPatchCenter::registerHook( 'stringloc', 'TPCFmtStrings::onLoc' );

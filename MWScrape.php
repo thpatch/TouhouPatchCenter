@@ -54,9 +54,9 @@ class Template
 	  * @param int $assign Offset of assignment character. Can be null for unnamed parameters.
 	  *
 	  */
-	public function add( &$str, &$start, &$assign, &$end )	{
+	public function add( &$str, &$start, &$assign, &$end ) {
 		// "|param = value"
-		if ( $assign )	{
+		if ( $assign ) {
 			$key = trim( substr( $str, $start, $assign - $start ) );
 			$assign++;	// Jump over assign character
 			$value = trim( substr( $str, $assign, $end - $assign ) );
@@ -179,8 +179,11 @@ class MWScrape {
 	public static function toArray( &$page ) {
 		$temps = array();
 
-		// Apply basic regex
-		$page = preg_replace( '/<!--.*?-->/s', '', $page );
+		// Apply basic regex. We leave translation unit ID removal to
+		// TPCUtil::sanitize(); if we did it here, we'd leave empty lines in
+		// place of these ID comments, and couldn't distinguish intended line
+		// breaks after <translate> from unintended ones anymore.
+		$page = preg_replace( '/<!--(?!T:).*?-->/s', '', $page );
 		$page = preg_replace( '/\[\[[Cc]ategory:.*?\]\]/', '', $page );
 		$page = preg_replace( self::MW_PAGE_LINK_REGEX, "$3", $page );
 
@@ -199,7 +202,7 @@ class MWScrape {
 				$nest++;
 			} elseif ( $curToken === self::MW_TR ) {
 				$nest--;
-				if ( $nest === 0 )	{
+				if ( $nest === 0 ) {
 					$temps[] = self::parseTemplate( $page, $tokens, $tempOff, $i );
 				}
 			}

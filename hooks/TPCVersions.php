@@ -19,11 +19,7 @@ class TPCVersions {
 	}
 
 	public static function onVerInfo( &$tpcState, $title, $temp ) {
-		$ver = array(
-			TPCUtil::dictGet( $temp->params[1] ),
-			TPCUtil::dictGet( $temp->params[2] ),
-			TPCUtil::dictGet( $temp->params[3], '(original)' )
-		);
+		$ver = array( $temp->params[1], $temp->params[2], ( $temp->params[3] ?? '(original)' ) );
 
 		// Optional code page specification
 		if ( isset( $temp->params[4] ) ) {
@@ -42,9 +38,7 @@ class TPCVersions {
 	}
 }
 
-$wgTPCHooks['thcrap_version_info/header'][] = 'TPCVersions::onVerInfoHeader';
-$wgTPCHooks['thcrap_ver_info/header'][] = 'TPCVersions::onVerInfoHeader';
-$wgTPCHooks['thcrap_version_info'][] = 'TPCVersions::onVerInfo';
-$wgTPCHooks['thcrap_ver_info'][] = 'TPCVersions::onVerInfo';
-$wgTPCRestrictedTemplates[] = 'thcrap_version_info';
-$wgTPCRestrictedTemplates[] = 'thcrap_ver_info';
+TouhouPatchCenter::registerHook( 'thcrap_version_info/header', 'TPCVersions::onVerInfoHeader' );
+TouhouPatchCenter::registerHook( 'thcrap_ver_info/header', 'TPCVersions::onVerInfoHeader' );
+TouhouPatchCenter::registerRestrictedHook( 'thcrap_version_info', 'TPCVersions::onVerInfo' );
+TouhouPatchCenter::registerRestrictedHook( 'thcrap_ver_info', 'TPCVersions::onVerInfo' );
