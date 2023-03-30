@@ -38,27 +38,7 @@ class TPCFmtStrings {
 		$stringdefs[$id] = $tl;
 		return true;
 	}
-
-	public static function onLoc( &$tpcState, &$title, &$temp ) {
-		$addr = ( $temp->params['addr'] ?? null );
-		$id = ( $temp->params['id'] ?? null );
-		if ( empty( $addr ) or empty( $id ) ) {
-			return true;
-		}
-		$stringdefs = &$tpcState->switchGameFile( "stringlocs.js" );
-
-		$builds = TPCParse::parseVer( $addr );
-		foreach ( $builds as $build => $val ) {
-			if ( $val !== "" ) {
-				$buildFile = &$tpcState->getBuild( $build );
-				$buildFile[$val] = $id;
-			}
-		}
-		return true;
-	}
 }
 TouhouPatchCenter::registerHook( 'thcrap_string_def', 'TPCFmtStrings::onDef' );
-TouhouPatchCenter::registerHook( 'thcrap_string_loc', 'TPCFmtStrings::onLoc' );
 // Short versions
 TouhouPatchCenter::registerHook( 'stringdef', 'TPCFmtStrings::onDef' );
-TouhouPatchCenter::registerHook( 'stringloc', 'TPCFmtStrings::onLoc' );
