@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Extension\Translate\PageTranslation\Hooks;
 
 class ApiEvalTitle extends ApiBase {
 	public function execute() {
@@ -15,9 +16,9 @@ class ApiEvalTitle extends ApiBase {
 		$pm = MediaWikiServices::getInstance()->getPermissionManager();
 		$user = $this->getUser();
 
-		PageTranslationHooks::$allowTargetEdit = true;
+		Hooks::$allowTargetEdit = true;
 		$errors = $pm->getPermissionErrors( 'edit', $user, $title );
-		PageTranslationHooks::$allowTargetEdit = false;
+		Hooks::$allowTargetEdit = false;
 		if ( $errors ) {
 			$this->dieStatus( $this->errorArrayToStatus( $errors, $user ) );
 		}
