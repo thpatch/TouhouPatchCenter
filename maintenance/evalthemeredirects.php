@@ -15,7 +15,7 @@ class TPCEvalThemeRedirects extends Maintenance {
 	}
 
 	public function execute() {
-		foreach ( TouhouThemeDB\Title::REDIRECTS as $k => $v ) {
+		foreach ( array_unique( TouhouThemeDB\Title::REDIRECTS ) as $v ) {
 			foreach ( Title::makeTitle( NS_THEMEDB, $v )->getSubPages() as $subpage ) {
 				$this->output( $subpage->getPrefixedText() . "\n" );
 				TouhouPatchCenter::evalTitle( $subpage );
