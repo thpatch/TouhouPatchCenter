@@ -5,6 +5,7 @@
   * Registers the following template hooks:
   *
   * {{tt}}
+  * {{tt/stagename}}
   *
   * @file
   * @author Nmlgc

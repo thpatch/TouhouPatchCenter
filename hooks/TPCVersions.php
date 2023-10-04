@@ -4,8 +4,8 @@
   * Parser for version information.
   * Registers the following template hooks:
   *
-  * {{thcrap_ver_info}}
-  * {{thcrap_ver_info/Header}}
+  * {{thcrap_version_info}} / {{thcrap_ver_info}}
+  * {{thcrap_version_info/header}} / {{thcrap_ver_info/header}}
   *
   * @file
   * @author Nmlgc
@@ -38,7 +38,8 @@ class TPCVersions {
 	}
 }
 
-TouhouPatchCenter::registerHook( 'thcrap_version_info/header', 'TPCVersions::onVerInfoHeader' );
-TouhouPatchCenter::registerHook( 'thcrap_ver_info/header', 'TPCVersions::onVerInfoHeader' );
 TouhouPatchCenter::registerRestrictedHook( 'thcrap_version_info', 'TPCVersions::onVerInfo' );
+TouhouPatchCenter::registerHook( 'thcrap_version_info/header', 'TPCVersions::onVerInfoHeader' );
+// Short versions
 TouhouPatchCenter::registerRestrictedHook( 'thcrap_ver_info', 'TPCVersions::onVerInfo' );
+TouhouPatchCenter::registerHook( 'thcrap_ver_info/header', 'TPCVersions::onVerInfoHeader' );

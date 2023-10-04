@@ -4,7 +4,7 @@
   * Parser for Music Room comments.
   * Registers the following template hooks:
   *
-  * {{thcrap_music}}
+  * {{thcrap_music}} / {{musicroom}}
   *
   * @file
   * @author Nmlgc
@@ -44,6 +44,7 @@ class TPCFmtMusic {
 		return true;
 	}
 }
+
 TouhouPatchCenter::registerHook( 'thcrap_music', 'TPCFmtMusic::onMusic' );
 // Short versions
 TouhouPatchCenter::registerHook( 'musicroom', 'TPCFmtMusic::onMusic' );

@@ -4,7 +4,7 @@
   * Parser for Team Shanghai Alice spell cards.
   * Registers the following template hooks:
   *
-  * {{thcrap_spell}}
+  * {{thcrap_spell}} / {{spell_card}}
   *
   * @file
   * @author Nmlgc

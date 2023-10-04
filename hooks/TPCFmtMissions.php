@@ -4,7 +4,7 @@
   * Parser for th095 and th125 mission descriptions.
   * Registers the following template hooks:
   *
-  * {{thcrap_mission}}
+  * {{thcrap_mission}} / {{mission}}
   *
   * @file
   * @author Egor
