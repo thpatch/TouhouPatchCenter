@@ -20,7 +20,7 @@
   *   involved) is *SLOW*.
   *   Thus, defer the actual string handling as long as possible.
   * - Instead, create an array containing the offsets of all interesting
-      MediaWiki tokens.
+  *   MediaWiki tokens.
   * - All the nesting functions work exclusively on this array. Subfunctions
   *   only get references into this array.
   * - Only the last function, Template->add, actually splits the string for
