@@ -4,8 +4,7 @@
   * Parser for hardcoded strings.
   * Registers the following template hooks:
   *
-  * {{thcrap_string_def}}
-  * {{thcrap_string_loc}}
+  * {{thcrap_string_def}} / {{stringdef}}
   *
   * @file
   * @author Nmlgc
@@ -39,6 +38,7 @@ class TPCFmtStrings {
 		return true;
 	}
 }
+
 TouhouPatchCenter::registerHook( 'thcrap_string_def', 'TPCFmtStrings::onDef' );
 // Short versions
 TouhouPatchCenter::registerHook( 'stringdef', 'TPCFmtStrings::onDef' );

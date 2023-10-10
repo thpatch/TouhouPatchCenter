@@ -4,8 +4,10 @@
   * Parser for Team Shanghai Alice .msg dialogs.
   * Registers the following template hooks:
   *
-  * {{thcrap_msg}}
-  * {{thcrap_msg_assist}}
+  * {{thcrap_msg}} / {{dialogtable}} / {{dt}}
+  * {{thcrap_msg_assist}} / {{msgassist}}
+  * {{thcrap_msg/footer}} / {{dialogtable/footer}} / {{dt/footer}}
+  * {{thcrap_msg_parse}} / {{msgparse}}
   *
   * @file
   * @author Nmlgc
@@ -184,9 +186,11 @@ class TPCFmtMsg {
 TouhouPatchCenter::registerHook( 'thcrap_msg', 'TPCFmtMsg::onMsg' );
 TouhouPatchCenter::registerHook( 'thcrap_msg_assist', 'TPCFmtMsg::onMsgAssist' );
 TouhouPatchCenter::registerHook( 'thcrap_msg/footer', 'TPCFmtMsg::onMsgFooter' );
+TouhouPatchCenter::registerHook( 'thcrap_msg_parse', 'TPCFmtMsg::onMsgParse' );
 // Short versions
-TouhouPatchCenter::registerHook( 'dt', 'TPCFmtMsg::onMsg' );
 TouhouPatchCenter::registerHook( 'dialogtable', 'TPCFmtMsg::onMsg' );
-TouhouPatchCenter::registerHook( 'dt/footer', 'TPCFmtMsg::onMsgFooter' );
+TouhouPatchCenter::registerHook( 'dt', 'TPCFmtMsg::onMsg' );
 TouhouPatchCenter::registerHook( 'msgassist', 'TPCFmtMsg::onMsgAssist' );
+TouhouPatchCenter::registerHook( 'dialogtable/footer', 'TPCFmtMsg::onMsgFooter' );
+TouhouPatchCenter::registerHook( 'dt/footer', 'TPCFmtMsg::onMsgFooter' );
 TouhouPatchCenter::registerHook( 'msgparse', 'TPCFmtMsg::onMsgParse' );

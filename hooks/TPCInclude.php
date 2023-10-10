@@ -8,7 +8,7 @@
   * {{thcrap_include}}
   * {{thcrap_tl_include}}
   * {{thcrap_prefix_include}}
-  * {{thcrap_prefix_file_include}}
+  * {{thcrap_prefix_file_include}} / {{thcrap_image}}
   */
 
 use MediaWiki\MediaWikiServices;

@@ -5,7 +5,8 @@
   * Registers the following template hooks:
   *
   * {{thcrap_gentext}} / {{gentext}}
-  * {{trophy}}
+  * {{thcrap_trophy}} / {{trophy}}
+  * {{thcrap_ability}} / {{ability}}
   *
   * @file
   * @author Nmlgc
@@ -49,7 +50,11 @@ class TPCFmtGentext {
 		return true;
 	}
 }
+
 TouhouPatchCenter::registerHook( 'thcrap_gentext', 'TPCFmtGentext::onGentext' );
+TouhouPatchCenter::registerHook( 'thcrap_trophy', 'TPCFmtGentext::onTrophy' );
+TouhouPatchCenter::registerHook( 'thcrap_ability', 'TPCFmtGentext::onAbility' );
+// Short versions
 TouhouPatchCenter::registerHook( 'gentext', 'TPCFmtGentext::onGentext' );
 TouhouPatchCenter::registerHook( 'trophy', 'TPCFmtGentext::onTrophy' );
 TouhouPatchCenter::registerHook( 'ability', 'TPCFmtGentext::onAbility' );
