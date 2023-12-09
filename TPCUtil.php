@@ -76,6 +76,7 @@ class TPCUtil {
 		$param = preg_replace( "/''(.*?)''/", '<i$\1>', $param );
 		$param = preg_replace( "/<u>(.*?)<\/u>/", '<u$\1>', $param );
 		$param = preg_replace( "/<ins>(.*?)<\/ins>/", '<u$\1>', $param );
+		$param = preg_replace( "/<br ?\\/?>/", "\n", $param );
 		if ( $escape_percents ) {
 			$param = preg_replace( '/%/', '%%', $param );
 		}
