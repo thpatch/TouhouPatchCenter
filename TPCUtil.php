@@ -70,6 +70,8 @@ class TPCUtil {
 		$param = preg_replace( $REGEX_LANG_PAT, $REGEX_LANG_REP, $param );
 		// &nbsp;
 		$param = preg_replace( '/&nbsp;/', "\u{00a0}", $param );
+		// space
+		$param = preg_replace( '/&#32;/', " ", $param );
 		// MediaWiki markup
 		$param = preg_replace( "/'''''(.*?)'''''/", '<bi$\1>', $param );
 		$param = preg_replace( "/'''(.*?)'''/", '<b$\1>', $param );
