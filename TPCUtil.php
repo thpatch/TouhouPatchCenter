@@ -82,6 +82,9 @@ class TPCUtil {
 		if ( $escape_percents ) {
 			$param = preg_replace( '/%/', '%%', $param );
 		}
+		// {{|}} => | (because for some reason {{!}} doesn't get interpreted
+		// properly in some places)
+		$param = preg_replace('/\{\{\s*\|\s*\}\}/', '|', $param);
 		// TL notes. We don't remove trailing whitespace here because you
 		// can *technically* have more than one per template…
 		$REGEX_TLNOTE = '/(\n)*\{\{\s*tlnote\s*\|\s*(.*?)(\|.*)*}}/is';
